@@ -33,4 +33,8 @@ export class User extends Model {
   @AllowNull
   @Column
   avatarUrl: string | null;
+
+  @AllowNull
+  @Column
+  otp: string | null;
 }
