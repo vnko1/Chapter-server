@@ -1,9 +1,22 @@
-import { AllowNull, Column, Default, Model, Table } from 'sequelize-typescript';
+import {
+  AllowNull,
+  Column,
+  DataType,
+  Default,
+  Model,
+  Scopes,
+  Table,
+} from 'sequelize-typescript';
 
+@Scopes(() => ({
+  withoutSensitiveData: {
+    attributes: { exclude: ['password', 'otp', 'accountStatus'] },
+  },
+}))
 @Table
 export class User extends Model {
   @AllowNull(false)
-  @Column({ unique: true })
+  @Column({ unique: true, type: DataType.STRING })
   email: string;
 
   @AllowNull
@@ -28,7 +41,7 @@ export class User extends Model {
   @AllowNull
   @Default(null)
   @Column
-  userStatus: string | null;
+  status: string | null;
 
   @AllowNull
   @Default(null)
@@ -43,4 +56,8 @@ export class User extends Model {
   @AllowNull
   @Column
   otp: string | null;
+
+  @Default('unconfirmed')
+  @Column
+  accountStatus: 'unconfirmed' | 'confirmed' | 'registered';
 }
