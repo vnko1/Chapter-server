@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { UserModule, AuthModule } from './modules';
+import { User } from './modules/user/model/user.model';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule, AuthModule } from './modules';
       database: process.env.MYSQL_DATABASE,
       synchronize: true,
       autoLoadModels: true,
+      models: [User],
     }),
     UserModule,
     AuthModule,
