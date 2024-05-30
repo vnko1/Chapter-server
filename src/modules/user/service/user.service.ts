@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-
 import { AppService, UserEmailDto } from 'src/common';
 import { User } from '../model/user.model';
 
