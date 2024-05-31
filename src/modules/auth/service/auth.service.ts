@@ -4,6 +4,7 @@ import { generate } from 'otp-generator';
 import { AppService, UserEmailDto } from 'src/common';
 import { UserService } from 'src/modules/user/service/user.service';
 import { OTPDto } from '../dto/otp.dto';
+import { MailService } from 'src/modules/mail/service/mail.service';
 
 interface Options {
   digits?: boolean;
@@ -14,19 +15,34 @@ interface Options {
 
 @Injectable()
 export class AuthService extends AppService {
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private mailService: MailService,
+  ) {
     super();
   }
 
   async registerEmail(userEmailDto: UserEmailDto) {
+    const otp = this.genOtp();
+
+    await this.mailService.sendEmail(
+      {
+        to: userEmailDto.email,
+        subject: 'Confirm your email',
+        // context: { otp },
+        text: otp,
+      },
+      'otpSend',
+    );
     return await this.userService.createUserInstance({
       ...userEmailDto,
-      otp: this.genOtp(),
+      otp,
     });
   }
 
   async confirmEmail(otpDto: OTPDto) {
     const user = await this.otpValidation(otpDto.otp);
+
     user.accountStatus = 'confirmed';
     user.otp = null;
     await user.save();
