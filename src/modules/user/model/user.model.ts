@@ -1,5 +1,7 @@
 import {
   AllowNull,
+  BeforeCreate,
+  BeforeUpdate,
   Column,
   DataType,
   Default,
@@ -7,6 +9,7 @@ import {
   Scopes,
   Table,
 } from 'sequelize-typescript';
+import { TIMEOUT_VALUES } from 'src/utils';
 
 @Scopes(() => ({
   withoutSensitiveData: {
@@ -15,6 +18,14 @@ import {
 }))
 @Table
 export class User extends Model {
+  @BeforeUpdate
+  @BeforeCreate
+  static timeoutRemove(instance: User) {
+    setTimeout(() => {
+      instance.otp = null;
+    }, TIMEOUT_VALUES.otp);
+  }
+
   @AllowNull(false)
   @Column({ unique: true, type: DataType.STRING })
   email: string;

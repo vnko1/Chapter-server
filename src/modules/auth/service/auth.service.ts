@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { generate } from 'otp-generator';
+
 import { AppService, UserEmailDto } from 'src/common';
 import { UserService } from 'src/modules/user/service/user.service';
+import { OTPDto } from '../dto/otp.dto';
 
 interface Options {
   digits?: boolean;
@@ -21,6 +23,22 @@ export class AuthService extends AppService {
       ...userEmailDto,
       otp: this.genOtp(),
     });
+  }
+
+  async confirmEmail(otpDto: OTPDto) {
+    const user = await this.otpValidation(otpDto.otp);
+    user.accountStatus = 'confirmed';
+    user.otp = null;
+    await user.save();
+
+    return { id: user.id, email: user.email };
+  }
+
+  private async otpValidation(otp: string) {
+    const user = await this.userService.findUser({ where: { otp } });
+    if (!user) throw new BadRequestException('Invalid otp');
+
+    return user;
   }
 
   private genOtp(length = 4, options?: Options) {
