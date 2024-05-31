@@ -25,17 +25,9 @@ export class AuthService extends AppService {
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
 
-    await this.mailService.sendEmail({
-      to: userEmailDto.email,
-      subject: 'Confirm your email',
-      template: 'acc-activate',
-      context: {
-        title: 'Chapter',
-        text1: 'Welcome to chapter application!',
-        text2: 'To confirm your email, please enter this one-time password: ',
-        text3: otp,
-      },
-    });
+    await this.mailService.sendEmail(
+      this.otpMailSendOpt(userEmailDto.email, otp),
+    );
     return await this.userService.createUserInstance({
       ...userEmailDto,
       otp,
@@ -62,5 +54,19 @@ export class AuthService extends AppService {
   private genOtp(length = 4, options?: Options) {
     const defaultOptions: Options = { specialChars: false, ...options };
     return generate(length, defaultOptions);
+  }
+
+  private otpMailSendOpt(email: string, otp: string) {
+    return {
+      to: email,
+      subject: 'Confirm your email',
+      template: 'acc-activate',
+      context: {
+        title: 'Chapter',
+        text1: 'Welcome to chapter application!',
+        text2: 'To confirm your email, please enter this one-time password: ',
+        text3: otp,
+      },
+    };
   }
 }
