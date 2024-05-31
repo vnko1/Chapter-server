@@ -24,7 +24,6 @@ export class AuthService extends AppService {
 
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
-    console.log('🚀 ~ AuthService ~ registerEmail ~ otp:', otp);
 
     await this.mailService.sendEmail({
       to: 'valenkoedu@gmail.com',
