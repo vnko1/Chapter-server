@@ -26,7 +26,7 @@ export class AuthService extends AppService {
     const otp = this.genOtp();
 
     await this.mailService.sendEmail({
-      to: 'valenkoedu@gmail.com',
+      to: userEmailDto.email,
       subject: 'Confirm your email',
       template: 'acc-activate',
       context: {
