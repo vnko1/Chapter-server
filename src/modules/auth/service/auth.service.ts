@@ -24,16 +24,19 @@ export class AuthService extends AppService {
 
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
+    console.log('🚀 ~ AuthService ~ registerEmail ~ otp:', otp);
 
-    await this.mailService.sendEmail(
-      {
-        to: userEmailDto.email,
-        subject: 'Confirm your email',
-        // context: { otp },
-        text: otp,
+    await this.mailService.sendEmail({
+      to: 'valenkoedu@gmail.com',
+      subject: 'Confirm your email',
+      template: 'acc-activate',
+      context: {
+        title: 'Chapter',
+        text1: 'Welcome to chapter application!',
+        text2: 'To confirm your email, please enter this one-time password: ',
+        text3: otp,
       },
-      'otpSend',
-    );
+    });
     return await this.userService.createUserInstance({
       ...userEmailDto,
       otp,
