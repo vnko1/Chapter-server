@@ -6,6 +6,7 @@ import {
   DataType,
   Default,
   Model,
+  PrimaryKey,
   Scopes,
   Table,
 } from 'sequelize-typescript';
@@ -25,6 +26,12 @@ export class User extends Model {
       instance.otp = null;
     }, TIMEOUT_VALUES.otp);
   }
+
+  @PrimaryKey
+  @AllowNull(false)
+  @Default(DataType.UUIDV4)
+  @Column({ type: DataType.UUID })
+  id: string;
 
   @AllowNull(false)
   @Column({ unique: true, type: DataType.STRING })
