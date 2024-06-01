@@ -29,14 +29,29 @@ export class AuthService extends AppService {
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
 
-    await this.mailService.sendEmail(
-      this.otpMailSendOpt(userEmailDto.email, otp),
-    );
     const user = await this.userService.createUserInstance({
       ...userEmailDto,
       otp,
     });
+
+    await this.mailService.sendEmail(
+      this.otpMailSendOpt(userEmailDto.email, otp),
+    );
+
     return { id: user.id };
+  }
+
+  async resentOtp(userEmailDto: UserEmailDto) {
+    const otp = this.genOtp();
+
+    await this.userService.updateUser(
+      { otp },
+      { where: { email: userEmailDto.email } },
+    );
+
+    await this.mailService.sendEmail(
+      this.otpMailSendOpt(userEmailDto.email, otp),
+    );
   }
 
   async confirmEmail(id: string, otpDto: OTPDto) {

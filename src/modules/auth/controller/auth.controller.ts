@@ -64,6 +64,14 @@ export class AuthController {
     return await this.authService.createAccount(userAccountDto, id);
   }
 
+  @Post('register/otp')
+  @AccountStatus(['unconfirmed'])
+  async resentOtp(
+    @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
+  ) {
+    return await this.authService.resentOtp(userEmailDto);
+  }
+
   @Get('user/:id')
   async getUserTemp(@Param('id') id: string) {
     return await this.authService.getTempUser(id);

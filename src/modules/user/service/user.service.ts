@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { FindOptions, Optional, UpdateOptions } from 'sequelize';
+import {
+  FindOptions,
+  FindOrCreateOptions,
+  Optional,
+  UpdateOptions,
+} from 'sequelize';
 
 import { AppService } from 'src/common';
 import { User } from '../model/user.model';
@@ -15,6 +20,10 @@ export class UserService extends AppService {
   ) {
     super();
   }
+  findOrCreateUserInstance(options: FindOrCreateOptions) {
+    return this.userModel.findOrCreate(options);
+  }
+
   createUserInstance<T extends Optional<any, string>>(userData: T) {
     return this.userModel.create(userData);
   }
