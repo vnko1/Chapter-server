@@ -18,6 +18,8 @@ import {
   userEmailSchema,
   ZodValidationPipe,
 } from 'src/common';
+
+import { User } from 'src/modules/user';
 import {
   AuthService,
   OTPDto,
@@ -29,7 +31,6 @@ import {
   SignInDto,
   signInSchema,
 } from '..';
-import { User } from 'src/modules/user';
 
 @UseGuards(AccountStatusGuard)
 @Controller('auth')
@@ -38,8 +39,11 @@ export class AuthController {
 
   @AccountStatus(['completed'])
   @Post('login')
-  async login(@Body(new ZodValidationPipe(signInSchema)) signInDto: SignInDto) {
-    return await this.authService.signIn(signInDto);
+  async login(
+    @UserData() user: User,
+    @Body(new ZodValidationPipe(signInSchema)) signInDto: SignInDto,
+  ) {
+    return await this.authService.signIn(user, signInDto);
   }
 
   @Post('register/email')

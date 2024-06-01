@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { generate } from 'otp-generator';
 
 import { AppService, UserAccountDto, UserEmailDto } from 'src/common';
@@ -28,8 +33,15 @@ export class AuthService extends AppService {
     return await this.userService.findUserByPK(id);
   }
 
-  async signIn(signInDto: SignInDto) {
-    return signInDto;
+  async signIn(userData: User, signInDto: SignInDto) {
+    const isValidPass = await this.checkPassword(
+      signInDto.password,
+      userData.password,
+    );
+    if (!isValidPass)
+      throw new UnauthorizedException('Wrong email or password');
+
+    return isValidPass;
   }
 
   async registerEmail(userEmailDto: UserEmailDto) {

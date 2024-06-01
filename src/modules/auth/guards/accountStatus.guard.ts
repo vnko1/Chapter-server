@@ -5,6 +5,7 @@ import {
   ConflictException,
   ForbiddenException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
@@ -27,6 +28,10 @@ export class AccountStatusGuard implements CanActivate {
       throw new ConflictException(
         `This email already is used; Account status: ${user.accountStatus}`,
       );
+    }
+
+    if (request.path.startsWith('/auth/login') && !user) {
+      throw new UnauthorizedException('Wrong email or password');
     }
 
     if (!accountStatus) return true;
