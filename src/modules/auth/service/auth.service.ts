@@ -66,7 +66,10 @@ export class AuthService extends AppService {
   }
 
   async createAccount(userAccountDto: UserAccountDto, id: string) {
-    return await this.userService.updateUser(userAccountDto, { where: { id } });
+    return await this.userService.updateUser(
+      { ...userAccountDto, accountStatus: 'completed' },
+      { where: { id } },
+    );
   }
 
   private async userValidation(
