@@ -1,6 +1,9 @@
 import {
+  AfterCreate,
+  AfterUpdate,
+  AfterValidate,
   AllowNull,
-  BeforeCreate,
+  BeforeValidate,
   Column,
   DataType,
   Default,
@@ -9,6 +12,8 @@ import {
   Scopes,
   Table,
 } from 'sequelize-typescript';
+import * as bcrypt from 'bcrypt';
+
 import { TIMEOUT_VALUES } from 'src/utils';
 
 @Scopes(() => ({
@@ -18,12 +23,25 @@ import { TIMEOUT_VALUES } from 'src/utils';
 }))
 @Table
 export class User extends Model {
-  @BeforeCreate
+  @AfterUpdate
+  @AfterCreate
+  @AfterValidate
   static clearOtp(instance: User) {
-    setTimeout(() => {
-      instance.otp = null;
-      instance.save();
-    }, TIMEOUT_VALUES.otp);
+    if (instance.otp) {
+      setTimeout(() => {
+        instance.otp = null;
+        instance.save();
+      }, TIMEOUT_VALUES.otp);
+    }
+  }
+
+  @BeforeValidate
+  static async hashPass(instance: User) {
+    if (instance.password) {
+      const salt = await bcrypt.genSalt();
+      const hashedPass = await bcrypt.hash(instance.password, salt);
+      instance.password = hashedPass;
+    }
   }
 
   @PrimaryKey

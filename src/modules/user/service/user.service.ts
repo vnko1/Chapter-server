@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { FindOptions, Optional } from 'sequelize';
+import { FindOptions, Optional, UpdateOptions } from 'sequelize';
 
 import { AppService } from 'src/common';
 import { User } from '../model/user.model';
@@ -25,5 +25,9 @@ export class UserService extends AppService {
 
   findUserByPK(pk: string, opt?: FindOptions, scope: UserScope = '') {
     return this.userModel.scope(scope).findByPk(pk, opt);
+  }
+
+  updateUser<T extends object>(userData: T, options: UpdateOptions) {
+    return this.userModel.update(userData, options);
   }
 }

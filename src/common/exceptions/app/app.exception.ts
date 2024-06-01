@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import e from 'express';
 import { AppService } from 'src/common/services';
 
 @Catch()
@@ -15,12 +16,18 @@ export class AppHttpExceptionFilter
   catch(exception: HttpException, host: ArgumentsHost) {
     const response = this.response(host);
 
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = this.status(exception);
 
     if (exception.message) response('Error', exception.message, status);
     else response(exception.name, exception.message, status);
+  }
+
+  private status(exception: any) {
+    if (exception instanceof HttpException) return exception.getStatus();
+    if (exception instanceof Error) {
+      if (exception.message.startsWith('Validation error')) return 400;
+    }
+
+    return HttpStatus.INTERNAL_SERVER_ERROR;
   }
 }

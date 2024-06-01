@@ -55,12 +55,13 @@ export class AuthController {
 
   @Patch('register/account/:id')
   @AccountStatus(['confirmed'])
+  @HttpCode(HttpStatus.NO_CONTENT)
   async createUserAccount(
     @Param('id') id: string,
     @Body(new ZodValidationPipe(userAccountSchema))
     userAccountDto: UserAccountDto,
   ) {
-    return userAccountDto;
+    return await this.authService.createAccount(userAccountDto, id);
   }
 
   @Get('user/:id')

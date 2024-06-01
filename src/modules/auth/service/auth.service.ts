@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { generate } from 'otp-generator';
 
-import { AppService, UserEmailDto } from 'src/common';
+import { AppService, UserAccountDto, UserEmailDto } from 'src/common';
 import { UserService } from 'src/modules/user/service/user.service';
 import { OTPDto } from '../dto/otp.dto';
 import { MailService } from 'src/modules/mail/service/mail.service';
@@ -59,10 +59,14 @@ export class AuthService extends AppService {
     const user = await this.userService.findUser({ where: { nickName } });
     if (user)
       throw new HttpException(
-        `User with nickname: ${nickName} already exists`,
+        `User with nickname: ${nickName}, already exists`,
         HttpStatus.CONFLICT,
       );
     return user;
+  }
+
+  async createAccount(userAccountDto: UserAccountDto, id: string) {
+    return await this.userService.updateUser(userAccountDto, { where: { id } });
   }
 
   private async userValidation(

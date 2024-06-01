@@ -1,7 +1,12 @@
 import { ArgumentsHost, HttpStatus } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 export abstract class AppService {
   constructor() {}
+
+  protected async checkPassword(password: string, hash: string) {
+    return await bcrypt.compare(password, hash);
+  }
   protected response(host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
