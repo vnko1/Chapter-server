@@ -28,7 +28,9 @@ export class AuthService extends AppService {
     return await this.userService.findUserByPK(id);
   }
 
-  async signIn(SignInDto: SignInDto) {}
+  async signIn(signInDto: SignInDto) {
+    return signInDto;
+  }
 
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();

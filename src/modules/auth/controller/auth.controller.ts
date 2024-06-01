@@ -36,9 +36,9 @@ export class AuthController {
 
   @AccountStatus(['completed'])
   @Post('login')
-  async login(
-    @Body(new ZodValidationPipe(signInSchema)) signInDto: SignInDto,
-  ) {}
+  async login(@Body(new ZodValidationPipe(signInSchema)) signInDto: SignInDto) {
+    return await this.authService.signIn(signInDto);
+  }
 
   @Post('register/email')
   @HttpCode(HttpStatus.OK)
