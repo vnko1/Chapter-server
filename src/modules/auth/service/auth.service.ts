@@ -55,6 +55,16 @@ export class AuthService extends AppService {
     return { id: user.id, email: user.email };
   }
 
+  async nickNameValidate(nickName: string) {
+    const user = await this.userService.findUser({ where: { nickName } });
+    if (user)
+      throw new HttpException(
+        `User with nickname: ${nickName} already exists`,
+        HttpStatus.CONFLICT,
+      );
+    return user;
+  }
+
   private async userValidation(
     id: string,
     fieldName: string,
