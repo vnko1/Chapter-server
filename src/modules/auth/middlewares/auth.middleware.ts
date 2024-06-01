@@ -11,12 +11,9 @@ export class AuthMiddleware implements NestMiddleware {
     const { email } = req.body;
     const { id } = req.params;
 
-    const user = await this.userService.findUser(
-      {
-        where: { [Op.or]: [{ email: email || '' }, { id: id || '' }] },
-      },
-      'withoutSensitiveData',
-    );
+    const user = await this.userService.findUser({
+      where: { [Op.or]: [{ email: email || '' }, { id: id || '' }] },
+    });
 
     req['user'] = user;
 

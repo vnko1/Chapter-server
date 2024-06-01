@@ -3,7 +3,7 @@ import { generate } from 'otp-generator';
 
 import { AppService, UserAccountDto, UserEmailDto } from 'src/common';
 
-import { UserService } from 'src/modules/user';
+import { User, UserService } from 'src/modules/user';
 import { MailService } from 'src/modules/mail';
 
 import { OTPDto, SignInDto } from '..';
@@ -60,18 +60,22 @@ export class AuthService extends AppService {
     );
   }
 
-  async confirmEmail(id: string, otpDto: OTPDto) {
+  async confirmEmail(userData: User, otpDto: OTPDto) {
     const user = await this.userValidation(
-      id,
+      userData,
       'otp',
       otpDto.otp,
       'Invalid otp',
       400,
     );
 
-    user.accountStatus = 'confirmed';
-    user.otp = null;
-    await user.save();
+    await this.userService.updateUser(
+      {
+        otp: null,
+        accountStatus: 'confirmed',
+      },
+      { where: { id: user.id } },
+    );
 
     return { id: user.id, email: user.email };
   }
@@ -94,18 +98,12 @@ export class AuthService extends AppService {
   }
 
   private async userValidation(
-    id: string,
+    user: User,
     fieldName: string,
     fieldValue: string,
     errorMessage: string,
     httpStatus: number,
   ) {
-    const user = await this.userService.findUserByPK(id);
-    if (!user)
-      throw new HttpException(
-        `User with id: ${id} not exists.`,
-        HttpStatus.ACCEPTED,
-      );
     if (user[fieldName] !== fieldValue)
       throw new HttpException(errorMessage, httpStatus);
 

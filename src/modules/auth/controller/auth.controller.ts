@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 
 import {
+  UserData,
   UserAccountDto,
   userAccountSchema,
   UserEmailDto,
@@ -28,6 +29,7 @@ import {
   SignInDto,
   signInSchema,
 } from '..';
+import { User } from 'src/modules/user';
 
 @UseGuards(AccountStatusGuard)
 @Controller('auth')
@@ -51,10 +53,11 @@ export class AuthController {
   @Post('register/confirm/:id')
   @AccountStatus(['unconfirmed'])
   async confirmEmail(
-    @Param('id') id: string,
-    @Body(new ZodValidationPipe(otpSchema)) otpDto: OTPDto,
+    @UserData() user: User,
+    @Body(new ZodValidationPipe(otpSchema))
+    otpDto: OTPDto,
   ) {
-    return await this.authService.confirmEmail(id, otpDto);
+    return await this.authService.confirmEmail(user, otpDto);
   }
 
   @Get('register/nickname')
