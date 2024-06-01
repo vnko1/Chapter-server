@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 
@@ -16,7 +17,7 @@ import { OTPDto, otpSchema } from '../dto/otp.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('register')
+  @Post('register/email')
   @HttpCode(HttpStatus.OK)
   async registerUserEmail(
     @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
@@ -24,13 +25,16 @@ export class AuthController {
     return await this.authService.registerEmail(userEmailDto);
   }
 
-  @Post('confirm/:id')
+  @Post('register/confirm/:id')
   async confirmEmail(
     @Param('id') id: string,
     @Body(new ZodValidationPipe(otpSchema)) otpDto: OTPDto,
   ) {
     return await this.authService.confirmEmail(id, otpDto);
   }
+
+  @Patch('register/account/:id')
+  async createUserAccount() {}
 
   @Get('user/:id')
   async getUserTemp(@Param('id') id: string) {

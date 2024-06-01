@@ -1,7 +1,6 @@
 import {
   AllowNull,
   BeforeCreate,
-  BeforeUpdate,
   Column,
   DataType,
   Default,
@@ -19,11 +18,11 @@ import { TIMEOUT_VALUES } from 'src/utils';
 }))
 @Table
 export class User extends Model {
-  @BeforeUpdate
   @BeforeCreate
-  static timeoutRemove(instance: User) {
+  static clearOtp(instance: User) {
     setTimeout(() => {
       instance.otp = null;
+      instance.save();
     }, TIMEOUT_VALUES.otp);
   }
 
