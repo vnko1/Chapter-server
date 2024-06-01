@@ -8,8 +8,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-
-import { AccountStatus } from '..';
+import { AccountStatus } from '../decorators';
 
 @Injectable()
 export class AccountStatusGuard implements CanActivate {

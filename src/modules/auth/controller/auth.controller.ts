@@ -10,30 +10,33 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { Response } from 'express';
 
+import { AppService } from 'src/common/services';
+import { ZodValidationPipe } from 'src/common/pipes';
+import { UserData } from 'src/common/decorators';
 import {
-  UserData,
   UserAccountDto,
   userAccountSchema,
   UserEmailDto,
   userEmailSchema,
-  ZodValidationPipe,
-  AppService,
-} from 'src/common';
+} from 'src/common/dto';
 
-import { User } from 'src/modules/user';
+import { User } from 'src/modules/user/model';
+
+import { AuthService } from '../service';
+import { AccountStatusGuard } from '../guards';
+import { AccountStatus } from '../decorators';
+
 import {
-  AuthService,
-  OTPDto,
-  otpSchema,
   NickNameDto,
   nickNameSchema,
-  AccountStatus,
-  AccountStatusGuard,
+  OTPDto,
+  otpSchema,
   SignInDto,
   signInSchema,
-} from '..';
-import { Response } from 'express';
+} from '../dto';
+import { AuthGuard } from 'src/common/guards';
 
 @UseGuards(AccountStatusGuard)
 @Controller('auth')
@@ -100,6 +103,7 @@ export class AuthController extends AppService {
     return await this.authService.resentOtp(userEmailDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get('user/:id')
   async getUserTemp(@Param('id') id: string) {
     return await this.authService.getTempUser(id);

@@ -7,8 +7,9 @@ import {
   UpdateOptions,
 } from 'sequelize';
 
-import { AppService } from 'src/common';
-import { User } from '..';
+import { AppService } from 'src/common/services';
+
+import { User } from '../model';
 
 type UserScope = '' | 'withoutSensitiveData';
 

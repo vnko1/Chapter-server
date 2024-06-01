@@ -1,5 +1,5 @@
 import { ArgumentsHost, HttpStatus } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
 
 import { ICred } from 'src/types';
@@ -33,5 +33,14 @@ export abstract class AppService {
       maxAge,
     });
     return res;
+  }
+
+  protected extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
+  }
+
+  protected extractTokenFromCookies(request: Request, name: string) {
+    return request.cookies[name];
   }
 }
