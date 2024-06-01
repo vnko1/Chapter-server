@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 
@@ -17,6 +18,7 @@ import {
   UserEmailDto,
   userEmailSchema,
   ZodValidationPipe,
+  AppService,
 } from 'src/common';
 
 import { User } from 'src/modules/user';
@@ -31,19 +33,26 @@ import {
   SignInDto,
   signInSchema,
 } from '..';
+import { Response } from 'express';
 
 @UseGuards(AccountStatusGuard)
 @Controller('auth')
-export class AuthController {
-  constructor(private authService: AuthService) {}
+export class AuthController extends AppService {
+  constructor(private authService: AuthService) {
+    super();
+  }
 
   @AccountStatus(['completed'])
   @Post('login')
   async login(
     @UserData() user: User,
     @Body(new ZodValidationPipe(signInSchema)) signInDto: SignInDto,
+    @Res() res: Response,
   ) {
-    return await this.authService.signIn(user, signInDto);
+    const cred = await this.authService.signIn(user, signInDto);
+    return this.cookieResponse(res, cred, +process.env.REFRESH_TOKEN_AGE).send({
+      access_token: cred.access_token,
+    });
   }
 
   @Post('register/email')

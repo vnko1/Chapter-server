@@ -4,6 +4,8 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { randomUUID } from 'crypto';
 import { generate } from 'otp-generator';
 
 import { AppService, UserAccountDto, UserEmailDto } from 'src/common';
@@ -19,12 +21,14 @@ interface Options {
   upperCaseAlphabets?: boolean;
   specialChars?: boolean;
 }
+type Payload = { sub: string; tokenId?: string };
 
 @Injectable()
 export class AuthService extends AppService {
   constructor(
     private userService: UserService,
     private mailService: MailService,
+    private jwtService: JwtService,
   ) {
     super();
   }
@@ -40,8 +44,10 @@ export class AuthService extends AppService {
     );
     if (!isValidPass)
       throw new UnauthorizedException('Wrong email or password');
-
-    return isValidPass;
+    const payload = {
+      sub: userData.id,
+    };
+    return await this.createCred(payload);
   }
 
   async registerEmail(userEmailDto: UserEmailDto) {
@@ -139,5 +145,30 @@ export class AuthService extends AppService {
         text3: otp,
       },
     };
+  }
+
+  private async createCred(payload: Payload) {
+    const access_token = await this.generateToken(
+      payload,
+      process.env.JWT_ACCESS_EXPIRES,
+    );
+    const refresh_token = await this.generateToken(
+      {
+        ...payload,
+        tokenId: randomUUID(),
+      },
+      process.env.JWT_REFRESH_EXPIRES,
+    );
+
+    return {
+      access_token,
+      refresh_token,
+    };
+  }
+
+  private async generateToken(payload: Payload, expiresIn: string | number) {
+    return await this.jwtService.signAsync(payload, {
+      expiresIn,
+    });
   }
 }

@@ -1,5 +1,8 @@
 import { ArgumentsHost, HttpStatus } from '@nestjs/common';
+import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
+
+import { ICred } from 'src/types';
 
 export abstract class AppService {
   constructor() {}
@@ -20,5 +23,15 @@ export abstract class AppService {
         errorMessage: message,
       });
     };
+  }
+
+  protected cookieResponse(res: Response, cred: ICred, maxAge: number) {
+    res.cookie('refresh_token', cred.refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge,
+    });
+    return res;
   }
 }
