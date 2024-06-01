@@ -24,15 +24,13 @@ export class AccountStatusGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    if (request.path.startsWith('/auth/register/email') && user) {
+    if (request.path.startsWith('/auth/register/email') && user)
       throw new ConflictException(
         `This email already is used; Account status: ${user.accountStatus}`,
       );
-    }
 
-    if (request.path.startsWith('/auth/login') && !user) {
+    if (request.path.startsWith('/auth/login') && !user)
       throw new UnauthorizedException('Wrong email or password');
-    }
 
     if (!accountStatus) return true;
 
