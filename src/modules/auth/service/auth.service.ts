@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { generate } from 'otp-generator';
 
 import { AppService, UserEmailDto } from 'src/common';
@@ -22,20 +22,31 @@ export class AuthService extends AppService {
     super();
   }
 
+  async getTempUser(id: string) {
+    return await this.userService.findUserByPK(id);
+  }
+
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
 
     await this.mailService.sendEmail(
       this.otpMailSendOpt(userEmailDto.email, otp),
     );
-    return await this.userService.createUserInstance({
+    const user = await this.userService.createUserInstance({
       ...userEmailDto,
       otp,
     });
+    return { id: user.id };
   }
 
-  async confirmEmail(otpDto: OTPDto) {
-    const user = await this.otpValidation(otpDto.otp);
+  async confirmEmail(id: string, otpDto: OTPDto) {
+    const user = await this.userValidation(
+      id,
+      'otp',
+      otpDto.otp,
+      'Invalid otp',
+      400,
+    );
 
     user.accountStatus = 'confirmed';
     user.otp = null;
@@ -44,9 +55,21 @@ export class AuthService extends AppService {
     return { id: user.id, email: user.email };
   }
 
-  private async otpValidation(otp: string) {
-    const user = await this.userService.findUser({ where: { otp } });
-    if (!user) throw new BadRequestException('Invalid otp');
+  private async userValidation(
+    id: string,
+    fieldName: string,
+    fieldValue: string,
+    errorMessage: string,
+    httpStatus: number,
+  ) {
+    const user = await this.userService.findUserByPK(id);
+    if (!user)
+      throw new HttpException(
+        `User with id: ${id} not exists.`,
+        HttpStatus.ACCEPTED,
+      );
+    if (user[fieldName] !== fieldValue)
+      throw new HttpException(errorMessage, httpStatus);
 
     return user;
   }

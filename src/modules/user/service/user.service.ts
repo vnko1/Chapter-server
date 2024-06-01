@@ -23,7 +23,7 @@ export class UserService extends AppService {
     return this.userModel.scope(scope).findOne(findOpt);
   }
 
-  findUserByPK(pk: number, opt?: FindOptions, scope: UserScope = '') {
+  findUserByPK(pk: string, opt?: FindOptions, scope: UserScope = '') {
     return this.userModel.scope(scope).findByPk(pk, opt);
   }
 }
