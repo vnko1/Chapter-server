@@ -2,10 +2,11 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { generate } from 'otp-generator';
 
 import { AppService, UserAccountDto, UserEmailDto } from 'src/common';
-import { UserService } from 'src/modules/user/service/user.service';
-import { OTPDto } from '../dto/otp.dto';
-import { SignInDto } from '../dto/signIn.dto';
-import { MailService } from 'src/modules/mail/service/mail.service';
+
+import { UserService } from 'src/modules/user';
+import { MailService } from 'src/modules/mail';
+
+import { OTPDto, SignInDto } from '..';
 
 interface Options {
   digits?: boolean;

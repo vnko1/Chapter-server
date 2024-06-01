@@ -7,7 +7,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AccountStatus } from '../decorators/accountStatus.decoraor';
+
+import { AccountStatus } from '..';
 
 @Injectable()
 export class AccountStatusGuard implements CanActivate {

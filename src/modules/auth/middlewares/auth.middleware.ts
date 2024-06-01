@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Op } from 'sequelize';
 import { Request, Response, NextFunction } from 'express';
 
-import { UserService } from 'src/modules/user/service/user.service';
+import { UserService } from 'src/modules/user';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {

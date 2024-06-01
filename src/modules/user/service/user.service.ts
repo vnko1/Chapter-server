@@ -8,7 +8,7 @@ import {
 } from 'sequelize';
 
 import { AppService } from 'src/common';
-import { User } from '../model/user.model';
+import { User } from '..';
 
 type UserScope = '' | 'withoutSensitiveData';
 

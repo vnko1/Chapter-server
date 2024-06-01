@@ -1,1 +1,1 @@
-export * from './accountStatus.decoraor';
+export * from './accountStatus.decorator';

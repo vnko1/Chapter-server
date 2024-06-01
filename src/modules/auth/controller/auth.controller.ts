@@ -17,12 +17,17 @@ import {
   userEmailSchema,
   ZodValidationPipe,
 } from 'src/common';
-import { AuthService } from '../service/auth.service';
-import { OTPDto, otpSchema } from '../dto/otp.dto';
-import { NickNameDto, nickNameSchema } from '../dto/nickName.dto';
-import { AccountStatus } from '../decorators/accountStatus.decoraor';
-import { AccountStatusGuard } from '../guards/accountStatus.guard';
-import { SignInDto, signInSchema } from '../dto/signIn.dto';
+import {
+  AuthService,
+  OTPDto,
+  otpSchema,
+  NickNameDto,
+  nickNameSchema,
+  AccountStatus,
+  AccountStatusGuard,
+  SignInDto,
+  signInSchema,
+} from '..';
 
 @UseGuards(AccountStatusGuard)
 @Controller('auth')
