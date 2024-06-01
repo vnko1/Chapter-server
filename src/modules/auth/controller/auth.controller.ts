@@ -22,11 +22,18 @@ import { OTPDto, otpSchema } from '../dto/otp.dto';
 import { NickNameDto, nickNameSchema } from '../dto/nickName.dto';
 import { AccountStatus } from '../decorators/accountStatus.decoraor';
 import { AccountStatusGuard } from '../guards/accountStatus.guard';
+import { SignInDto, signInSchema } from '../dto/signIn.dto';
 
 @UseGuards(AccountStatusGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @AccountStatus(['completed'])
+  @Post('login')
+  async login(
+    @Body(new ZodValidationPipe(signInSchema)) signInDto: SignInDto,
+  ) {}
 
   @Post('register/email')
   @HttpCode(HttpStatus.OK)

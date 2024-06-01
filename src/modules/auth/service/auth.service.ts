@@ -4,6 +4,7 @@ import { generate } from 'otp-generator';
 import { AppService, UserAccountDto, UserEmailDto } from 'src/common';
 import { UserService } from 'src/modules/user/service/user.service';
 import { OTPDto } from '../dto/otp.dto';
+import { SignInDto } from '../dto/signIn.dto';
 import { MailService } from 'src/modules/mail/service/mail.service';
 
 interface Options {
@@ -25,6 +26,8 @@ export class AuthService extends AppService {
   async getTempUser(id: string) {
     return await this.userService.findUserByPK(id);
   }
+
+  async signIn(SignInDto: SignInDto) {}
 
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
