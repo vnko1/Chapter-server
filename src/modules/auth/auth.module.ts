@@ -3,9 +3,9 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { UserModule } from '../user/user.module';
 import { MailModule } from '../mail/mail.module';
 
-import { AuthController } from './controller/auth.controller';
-import { AuthService } from './service/auth.service';
-import { AuthMiddleware } from './middlewares/auth.middleware';
+import { AuthService } from './service';
+import { AuthController } from './controller';
+import { AuthMiddleware } from './middlewares';
 
 @Module({
   providers: [AuthService],
