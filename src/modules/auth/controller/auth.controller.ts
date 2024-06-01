@@ -7,13 +7,23 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 
-import { UserEmailDto, userEmailSchema, ZodValidationPipe } from 'src/common';
+import {
+  UserAccountDto,
+  userAccountSchema,
+  UserEmailDto,
+  userEmailSchema,
+  ZodValidationPipe,
+} from 'src/common';
 import { AuthService } from '../service/auth.service';
 import { OTPDto, otpSchema } from '../dto/otp.dto';
 import { NickNameDto, nickNameSchema } from '../dto/nickName.dto';
+import { AccountStatus } from '../decorators/accountStatus.decoraor';
+import { AccountStatusGuard } from '../guards/accountStatus.guard';
 
+@UseGuards(AccountStatusGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -27,6 +37,7 @@ export class AuthController {
   }
 
   @Post('register/confirm/:id')
+  @AccountStatus(['unconfirmed'])
   async confirmEmail(
     @Param('id') id: string,
     @Body(new ZodValidationPipe(otpSchema)) otpDto: OTPDto,
@@ -43,7 +54,14 @@ export class AuthController {
   }
 
   @Patch('register/account/:id')
-  async createUserAccount() {}
+  @AccountStatus(['confirmed'])
+  async createUserAccount(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(userAccountSchema))
+    userAccountDto: UserAccountDto,
+  ) {
+    return userAccountDto;
+  }
 
   @Get('user/:id')
   async getUserTemp(@Param('id') id: string) {

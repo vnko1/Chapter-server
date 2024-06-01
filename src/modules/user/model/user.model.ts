@@ -13,7 +13,7 @@ import { TIMEOUT_VALUES } from 'src/utils';
 
 @Scopes(() => ({
   withoutSensitiveData: {
-    attributes: { exclude: ['password', 'otp', 'accountStatus'] },
+    attributes: { exclude: ['password', 'otp'] },
   },
 }))
 @Table
@@ -77,4 +77,8 @@ export class User extends Model {
   @Default('unconfirmed')
   @Column
   accountStatus: 'unconfirmed' | 'confirmed' | 'completed';
+
+  @Default(false)
+  @Column
+  cookieAccepted: boolean;
 }
