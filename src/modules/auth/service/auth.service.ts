@@ -35,10 +35,6 @@ export class AuthService extends AppService {
     super();
   }
 
-  async getTempUser(id: string) {
-    return await this.userService.findUserByPK(id);
-  }
-
   async signIn(userData: User, signInDto: SignInDto) {
     const isValidPass = await this.checkPassword(
       signInDto.password,
@@ -67,17 +63,34 @@ export class AuthService extends AppService {
     return { id: user.id };
   }
 
-  async resentOtp(userEmailDto: UserEmailDto) {
+  async restoreAcc(userEmailDto: UserEmailDto) {
+    const otp = this.genOtp();
+    const user = await this.userService.updateUser(
+      { otp },
+      { where: { email: userEmailDto.email }, paranoid: false },
+    );
+
+    await this.mailService.sendEmail(
+      this.restoreMailSendOpt(userEmailDto.email, otp),
+    );
+
+    return user;
+  }
+
+  async resentOtp(userEmailDto: UserEmailDto, sendType: 'confirm' | 'restore') {
     const otp = this.genOtp();
 
     await this.userService.updateUser(
       { otp },
-      { where: { email: userEmailDto.email } },
+      { where: { email: userEmailDto.email }, paranoid: false },
     );
 
-    await this.mailService.sendEmail(
-      this.otpMailSendOpt(userEmailDto.email, otp),
-    );
+    const sendOpt =
+      sendType === 'confirm'
+        ? this.otpMailSendOpt(userEmailDto.email, otp)
+        : this.restoreMailSendOpt(userEmailDto.email, otp);
+
+    await this.mailService.sendEmail(sendOpt);
   }
 
   async confirmEmail(userData: User, otpDto: OTPDto) {
@@ -158,11 +171,25 @@ export class AuthService extends AppService {
     return {
       to: email,
       subject: 'Confirm your email',
-      template: 'acc-activate',
+      template: 'otp',
       context: {
         title: 'Chapter',
         text1: 'Welcome to chapter application!',
         text2: 'To confirm your email, please enter this one-time password: ',
+        text3: otp,
+      },
+    };
+  }
+
+  private restoreMailSendOpt(email: string, otp: string) {
+    return {
+      to: email,
+      subject: 'Restore your account',
+      template: 'otp',
+      context: {
+        title: 'Chapter',
+        text1: 'Welcome to chapter application!',
+        text2: 'To restore your account, please enter this one-time password: ',
         text3: otp,
       },
     };

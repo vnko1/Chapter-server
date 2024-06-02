@@ -21,8 +21,8 @@ import {
   UserEmailDto,
   userEmailSchema,
 } from 'src/common/dto';
-
 import { CredEnum } from 'src/types';
+
 import { User } from 'src/modules/user/model';
 
 import { AuthService } from '../service';
@@ -108,7 +108,7 @@ export class AuthController extends AppService {
   async resentOtp(
     @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
   ) {
-    return await this.authService.resentOtp(userEmailDto);
+    return await this.authService.resentOtp(userEmailDto, 'confirm');
   }
 
   @Post('logout')
@@ -128,5 +128,15 @@ export class AuthController extends AppService {
     ).send({
       access_token: cred.access_token,
     });
+  }
+
+  @Public()
+  @Post('restore')
+  @AccountStatus(['deleted'])
+  async restoreUser(
+    @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
+  ) {
+    return userEmailDto;
+    return await this.authService.restoreAcc(userEmailDto);
   }
 }

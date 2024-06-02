@@ -26,7 +26,7 @@ export class AccountGuard implements CanActivate {
 
     if (request.path.startsWith('/auth/register/email') && user)
       throw new ConflictException(
-        `This email already is used; Account status: ${user.accountStatus}`,
+        `This email already is used; Account status: ${user.deletedAt !== null ? 'deleted' : user.accountStatus}`,
       );
 
     if (request.path.startsWith('/auth/login')) {
@@ -41,7 +41,15 @@ export class AccountGuard implements CanActivate {
 
     if (!user) throw new NotFoundException('User not exists');
 
-    if (user && !accountStatus.includes(user.accountStatus))
+    if (accountStatus.includes('deleted')) {
+      if (user.deletedAt === null)
+        throw new ForbiddenException(
+          `Forbidden; Account status: ${user.accountStatus}`,
+        );
+      return true;
+    }
+
+    if (!accountStatus.includes(user.accountStatus))
       throw new ForbiddenException(
         `Forbidden; Account status: ${user.accountStatus}`,
       );
