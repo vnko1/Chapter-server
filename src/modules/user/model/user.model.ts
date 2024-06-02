@@ -23,6 +23,18 @@ import { TIMEOUT_VALUES } from 'src/utils';
   withoutSensitiveAndAccStatusData: {
     attributes: { exclude: ['password', 'otp', 'accountStatus'] },
   },
+  withoutAdminData: {
+    attributes: {
+      exclude: [
+        'password',
+        'otp',
+        'accountStatus',
+        'deletedAt',
+        'createdAt',
+        'updatedAt',
+      ],
+    },
+  },
 }))
 @Table({ paranoid: true })
 export class User extends Model {

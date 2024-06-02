@@ -50,7 +50,7 @@ export class AuthGuard extends AppService implements CanActivate {
       const user = await this.userService.findUserByPK(
         payload.sub,
         undefined,
-        'withoutSensitiveAndAccStatusData',
+        'withoutAdminData',
       );
       if (!user) throw new UnauthorizedException();
 
