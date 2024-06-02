@@ -106,6 +106,19 @@ export class AuthController extends AppService {
   ) {
     return await this.authService.resentOtp(userEmailDto);
   }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@Res() res: Response) {
+    res.cookie('refresh_token', '', {
+      httpOnly: true,
+      secure: true,
+      maxAge: -1,
+      sameSite: 'none',
+    });
+    return res.send();
+  }
+
   @RToken()
   @Post('refresh')
   async refreshAccessToken(@UserData() user: User, @Res() res: Response) {
