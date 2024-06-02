@@ -14,7 +14,7 @@ import { Response } from 'express';
 
 import { AppService } from 'src/common/services';
 import { ZodValidationPipe } from 'src/common/pipes';
-import { Public, UserData } from 'src/common/decorators';
+import { Public, RToken, UserData } from 'src/common/decorators';
 import {
   UserAccountDto,
   userAccountSchema,
@@ -105,5 +105,13 @@ export class AuthController extends AppService {
     @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
   ) {
     return await this.authService.resentOtp(userEmailDto);
+  }
+  @RToken()
+  @Post('refresh')
+  async refreshAccessToken(@UserData() user: User, @Res() res: Response) {
+    const cred = await this.authService.createCred({ sub: user.id });
+    return this.cookieResponse(res, cred, +process.env.REFRESH_TOKEN_AGE).send({
+      access_token: cred.access_token,
+    });
   }
 }

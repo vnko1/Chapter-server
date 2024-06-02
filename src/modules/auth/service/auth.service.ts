@@ -117,6 +117,25 @@ export class AuthService extends AppService {
     );
   }
 
+  async createCred(payload: Payload) {
+    const access_token = await this.generateToken(
+      payload,
+      process.env.JWT_ACCESS_EXPIRES,
+    );
+    const refresh_token = await this.generateToken(
+      {
+        ...payload,
+        tokenId: randomUUID(),
+      },
+      process.env.JWT_REFRESH_EXPIRES,
+    );
+
+    return {
+      access_token,
+      refresh_token,
+    };
+  }
+
   private async userValidation(
     user: User,
     fieldName: string,
@@ -146,25 +165,6 @@ export class AuthService extends AppService {
         text2: 'To confirm your email, please enter this one-time password: ',
         text3: otp,
       },
-    };
-  }
-
-  private async createCred(payload: Payload) {
-    const access_token = await this.generateToken(
-      payload,
-      process.env.JWT_ACCESS_EXPIRES,
-    );
-    const refresh_token = await this.generateToken(
-      {
-        ...payload,
-        tokenId: randomUUID(),
-      },
-      process.env.JWT_REFRESH_EXPIRES,
-    );
-
-    return {
-      access_token,
-      refresh_token,
     };
   }
 
