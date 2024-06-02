@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Delete, Get, Param } from '@nestjs/common';
 
 import { Public, UserData } from 'src/common/decorators';
 
@@ -12,6 +12,11 @@ export class UserController {
   @Get()
   async getMe(@UserData() user: User) {
     return user;
+  }
+
+  @Delete()
+  async deleteUser(@UserData('id') id: string) {
+    return id;
   }
 
   @Public()
