@@ -24,7 +24,7 @@ import { TIMEOUT_VALUES } from 'src/utils';
     attributes: { exclude: ['password', 'otp', 'accountStatus'] },
   },
 }))
-@Table
+@Table({ paranoid: true })
 export class User extends Model {
   @AfterUpdate
   @AfterCreate
@@ -97,7 +97,7 @@ export class User extends Model {
 
   @Default('unconfirmed')
   @Column
-  accountStatus: 'unconfirmed' | 'confirmed' | 'completed' | 'deleted';
+  accountStatus: 'unconfirmed' | 'confirmed' | 'completed';
 
   @Default(false)
   @Column

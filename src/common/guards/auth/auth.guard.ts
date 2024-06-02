@@ -51,13 +51,8 @@ export class AuthGuard extends AppService implements CanActivate {
       const user = await this.userService.findUserByPK(
         payload.sub,
         undefined,
-        'withoutSensitiveData',
+        'withoutSensitiveAndAccStatusData',
       );
-
-      if (user.accountStatus === 'deleted')
-        throw new ForbiddenException(
-          `Forbidden; Account status: ${user.accountStatus}`,
-        );
 
       request['user'] = user;
     } catch {
