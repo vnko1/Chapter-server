@@ -14,7 +14,7 @@ import { Response } from 'express';
 
 import { AppService } from 'src/common/services';
 import { ZodValidationPipe } from 'src/common/pipes';
-import { UserData } from 'src/common/decorators';
+import { Public, UserData } from 'src/common/decorators';
 import {
   UserAccountDto,
   userAccountSchema,
@@ -36,7 +36,6 @@ import {
   SignInDto,
   signInSchema,
 } from '../dto';
-import { AuthGuard } from 'src/common/guards';
 
 @UseGuards(AccountStatusGuard)
 @Controller('auth')
@@ -46,6 +45,7 @@ export class AuthController extends AppService {
   }
 
   @AccountStatus(['completed'])
+  @Public()
   @Post('login')
   async login(
     @UserData() user: User,
@@ -58,6 +58,7 @@ export class AuthController extends AppService {
     });
   }
 
+  @Public()
   @Post('register/email')
   @HttpCode(HttpStatus.OK)
   async registerUserEmail(
@@ -66,8 +67,9 @@ export class AuthController extends AppService {
     return await this.authService.registerEmail(userEmailDto);
   }
 
-  @Post('register/confirm/:id')
+  @Public()
   @AccountStatus(['unconfirmed'])
+  @Post('register/confirm/:id')
   async confirmEmail(
     @UserData() user: User,
     @Body(new ZodValidationPipe(otpSchema))
@@ -76,6 +78,7 @@ export class AuthController extends AppService {
     return await this.authService.confirmEmail(user, otpDto);
   }
 
+  @Public()
   @Get('register/nickname')
   @HttpCode(HttpStatus.NO_CONTENT)
   async nickNameValidation(
@@ -83,7 +86,7 @@ export class AuthController extends AppService {
   ) {
     return await this.authService.nickNameValidate(nickNameDto.nickName);
   }
-
+  @Public()
   @Patch('register/account/:id')
   @AccountStatus(['confirmed'])
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -95,17 +98,12 @@ export class AuthController extends AppService {
     return await this.authService.createAccount(userAccountDto, id);
   }
 
+  @Public()
   @Post('register/otp')
   @AccountStatus(['unconfirmed'])
   async resentOtp(
     @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
   ) {
     return await this.authService.resentOtp(userEmailDto);
-  }
-
-  @UseGuards(AuthGuard)
-  @Get('user/:id')
-  async getUserTemp(@Param('id') id: string) {
-    return await this.authService.getTempUser(id);
   }
 }
