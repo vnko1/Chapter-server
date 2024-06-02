@@ -10,7 +10,7 @@ export abstract class AppService {
   protected async checkPassword(password: string, hash: string) {
     return await bcrypt.compare(password, hash);
   }
-  protected response(host: ArgumentsHost) {
+  protected exceptionResponse(host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
@@ -25,7 +25,7 @@ export abstract class AppService {
     };
   }
 
-  protected cookieResponse(res: Response, cred: ICred, maxAge: number) {
+  protected setCookieResponse(res: Response, cred: ICred, maxAge: number) {
     res.cookie('refresh_token', cred.refresh_token, {
       httpOnly: true,
       secure: true,
@@ -33,6 +33,15 @@ export abstract class AppService {
       maxAge,
     });
     return res;
+  }
+
+  protected deleteCookieResponse(res: Response, name: string) {
+    return res.cookie(name, '', {
+      httpOnly: true,
+      secure: true,
+      maxAge: -1,
+      sameSite: 'none',
+    });
   }
 
   protected extractTokenFromHeader(request: Request): string | undefined {

@@ -22,6 +22,7 @@ import {
   userEmailSchema,
 } from 'src/common/dto';
 
+import { CredEnum } from 'src/types';
 import { User } from 'src/modules/user/model';
 
 import { AuthService } from '../service';
@@ -52,7 +53,11 @@ export class AuthController extends AppService {
     @Res() res: Response,
   ) {
     const cred = await this.authService.signIn(user, signInDto);
-    return this.cookieResponse(res, cred, +process.env.REFRESH_TOKEN_AGE).send({
+    return this.setCookieResponse(
+      res,
+      cred,
+      +process.env.REFRESH_TOKEN_AGE,
+    ).send({
       access_token: cred.access_token,
     });
   }
@@ -109,20 +114,18 @@ export class AuthController extends AppService {
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Res() res: Response) {
-    res.cookie('refresh_token', '', {
-      httpOnly: true,
-      secure: true,
-      maxAge: -1,
-      sameSite: 'none',
-    });
-    return res.send();
+    return this.deleteCookieResponse(res, CredEnum.Refresh_token).send();
   }
 
   @RToken()
   @Post('refresh')
   async refreshAccessToken(@UserData() user: User, @Res() res: Response) {
     const cred = await this.authService.createCred({ sub: user.id });
-    return this.cookieResponse(res, cred, +process.env.REFRESH_TOKEN_AGE).send({
+    return this.setCookieResponse(
+      res,
+      cred,
+      +process.env.REFRESH_TOKEN_AGE,
+    ).send({
       access_token: cred.access_token,
     });
   }

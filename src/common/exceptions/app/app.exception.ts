@@ -13,7 +13,7 @@ export class AppHttpExceptionFilter
   implements ExceptionFilter
 {
   catch(exception: HttpException, host: ArgumentsHost) {
-    const response = this.response(host);
+    const response = this.exceptionResponse(host);
 
     const status = this.status(exception);
 

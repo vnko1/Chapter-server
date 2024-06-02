@@ -1,1 +1,1 @@
-export * from './cred.interface';
+export * from './cred/cred.interface';
