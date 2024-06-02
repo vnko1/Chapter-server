@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SequelizeModule } from '@nestjs/sequelize';
 
-import { UserModule, AuthModule, MailModule } from './modules';
+import { UserModule, AuthModule, MailModule, TasksModule } from './modules';
 import { User } from './modules/user/model';
 
 @Module({
@@ -26,6 +26,7 @@ import { User } from './modules/user/model';
     MailModule,
     UserModule,
     AuthModule,
+    TasksModule,
   ],
 })
 export class AppModule {}
