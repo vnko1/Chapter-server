@@ -1,7 +1,6 @@
 import {
   CanActivate,
   ExecutionContext,
-  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -53,6 +52,7 @@ export class AuthGuard extends AppService implements CanActivate {
         undefined,
         'withoutSensitiveAndAccStatusData',
       );
+      if (!user) throw new UnauthorizedException();
 
       request['user'] = user;
     } catch {
