@@ -63,10 +63,10 @@ export class AuthService extends AppService {
     return { id: user.id };
   }
 
-  async restoreAcc(userEmailDto: UserEmailDto) {
+  async sendRestoreOtp(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
     const user = await this.userService.updateUser(
-      { otp },
+      { otp, accountStatus: 'restoring' },
       { where: { email: userEmailDto.email }, paranoid: false },
     );
 
@@ -107,10 +107,28 @@ export class AuthService extends AppService {
         otp: null,
         accountStatus: 'confirmed',
       },
-      { where: { id: user.id } },
+      { where: { id: user.id }, paranoid: false },
     );
 
     return { id: user.id, email: user.email };
+  }
+
+  async restoreAcc(userData: User, otpDto: OTPDto) {
+    const user = await this.userValidation(
+      userData,
+      'otp',
+      otpDto.otp,
+      'Invalid otp',
+      400,
+    );
+    await this.userService.restoreUser({ where: { id: user.id } });
+    return this.userService.updateUser(
+      {
+        otp: null,
+        accountStatus: 'completed',
+      },
+      { where: { id: user.id } },
+    );
   }
 
   async nickNameValidate(nickName: string) {

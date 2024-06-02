@@ -7,11 +7,13 @@ import { UserService } from 'src/modules/user/service';
 export class UserMiddleware implements NestMiddleware {
   constructor(private userService: UserService) {}
   async use(req: Request, _: Response, next: NextFunction) {
-    const { email } = req.body;
+    const { email, otp } = req.body;
     const { id } = req.params;
 
     const user = await this.userService.findUser({
-      where: { [Op.or]: [{ email: email || '' }, { id: id || '' }] },
+      where: {
+        [Op.or]: [{ email: email || '' }, { id: id || '' }, { otp: otp || '' }],
+      },
       paranoid: false,
     });
 

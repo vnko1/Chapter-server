@@ -132,11 +132,33 @@ export class AuthController extends AppService {
 
   @Public()
   @Post('restore')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @AccountStatus(['deleted'])
   async restoreUser(
     @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
   ) {
-    return userEmailDto;
-    return await this.authService.restoreAcc(userEmailDto);
+    return await this.authService.sendRestoreOtp(userEmailDto);
+  }
+
+  @Public()
+  @Post('restore/otp')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @AccountStatus(['restoring'])
+  async resentRestoreOtp(
+    @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
+  ) {
+    return await this.authService.resentOtp(userEmailDto, 'restore');
+  }
+
+  @Public()
+  @Post('restore/confirm')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @AccountStatus(['restoring'])
+  async confirmAccRestore(
+    @UserData() user: User,
+    @Body(new ZodValidationPipe(otpSchema))
+    otpDto: OTPDto,
+  ) {
+    return await this.authService.restoreAcc(user, otpDto);
   }
 }

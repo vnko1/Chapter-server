@@ -6,6 +6,7 @@ import {
   ForbiddenException,
   NotFoundException,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
@@ -29,6 +30,10 @@ export class AccountGuard implements CanActivate {
         `This email already is used; Account status: ${user.deletedAt !== null ? 'deleted' : user.accountStatus}`,
       );
 
+    if (request.path.startsWith('/auth/restore/confirm')) {
+      if (!user) throw new BadRequestException('Invalid otp');
+    }
+
     if (request.path.startsWith('/auth/login')) {
       if (!user) throw new UnauthorizedException('Wrong email or password');
       if (user.deletedAt !== null)
@@ -51,7 +56,7 @@ export class AccountGuard implements CanActivate {
 
     if (!accountStatus.includes(user.accountStatus))
       throw new ForbiddenException(
-        `Forbidden; Account status: ${user.accountStatus}`,
+        `!Forbidden; Account status: ${user.accountStatus}`,
       );
 
     return true;

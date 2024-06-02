@@ -109,7 +109,7 @@ export class User extends Model {
 
   @Default('unconfirmed')
   @Column
-  accountStatus: 'unconfirmed' | 'confirmed' | 'completed';
+  accountStatus: 'unconfirmed' | 'confirmed' | 'completed' | 'restoring';
 
   @Default(false)
   @Column
