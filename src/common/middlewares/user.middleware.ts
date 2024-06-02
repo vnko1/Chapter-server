@@ -12,6 +12,7 @@ export class UserMiddleware implements NestMiddleware {
 
     const user = await this.userService.findUser({
       where: { [Op.or]: [{ email: email || '' }, { id: id || '' }] },
+      paranoid: false,
     });
 
     req['user'] = user;

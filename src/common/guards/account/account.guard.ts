@@ -29,8 +29,11 @@ export class AccountGuard implements CanActivate {
         `This email already is used; Account status: ${user.accountStatus}`,
       );
 
-    if (request.path.startsWith('/auth/login') && !user)
-      throw new UnauthorizedException('Wrong email or password');
+    if (request.path.startsWith('/auth/login')) {
+      if (!user) throw new UnauthorizedException('Wrong email or password');
+      if (user.deletedAt !== null)
+        throw new ForbiddenException(`Forbidden; Account status: deleted`);
+    }
 
     if (!accountStatus) return true;
 
