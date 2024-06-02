@@ -11,7 +11,10 @@ import { AppService } from 'src/common/services';
 
 import { User } from '../model';
 
-type UserScope = '' | 'withoutSensitiveData';
+type UserScope =
+  | ''
+  | 'withoutSensitiveData'
+  | 'withoutSensitiveAndAccStatusData';
 
 @Injectable()
 export class UserService extends AppService {

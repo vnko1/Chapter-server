@@ -49,7 +49,7 @@ export class AuthGuard extends AppService implements CanActivate {
       const user = await this.userService.findUserByPK(
         payload.sub,
         undefined,
-        'withoutSensitiveData',
+        'withoutSensitiveAndAccStatusData',
       );
 
       request['user'] = user;

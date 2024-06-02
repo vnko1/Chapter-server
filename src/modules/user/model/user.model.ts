@@ -20,6 +20,9 @@ import { TIMEOUT_VALUES } from 'src/utils';
   withoutSensitiveData: {
     attributes: { exclude: ['password', 'otp'] },
   },
+  withoutSensitiveAndAccStatusData: {
+    attributes: { exclude: ['password', 'otp', 'accountStatus'] },
+  },
 }))
 @Table
 export class User extends Model {
