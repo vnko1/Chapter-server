@@ -1,15 +1,17 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 
-import { AppService } from '../services';
-import { IS_PUBLIC_KEY, REFRESH_TOKEN } from '../decorators';
 import { UserService } from 'src/modules/user/service';
+
+import { AppService } from 'src/common/services';
+import { IS_PUBLIC_KEY, REFRESH_TOKEN } from 'src/common/decorators';
 
 @Injectable()
 export class AuthGuard extends AppService implements CanActivate {
@@ -49,8 +51,13 @@ export class AuthGuard extends AppService implements CanActivate {
       const user = await this.userService.findUserByPK(
         payload.sub,
         undefined,
-        'withoutSensitiveAndAccStatusData',
+        'withoutSensitiveData',
       );
+
+      if (user.accountStatus === 'deleted')
+        throw new ForbiddenException(
+          `Forbidden; Account status: ${user.accountStatus}`,
+        );
 
       request['user'] = user;
     } catch {

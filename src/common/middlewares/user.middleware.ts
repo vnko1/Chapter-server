@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import { UserService } from 'src/modules/user/service';
 
 @Injectable()
-export class AuthMiddleware implements NestMiddleware {
+export class UserMiddleware implements NestMiddleware {
   constructor(private userService: UserService) {}
   async use(req: Request, _: Response, next: NextFunction) {
     const { email } = req.body;

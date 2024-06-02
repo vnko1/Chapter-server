@@ -3,13 +3,13 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 
 import { AuthGuard } from 'src/common/guards';
+import { UserMiddleware } from 'src/common/middlewares';
 
 import { UserModule } from '../user/user.module';
 import { MailModule } from '../mail/mail.module';
 
 import { AuthService } from './service';
 import { AuthController } from './controller';
-import { AuthMiddleware } from './middlewares';
 
 @Module({
   imports: [
@@ -33,6 +33,6 @@ import { AuthMiddleware } from './middlewares';
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(AuthController);
+    consumer.apply(UserMiddleware).forRoutes(AuthController);
   }
 }

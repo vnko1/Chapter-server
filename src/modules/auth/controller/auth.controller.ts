@@ -14,7 +14,7 @@ import { Response } from 'express';
 
 import { AppService } from 'src/common/services';
 import { ZodValidationPipe } from 'src/common/pipes';
-import { Public, RToken, UserData } from 'src/common/decorators';
+import { AccountStatus, Public, RToken, UserData } from 'src/common/decorators';
 import {
   UserAccountDto,
   userAccountSchema,
@@ -25,8 +25,6 @@ import {
 import { User } from 'src/modules/user/model';
 
 import { AuthService } from '../service';
-import { AccountStatusGuard } from '../guards';
-import { AccountStatus } from '../decorators';
 
 import {
   NickNameDto,
@@ -36,8 +34,9 @@ import {
   SignInDto,
   signInSchema,
 } from '../dto';
+import { AccountGuard } from 'src/common/guards';
 
-@UseGuards(AccountStatusGuard)
+@UseGuards(AccountGuard)
 @Controller('auth')
 export class AuthController extends AppService {
   constructor(private authService: AuthService) {

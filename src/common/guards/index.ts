@@ -1,1 +1,2 @@
-export * from './auth.guard';
+export * from './auth/auth.guard';
+export * from './account/account.guard';
