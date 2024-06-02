@@ -32,7 +32,9 @@ export class AccountGuard implements CanActivate {
     if (request.path.startsWith('/auth/login')) {
       if (!user) throw new UnauthorizedException('Wrong email or password');
       if (user.deletedAt !== null)
-        throw new ForbiddenException(`Forbidden; Account status: deleted`);
+        throw new ForbiddenException(`Forbidden; Account status: deleted`, {
+          description: `Deleted at: ${user.deletedAt}`,
+        });
     }
 
     if (!accountStatus) return true;

@@ -15,13 +15,20 @@ export abstract class AppService {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
-    return function (type: string, message: string, status: HttpStatus) {
-      return response.status(status).json({
+    return function (
+      type: string,
+      message: string,
+      status: HttpStatus,
+      description?: string,
+    ) {
+      const errorResponse = {
         statusCode: status,
         path: request.url,
         errorType: type,
         errorMessage: message,
-      });
+      };
+      if (description) errorResponse['message'] = description;
+      return response.status(status).json(errorResponse);
     };
   }
 

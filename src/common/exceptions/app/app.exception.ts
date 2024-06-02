@@ -17,7 +17,13 @@ export class AppHttpExceptionFilter
 
     const status = this.status(exception);
 
-    if (exception.message) response('Error', exception.message, status);
+    if (exception.message)
+      response(
+        'Error',
+        exception.message,
+        status,
+        exception?.getResponse()['error'],
+      );
     else response(exception.name, exception.message, status);
   }
 
