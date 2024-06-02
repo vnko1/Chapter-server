@@ -53,4 +53,7 @@ export class UserService extends AppService {
   restoreUser(opt: RestoreOptions) {
     return this.userModel.restore(opt);
   }
+  getAllUsers(opt: FindOptions) {
+    return this.userModel.findAll(opt);
+  }
 }
