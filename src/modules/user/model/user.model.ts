@@ -1,4 +1,5 @@
 import {
+  AfterBulkDestroy,
   AfterCreate,
   AfterUpdate,
   AfterValidate,
@@ -36,6 +37,14 @@ export class User extends Model {
         instance.save();
       }, TIMEOUT_VALUES.otp);
     }
+  }
+
+  @AfterBulkDestroy
+  static async destroyModel(instance: User) {
+    console.log('🚀 ~ User ~ destroyModel ~ instance:', instance);
+    // setTimeout(() => {
+    //   // instance.destroy({ force: true });
+    // }, 5000);
   }
 
   @BeforeValidate
