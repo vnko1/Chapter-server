@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, Param, Res } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 
 import { CredEnum } from 'src/types';
@@ -20,11 +28,9 @@ export class UserController extends AppService {
   }
 
   @Delete()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@UserData('id') id: string, @Res() res: Response) {
-    await this.userService.updateUser(
-      { accountStatus: 'deleted' },
-      { where: { id } },
-    );
+    await this.userService.deleteUser({ where: { id } });
     return this.deleteCookieResponse(res, CredEnum.Refresh_token).send();
   }
 

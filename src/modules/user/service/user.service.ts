@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import {
+  DestroyOptions,
   FindOptions,
   FindOrCreateOptions,
   Optional,
+  RestoreOptions,
   UpdateOptions,
 } from 'sequelize';
 
@@ -42,5 +44,13 @@ export class UserService extends AppService {
 
   updateUser<T extends object>(userData: T, options: UpdateOptions) {
     return this.userModel.update(userData, options);
+  }
+
+  deleteUser(opt: DestroyOptions) {
+    return this.userModel.destroy(opt);
+  }
+
+  restoreUser(opt: RestoreOptions) {
+    return this.userModel.restore(opt);
   }
 }
