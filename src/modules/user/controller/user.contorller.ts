@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 
-import { UserData } from 'src/common/decorators';
+import { Public, UserData } from 'src/common/decorators';
 
 import { User } from '../model';
 import { UserService } from '../service';
@@ -14,6 +14,7 @@ export class UserController {
     return user;
   }
 
+  @Public()
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     return await this.userService.findUserByPK(id);
