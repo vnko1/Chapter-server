@@ -65,11 +65,14 @@ export class AuthService extends AppService {
 
   async confirmPassRestore(user: User) {
     const otp = this.genOtp(10);
+    user.otp = otp;
+    user.accountStatus = 'forgotPassword';
+    await user.save();
 
-    await this.userService.updateUser(
-      { otp, accountStatus: 'forgotPassword' },
-      { where: { id: user.id } },
-    );
+    // await this.userService.updateUser(
+    //   { otp, accountStatus: 'forgotPassword' },
+    //   { where: { id: user.id } },
+    // );
 
     return await this.mailService.sendEmail(
       this.mailSendOpt(user.email, otp, 'restorePassword'),
@@ -233,14 +236,18 @@ export class AuthService extends AppService {
       case 'restorePassword':
         return {
           to: email,
-          subject: 'Restore your account',
+          subject: 'Restore your password',
           template: 'password',
           context: {
             title: 'Chapter',
-            text1: 'Welcome to chapter application!',
-            text2:
-              'To restore your account, please enter this one-time password: ',
-            text3: otp,
+            actionTitle: 'Chapter',
+            url: process.env.CLIENT_URL + '/' + otp,
+            text1: '"Trouble signing in?',
+            text2: '"Resetting your password is easy."',
+            text3:
+              'Just press the button below and follow the instructions. We’ll have you up and running in no time.',
+            text4:
+              'If you did not make this request then please ignore this email.',
           },
         };
     }

@@ -161,10 +161,11 @@ export class AuthController extends AppService {
 
   @Public()
   @Post('pass-reset')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async resetPassword(
     @Body(new ZodValidationPipe(userEmailSchema)) _,
     @UserData() user: User,
   ) {
-    return user;
+    return await this.authService.confirmPassRestore(user);
   }
 }
