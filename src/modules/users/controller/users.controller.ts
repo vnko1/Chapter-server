@@ -17,17 +17,13 @@ import { Public, UserData } from 'src/common/decorators';
 import { ZodValidationPipe } from 'src/common/pipes';
 
 import { User } from 'src/modules/user/model';
-import { UserService } from 'src/modules/user/service';
 
 import { UpdatePasswordDto, updatePasswordSchema } from '../dto';
 import { UsersService } from '../service';
 
 @Controller('user')
 export class UsersController extends AppService {
-  constructor(
-    private userService: UserService,
-    private usersService: UsersService,
-  ) {
+  constructor(private usersService: UsersService) {
     super();
   }
 
@@ -38,8 +34,8 @@ export class UsersController extends AppService {
   }
 
   @Get()
-  async getMe(@UserData() user: User) {
-    return user;
+  async getMe(@UserData('id') id: string) {
+    return await this.usersService.getUserById(id, 'withoutAdminData');
   }
 
   @Delete()
