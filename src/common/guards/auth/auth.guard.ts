@@ -47,11 +47,7 @@ export class AuthGuard extends AppService implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
 
-      const user = await this.userService.findUserByPK(
-        payload.sub,
-        undefined,
-        'withoutAdminData',
-      );
+      const user = await this.userService.findUserByPK(payload.sub);
       if (!user) throw new UnauthorizedException();
 
       request['user'] = user;

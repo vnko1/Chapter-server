@@ -50,11 +50,12 @@ export class UsersController extends AppService {
   }
 
   @Patch('password')
-  // @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async updateUserPassword(
+    @UserData() user: User,
     @Body(new ZodValidationPipe(updatePasswordSchema))
     updatePasswordDto: UpdatePasswordDto,
   ) {
-    return updatePasswordDto;
+    return await this.usersService.changeUserPassword(user, updatePasswordDto);
   }
 }
