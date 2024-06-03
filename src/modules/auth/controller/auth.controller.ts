@@ -158,4 +158,13 @@ export class AuthController extends AppService {
   ) {
     return await this.authService.restoreAcc(user, otpDto);
   }
+
+  @Public()
+  @Post('pass-reset')
+  async resetPassword(
+    @Body(new ZodValidationPipe(userEmailSchema)) _,
+    @UserData() user: User,
+  ) {
+    return user;
+  }
 }

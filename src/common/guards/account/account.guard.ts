@@ -41,7 +41,7 @@ export class AccountGuard implements CanActivate {
     if (path.startsWith('/auth/restore/confirm') && !user)
       throw new BadRequestException('Invalid otp');
 
-    if (path.startsWith('/auth/login')) {
+    if (path.startsWith('/auth/login') || path.startsWith('/auth/pass-reset')) {
       if (!user) throw new UnauthorizedException('Wrong email or password');
       if (user.deletedAt !== null)
         throw new ForbiddenException(`Forbidden; Account status: deleted`, {
