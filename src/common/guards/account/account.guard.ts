@@ -38,6 +38,9 @@ export class AccountGuard implements CanActivate {
         `This email already is used; Account status: ${user.deletedAt !== null ? 'deleted' : user.accountStatus}`,
       );
 
+    if (path.startsWith('/auth/pass-upd') && !user)
+      throw new NotFoundException('User not exists');
+
     if (path.startsWith('/auth/restore/confirm') && !user)
       throw new BadRequestException('Invalid otp');
 
@@ -49,7 +52,6 @@ export class AccountGuard implements CanActivate {
           description: `Deleted at: ${user.deletedAt}`,
         });
     }
-
     if (!accountStatus) return true;
 
     if (!user) throw new NotFoundException('User not exists');

@@ -8,6 +8,7 @@ export class UserMiddleware implements NestMiddleware {
   constructor(private userService: UserService) {}
   async use(req: Request, _: Response, next: NextFunction) {
     const { email, otp } = req.body;
+
     const { id } = req.params;
 
     const user = await this.userService.findUser({

@@ -36,10 +36,13 @@ export class AuthService extends AppService {
   }
 
   async signIn(userData: User, signInDto: SignInDto) {
-    const isValidPass = await this.checkPassword(
+    const validPass = await this.checkPassword(
       signInDto.password,
       userData.password,
     );
+    console.log('🚀 ~ AuthService ~ signIn ~ isValidPass:', validPass);
+
+    const isValidPass = signInDto.password === userData.password;
 
     if (!isValidPass)
       throw new UnauthorizedException('Wrong email or password');
