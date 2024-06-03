@@ -1,3 +1,4 @@
+import { UsersModule } from './modules/users/users.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -8,6 +9,7 @@ import { User } from './modules/user/model';
 
 @Module({
   imports: [
+    UsersModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env'] }),
     ScheduleModule.forRoot(),
     SequelizeModule.forRootAsync({
@@ -27,6 +29,7 @@ import { User } from './modules/user/model';
     UserModule,
     AuthModule,
     TasksModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
