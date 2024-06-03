@@ -63,6 +63,19 @@ export class AuthService extends AppService {
     return { id: user.id };
   }
 
+  async confirmPassRestore(user: User) {
+    const otp = this.genOtp(10);
+
+    await this.userService.updateUser(
+      { otp, accountStatus: 'forgotPassword' },
+      { where: { id: user.id } },
+    );
+
+    return await this.mailService.sendEmail(
+      this.mailSendOpt(user.email, otp, 'restorePassword'),
+    );
+  }
+
   async sendRestoreOtp(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
     const user = await this.userService.updateUser(
@@ -184,10 +197,11 @@ export class AuthService extends AppService {
     const defaultOptions: Options = { specialChars: false, ...options };
     return generate(length, defaultOptions);
   }
+
   private mailSendOpt(
     email: string,
     otp: string,
-    variant: 'confirmEmail' | 'restoreAccount',
+    variant: 'confirmEmail' | 'restoreAccount' | 'restorePassword',
   ) {
     switch (variant) {
       case 'confirmEmail':
@@ -208,6 +222,19 @@ export class AuthService extends AppService {
           to: email,
           subject: 'Restore your account',
           template: 'otp',
+          context: {
+            title: 'Chapter',
+            text1: 'Welcome to chapter application!',
+            text2:
+              'To restore your account, please enter this one-time password: ',
+            text3: otp,
+          },
+        };
+      case 'restorePassword':
+        return {
+          to: email,
+          subject: 'Restore your account',
+          template: 'password',
           context: {
             title: 'Chapter',
             text1: 'Welcome to chapter application!',
