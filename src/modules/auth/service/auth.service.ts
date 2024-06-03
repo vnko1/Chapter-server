@@ -66,7 +66,6 @@ export class AuthService extends AppService {
   async confirmPassRestore(user: User) {
     const otp = this.genOtp(10);
     user.otp = otp;
-    user.accountStatus = 'forgotPassword';
     await user.save();
 
     // await this.userService.updateUser(
