@@ -11,6 +11,7 @@ import {
 import { Reflector } from '@nestjs/core';
 
 import { AccountStatus } from '../../decorators';
+import { User } from 'src/modules/user/model';
 
 @Injectable()
 export class AccountGuard implements CanActivate {
@@ -24,16 +25,23 @@ export class AccountGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
+    return this.validatePattern(request.path, user, accountStatus);
+  }
 
-    if (request.path.startsWith('/auth/register/email') && user)
+  private validatePattern(
+    path: string,
+    user: User | null,
+    accountStatus: string[],
+  ) {
+    if (path.startsWith('/auth/register/email') && user)
       throw new ConflictException(
         `This email already is used; Account status: ${user.deletedAt !== null ? 'deleted' : user.accountStatus}`,
       );
 
-    if (request.path.startsWith('/auth/restore/confirm') && !user)
+    if (path.startsWith('/auth/restore/confirm') && !user)
       throw new BadRequestException('Invalid otp');
 
-    if (request.path.startsWith('/auth/login')) {
+    if (path.startsWith('/auth/login')) {
       if (!user) throw new UnauthorizedException('Wrong email or password');
       if (user.deletedAt !== null)
         throw new ForbiddenException(`Forbidden; Account status: deleted`, {
@@ -55,7 +63,7 @@ export class AccountGuard implements CanActivate {
 
     if (!accountStatus.includes(user.accountStatus))
       throw new ForbiddenException(
-        `!Forbidden; Account status: ${user.accountStatus}`,
+        `Forbidden; Account status: ${user.accountStatus}`,
       );
 
     return true;
