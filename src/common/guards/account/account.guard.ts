@@ -39,7 +39,7 @@ export class AccountGuard implements CanActivate {
       );
 
     if (path.startsWith('/auth/pass-upd') && !user)
-      throw new NotFoundException('User not exists');
+      throw new ForbiddenException();
 
     if (path.startsWith('/auth/restore/confirm') && !user)
       throw new BadRequestException('Invalid otp');

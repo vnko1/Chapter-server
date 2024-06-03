@@ -40,12 +40,8 @@ export class AuthService extends AppService {
       signInDto.password,
       userData.password,
     );
-    console.log('🚀 ~ AuthService ~ signIn ~ isValidPass:', validPass);
 
-    const isValidPass = signInDto.password === userData.password;
-
-    if (!isValidPass)
-      throw new UnauthorizedException('Wrong email or password');
+    if (!validPass) throw new UnauthorizedException('Wrong email or password');
     const payload = {
       sub: userData.id,
     };
@@ -78,9 +74,10 @@ export class AuthService extends AppService {
   }
 
   async passUpdate(user: User, password: string) {
-    user.password = password;
-    user.otp = null;
-    return user.save();
+    return this.userService.updateUser(
+      { password, otp: null },
+      { where: { id: user.id } },
+    );
   }
 
   async sendRestoreOtp(user: User) {
