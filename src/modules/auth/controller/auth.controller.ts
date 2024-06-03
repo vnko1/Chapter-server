@@ -30,6 +30,8 @@ import {
   nickNameSchema,
   OTPDto,
   otpSchema,
+  PasswordDto,
+  passwordSchema,
   SignInDto,
   signInSchema,
 } from '../dto';
@@ -167,11 +169,16 @@ export class AuthController extends AppService {
     @Body(new ZodValidationPipe(userEmailSchema)) _,
     @UserData() user: User,
   ) {
-    return await this.authService.confirmPassRestore(user);
+    return await this.authService.passRestore(user);
   }
 
   @Public()
-  @Patch('pass-save')
+  @Patch('pass-upd')
   @HttpCode(HttpStatus.NO_CONTENT)
-  saveNewPass() {}
+  async saveNewPass(
+    @Body(new ZodValidationPipe(passwordSchema)) passwordDto: PasswordDto,
+    @UserData() user: User,
+  ) {
+    return await this.authService.passUpdate(user, passwordDto.password);
+  }
 }

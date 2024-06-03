@@ -40,6 +40,7 @@ export class AuthService extends AppService {
       signInDto.password,
       userData.password,
     );
+
     if (!isValidPass)
       throw new UnauthorizedException('Wrong email or password');
     const payload = {
@@ -63,7 +64,7 @@ export class AuthService extends AppService {
     return { id: user.id };
   }
 
-  async confirmPassRestore(user: User) {
+  async passRestore(user: User) {
     const otp = this.genOtp(10);
     user.otp = otp;
     await user.save();
@@ -71,6 +72,12 @@ export class AuthService extends AppService {
     return await this.mailService.sendEmail(
       this.mailSendOpt(user.email, otp, 'restorePassword'),
     );
+  }
+
+  async passUpdate(user: User, password: string) {
+    user.password = password;
+    user.otp = null;
+    return user.save();
   }
 
   async sendRestoreOtp(user: User) {
