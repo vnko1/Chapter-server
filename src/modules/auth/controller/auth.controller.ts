@@ -132,9 +132,10 @@ export class AuthController extends AppService {
   @HttpCode(HttpStatus.NO_CONTENT)
   @AccountStatus(['deleted'])
   async restoreUser(
-    @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
+    @Body(new ZodValidationPipe(userEmailSchema)) _,
+    @UserData() user: User,
   ) {
-    return await this.authService.sendRestoreOtp(userEmailDto);
+    return await this.authService.sendRestoreOtp(user);
   }
 
   @Public()
@@ -168,4 +169,9 @@ export class AuthController extends AppService {
   ) {
     return await this.authService.confirmPassRestore(user);
   }
+
+  @Public()
+  @Patch('pass-save')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  saveNewPass() {}
 }

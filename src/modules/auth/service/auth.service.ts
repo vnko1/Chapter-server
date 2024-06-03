@@ -68,25 +68,20 @@ export class AuthService extends AppService {
     user.otp = otp;
     await user.save();
 
-    // await this.userService.updateUser(
-    //   { otp, accountStatus: 'forgotPassword' },
-    //   { where: { id: user.id } },
-    // );
-
     return await this.mailService.sendEmail(
       this.mailSendOpt(user.email, otp, 'restorePassword'),
     );
   }
 
-  async sendRestoreOtp(userEmailDto: UserEmailDto) {
+  async sendRestoreOtp(user: User) {
     const otp = this.genOtp();
-    const user = await this.userService.updateUser(
-      { otp, accountStatus: 'restoring' },
-      { where: { email: userEmailDto.email }, paranoid: false },
-    );
+
+    user.otp = otp;
+    user.accountStatus = 'restoring';
+    await user.save();
 
     await this.mailService.sendEmail(
-      this.mailSendOpt(userEmailDto.email, otp, 'restoreAccount'),
+      this.mailSendOpt(user.email, otp, 'restoreAccount'),
     );
 
     return user;
@@ -241,6 +236,7 @@ export class AuthService extends AppService {
             title: 'Chapter',
             actionTitle: 'Chapter',
             url: process.env.CLIENT_URL + '/' + otp,
+            app_name: 'Chapter',
             text1: '"Trouble signing in?',
             text2: '"Resetting your password is easy."',
             text3:
