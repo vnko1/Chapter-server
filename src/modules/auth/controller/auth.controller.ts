@@ -108,7 +108,7 @@ export class AuthController extends AppService {
   async resentOtp(
     @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
   ) {
-    return await this.authService.resentOtp(userEmailDto, 'confirm');
+    return await this.authService.resentOtp(userEmailDto, 'confirmEmail');
   }
 
   @Post('logout')
@@ -147,7 +147,7 @@ export class AuthController extends AppService {
   async resentRestoreOtp(
     @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
   ) {
-    return await this.authService.resentOtp(userEmailDto, 'restore');
+    return await this.authService.resentOtp(userEmailDto, 'restoreAccount');
   }
 
   @Public()

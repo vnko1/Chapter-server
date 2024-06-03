@@ -57,7 +57,7 @@ export class AuthService extends AppService {
     });
 
     await this.mailService.sendEmail(
-      this.otpMailSendOpt(userEmailDto.email, otp),
+      this.mailSendOpt(userEmailDto.email, otp, 'confirmEmail'),
     );
 
     return { id: user.id };
@@ -71,13 +71,16 @@ export class AuthService extends AppService {
     );
 
     await this.mailService.sendEmail(
-      this.restoreMailSendOpt(userEmailDto.email, otp),
+      this.mailSendOpt(userEmailDto.email, otp, 'restoreAccount'),
     );
 
     return user;
   }
 
-  async resentOtp(userEmailDto: UserEmailDto, sendType: 'confirm' | 'restore') {
+  async resentOtp(
+    userEmailDto: UserEmailDto,
+    sendType: 'confirmEmail' | 'restoreAccount',
+  ) {
     const otp = this.genOtp();
 
     await this.userService.updateUser(
@@ -85,10 +88,7 @@ export class AuthService extends AppService {
       { where: { email: userEmailDto.email }, paranoid: false },
     );
 
-    const sendOpt =
-      sendType === 'confirm'
-        ? this.otpMailSendOpt(userEmailDto.email, otp)
-        : this.restoreMailSendOpt(userEmailDto.email, otp);
+    const sendOpt = this.mailSendOpt(userEmailDto.email, otp, sendType);
 
     await this.mailService.sendEmail(sendOpt);
   }
@@ -184,33 +184,39 @@ export class AuthService extends AppService {
     const defaultOptions: Options = { specialChars: false, ...options };
     return generate(length, defaultOptions);
   }
-
-  private otpMailSendOpt(email: string, otp: string) {
-    return {
-      to: email,
-      subject: 'Confirm your email',
-      template: 'otp',
-      context: {
-        title: 'Chapter',
-        text1: 'Welcome to chapter application!',
-        text2: 'To confirm your email, please enter this one-time password: ',
-        text3: otp,
-      },
-    };
-  }
-
-  private restoreMailSendOpt(email: string, otp: string) {
-    return {
-      to: email,
-      subject: 'Restore your account',
-      template: 'otp',
-      context: {
-        title: 'Chapter',
-        text1: 'Welcome to chapter application!',
-        text2: 'To restore your account, please enter this one-time password: ',
-        text3: otp,
-      },
-    };
+  private mailSendOpt(
+    email: string,
+    otp: string,
+    variant: 'confirmEmail' | 'restoreAccount',
+  ) {
+    switch (variant) {
+      case 'confirmEmail':
+        return {
+          to: email,
+          subject: 'Confirm your email',
+          template: 'otp',
+          context: {
+            title: 'Chapter',
+            text1: 'Welcome to chapter application!',
+            text2:
+              'To confirm your email, please enter this one-time password: ',
+            text3: otp,
+          },
+        };
+      case 'restoreAccount':
+        return {
+          to: email,
+          subject: 'Restore your account',
+          template: 'otp',
+          context: {
+            title: 'Chapter',
+            text1: 'Welcome to chapter application!',
+            text2:
+              'To restore your account, please enter this one-time password: ',
+            text3: otp,
+          },
+        };
+    }
   }
 
   private async generateToken(payload: Payload, expiresIn: string | number) {

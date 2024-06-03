@@ -30,9 +30,8 @@ export class AccountGuard implements CanActivate {
         `This email already is used; Account status: ${user.deletedAt !== null ? 'deleted' : user.accountStatus}`,
       );
 
-    if (request.path.startsWith('/auth/restore/confirm')) {
-      if (!user) throw new BadRequestException('Invalid otp');
-    }
+    if (request.path.startsWith('/auth/restore/confirm') && !user)
+      throw new BadRequestException('Invalid otp');
 
     if (request.path.startsWith('/auth/login')) {
       if (!user) throw new UnauthorizedException('Wrong email or password');
