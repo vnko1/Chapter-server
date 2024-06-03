@@ -15,4 +15,57 @@ export class MailService {
       );
     }
   }
+
+  mailSendOpt(
+    email: string,
+    otp: string,
+    variant: 'confirmEmail' | 'restoreAccount' | 'restorePassword',
+  ) {
+    switch (variant) {
+      case 'confirmEmail':
+        return {
+          to: email,
+          subject: 'Confirm your email',
+          template: 'otp',
+          context: {
+            title: 'Chapter',
+            text1: 'Welcome to chapter application!',
+            text2:
+              'To confirm your email, please enter this one-time password: ',
+            text3: otp,
+          },
+        };
+      case 'restoreAccount':
+        return {
+          to: email,
+          subject: 'Restore your account',
+          template: 'otp',
+          context: {
+            title: 'Chapter',
+            text1: 'Welcome to chapter application!',
+            text2:
+              'To restore your account, please enter this one-time password: ',
+            text3: otp,
+          },
+        };
+      case 'restorePassword':
+        return {
+          to: email,
+          subject: 'Restore your password',
+          template: 'password',
+          context: {
+            title: 'Chapter',
+            actionTitle: 'Chapter',
+            url: process.env.CLIENT_URL + '/' + otp,
+            app_name: 'Chapter',
+            text1: 'Trouble signing in?',
+            text2: 'Resetting your password is easy."',
+            text3:
+              'Just press the button below and follow the instructions. We’ll have you up and running in no time.',
+            text4:
+              'If you did not make this request then please ignore this email.',
+          },
+        };
+    }
+  }
 }
