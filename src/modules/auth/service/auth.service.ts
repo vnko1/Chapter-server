@@ -237,8 +237,8 @@ export class AuthService extends AppService {
             actionTitle: 'Chapter',
             url: process.env.CLIENT_URL + '/' + otp,
             app_name: 'Chapter',
-            text1: '"Trouble signing in?',
-            text2: '"Resetting your password is easy."',
+            text1: 'Trouble signing in?',
+            text2: 'Resetting your password is easy."',
             text3:
               'Just press the button below and follow the instructions. We’ll have you up and running in no time.',
             text4:
