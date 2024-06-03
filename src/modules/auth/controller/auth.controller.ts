@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -12,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
+import { CredEnum } from 'src/types';
 import { AppService } from 'src/common/services';
 import { ZodValidationPipe } from 'src/common/pipes';
 import { AccountStatus, Public, RToken, UserData } from 'src/common/decorators';
@@ -21,12 +21,10 @@ import {
   UserEmailDto,
   userEmailSchema,
 } from 'src/common/dto';
-import { CredEnum } from 'src/types';
+import { AccountGuard } from 'src/common/guards';
 
 import { User } from 'src/modules/user/model';
-
 import { AuthService } from '../service';
-
 import {
   NickNameDto,
   nickNameSchema,
@@ -35,7 +33,6 @@ import {
   SignInDto,
   signInSchema,
 } from '../dto';
-import { AccountGuard } from 'src/common/guards';
 
 @UseGuards(AccountGuard)
 @Controller('auth')
@@ -83,7 +80,7 @@ export class AuthController extends AppService {
   }
 
   @Public()
-  @Get('register/nickname')
+  @Post('register/nickname')
   @HttpCode(HttpStatus.NO_CONTENT)
   async nickNameValidation(
     @Body(new ZodValidationPipe(nickNameSchema)) nickNameDto: NickNameDto,
