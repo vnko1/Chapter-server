@@ -5,6 +5,8 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+
+import { deleteAllFiles, getPath } from 'src/utils';
 import { AppService } from 'src/common/services';
 
 @Catch()
@@ -19,6 +21,8 @@ export class AppHttpExceptionFilter
 
     const errorDescription =
       exception.getResponse && exception.getResponse()['error'];
+
+    deleteAllFiles(getPath('src', 'temp'));
 
     if (exception.message)
       response('Error', exception.message, status, errorDescription);
