@@ -5,15 +5,17 @@ import {
   CallHandler,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-
+import { catchError, tap } from 'rxjs/operators';
 import { deleteAllFiles, getPath } from 'src/utils';
 
 @Injectable()
 export class ClearDataInterceptor implements NestInterceptor {
-  intercept(_: ExecutionContext, next: CallHandler): Observable<any> {
-    return next
-      .handle()
-      .pipe(tap(() => deleteAllFiles(getPath('src', 'temp'))));
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    return (
+      next
+        .handle()
+        // .pipe(catchError(async (error) => console.log(error)))
+        .pipe(tap(() => deleteAllFiles(getPath('src', 'temp'))))
+    );
   }
 }
