@@ -24,8 +24,8 @@ export const updateUserSchema = z
     location: z.string().min(2).optional(),
     image: z
       .any()
-      .refine((file) => {
-        return file?.size <= MAX_FILE_SIZE;
+      .refine((image) => {
+        return image.size <= MAX_FILE_SIZE;
       }, `Max image size is 3MB.`)
       .refine((image) => {
         return ACCEPTED_IMAGE_TYPES.includes(image?.mimetype);
@@ -34,7 +34,6 @@ export const updateUserSchema = z
   })
   .refine(
     (data) => {
-      console.log('🚀 ~ data:', data);
       return Object.keys(data).some((key) => data[key] !== undefined);
     },
     {
