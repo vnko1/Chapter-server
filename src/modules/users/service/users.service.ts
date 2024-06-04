@@ -4,14 +4,37 @@ import { UserScope } from 'src/types';
 import { AppService } from 'src/common/services';
 
 import { UserService } from 'src/modules/user/service';
+import { CloudsService } from 'src/modules/clouds/service';
 import { User } from 'src/modules/user/model';
 
-import { UpdatePasswordDto } from '../dto';
+import { UpdatePasswordDto, UpdateUserDto } from '../dto';
+import { UploadApiOptions } from 'cloudinary';
 
 @Injectable()
 export class UsersService extends AppService {
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private cloudsService: CloudsService,
+  ) {
     super();
+  }
+
+  private uploadOption: UploadApiOptions = {
+    resource_type: 'image',
+    folder: 'chapter/avatar',
+    overwrite: true,
+  };
+
+  private async uploadAvatar(image: Express.Multer.File, id: string) {
+    const res = await this.cloudsService.upload(image.path, {
+      ...this.uploadOption,
+      public_id: id,
+    });
+
+    return await this.cloudsService.edit(res.secure_url, {
+      fetch_format: 'auto',
+      quality: 'auto',
+    });
   }
 
   async deleteUser(id: string) {
@@ -35,5 +58,16 @@ export class UsersService extends AppService {
       { password: newPassword },
       { where: { id: user.id } },
     );
+  }
+
+  async updateUser(user: User, updateUserDto: UpdateUserDto) {
+    const { image, ...userData } = updateUserDto;
+
+    await this.userService.updateUser(userData, { where: { id: user.id } });
+
+    if (image) {
+      user.avatarUrl = await this.uploadAvatar(image, user.id);
+      await user.save();
+    }
   }
 }

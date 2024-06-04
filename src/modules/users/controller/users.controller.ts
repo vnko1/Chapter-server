@@ -60,8 +60,11 @@ export class UsersController extends AppService {
   @UseInterceptors(
     FileInterceptor('image', { storage: diskStorage(multerConfig) }),
   )
+  @HttpCode(HttpStatus.NO_CONTENT)
   async updateUser(
-    @Body() updateUserDto: UpdateUserDto,
+    @UserData() user: User,
+    @Body()
+    updateUserDto: UpdateUserDto,
     @UploadedFile() image: Express.Multer.File,
   ) {
     const parsedSchema = updateUserSchema.safeParse({
@@ -71,7 +74,8 @@ export class UsersController extends AppService {
 
     if (!parsedSchema.success)
       throw new BadRequestException(parsedSchema.error.errors[0].message);
-    return parsedSchema.data;
+
+    return await this.usersService.updateUser(user, parsedSchema.data);
   }
 
   @Patch('password')
