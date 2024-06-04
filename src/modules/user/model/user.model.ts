@@ -110,6 +110,6 @@ export class User extends Model {
   @Column
   cookieAccepted: boolean;
 
-  @HasMany(() => User, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  subscribers: User[];
+  // @HasMany(() => User, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  // subscribers: User[];
 }
