@@ -1,5 +1,10 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { UploadApiOptions, v2 as clouds } from 'cloudinary';
+import {
+  ConfigAndUrlOptions,
+  TransformationOptions,
+  UploadApiOptions,
+  v2 as clouds,
+} from 'cloudinary';
 
 import { AppService } from 'src/common/services';
 
@@ -16,7 +21,7 @@ export class CloudsService extends AppService {
     options?: Partial<UploadApiOptions>,
   ): Promise<CloudsResponse> {
     try {
-      return await clouds.uploader.upload(filePath, options);
+      return clouds.uploader.upload(filePath, options);
     } catch (error) {
       throw new ServiceUnavailableException(error.message);
     }
@@ -25,9 +30,18 @@ export class CloudsService extends AppService {
   async delete(url: string, options?: Partial<DeleteOptions>) {
     try {
       const publicId = this.getPublicIdFromUrl(url, options?.sliceValue);
-      await clouds.uploader.destroy(publicId, options);
+      return clouds.uploader.destroy(publicId, options);
     } catch (error) {
       throw new ServiceUnavailableException(error.message);
     }
+  }
+
+  async edit(
+    url: string,
+    options?: TransformationOptions | ConfigAndUrlOptions,
+    sliceValue = -4,
+  ) {
+    const publicId = this.getPublicIdFromUrl(url, sliceValue);
+    return clouds.url(publicId, options);
   }
 }
