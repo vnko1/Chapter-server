@@ -7,7 +7,7 @@ import {
   Column,
   DataType,
   Default,
-  // HasMany,
+  HasMany,
   Model,
   PrimaryKey,
   Scopes,
@@ -75,32 +75,26 @@ export class User extends Model {
   password: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   firstName: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   lastName: string | null;
 
   @AllowNull
-  @Default(null)
   @Column({ unique: true })
   nickName: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   status: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   location: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   avatarUrl: string | null;
 
@@ -109,14 +103,13 @@ export class User extends Model {
   otp: string | null;
 
   @Default('unconfirmed')
-  @Column
+  @Column(DataType.ENUM('unconfirmed', 'confirmed', 'completed', 'restoring'))
   accountStatus: 'unconfirmed' | 'confirmed' | 'completed' | 'restoring';
 
   @Default(false)
   @Column
   cookieAccepted: boolean;
 
-  // @HasMany(() => User, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  // @Column
-  // subscribers: User[];
+  @HasMany(() => User, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  subscribers: User[];
 }
