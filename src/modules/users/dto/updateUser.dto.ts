@@ -34,6 +34,7 @@ export const updateUserSchema = z
   })
   .refine(
     (data) => {
+      console.log('🚀 ~ data:', data);
       return Object.keys(data).some((key) => data[key] !== undefined);
     },
     {

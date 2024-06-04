@@ -8,7 +8,11 @@ import {
   Param,
   Patch,
   Res,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 
 import { CredEnum } from 'src/types';
@@ -25,6 +29,8 @@ import {
   updateUserSchema,
 } from '../dto';
 import { UsersService } from '../service';
+import { diskStorage } from 'multer';
+import { multerConfig } from 'src/utils';
 
 @Controller('user')
 export class UsersController extends AppService {
@@ -51,9 +57,20 @@ export class UsersController extends AppService {
   }
 
   @Patch()
+  @UseInterceptors(
+    FileInterceptor('image', { storage: diskStorage(multerConfig) }),
+  )
   async updateUser(
-    @Body(new ZodValidationPipe(updateUserSchema)) updateUserDto: UpdateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() image: Express.Multer.File,
   ) {
+    const parsedSchema = updateUserSchema.safeParse({
+      ...updateUserDto,
+      image,
+    });
+
+    if (!parsedSchema.success)
+      throw new BadRequestException(parsedSchema.error.errors[0].message);
     return updateUserDto;
   }
 
