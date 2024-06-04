@@ -71,7 +71,7 @@ export class UsersController extends AppService {
 
     if (!parsedSchema.success)
       throw new BadRequestException(parsedSchema.error.errors[0].message);
-    return updateUserDto;
+    return parsedSchema.data;
   }
 
   @Patch('password')
