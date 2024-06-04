@@ -7,6 +7,7 @@ import {
   Column,
   DataType,
   Default,
+  // HasMany,
   Model,
   PrimaryKey,
   Scopes,
@@ -114,4 +115,8 @@ export class User extends Model {
   @Default(false)
   @Column
   cookieAccepted: boolean;
+
+  // @HasMany(() => User, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  // @Column
+  // subscribers: User[];
 }

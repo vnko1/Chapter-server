@@ -15,11 +15,11 @@ import { User } from './modules/user/model';
     SequelizeModule.forRootAsync({
       useFactory: () => ({
         dialect: 'mysql',
-        host: process.env.MYSQL_HOST,
-        port: +process.env.MYSQL_PORT,
-        username: process.env.MYSQL_USERNAME,
-        password: process.env.MYSQL_ROOT_PASSWORD,
-        database: process.env.MYSQL_DATABASE,
+        host: process.env.DB_HOST,
+        port: +process.env.DB_PORT,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_ROOT_PASSWORD,
+        database: process.env.DB_DATABASE,
         synchronize: true,
         autoLoadModels: true,
         models: [User],
