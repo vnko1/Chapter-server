@@ -11,7 +11,7 @@ import { deleteAllFiles, getPath } from 'src/utils';
 
 @Injectable()
 export class ClearDataInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(_: ExecutionContext, next: CallHandler): Observable<any> {
     return next
       .handle()
       .pipe(tap(() => deleteAllFiles(getPath('src', 'temp'))))
