@@ -17,7 +17,6 @@ export const userAccountSchema = z.object({
     })
     .min(2, 'Last name must be at least 5 characters long.')
     .max(40, 'Last name must be at least 40 characters long.'),
-
   nickName: z
     .string({
       required_error: 'Nickname is required',
@@ -25,7 +24,6 @@ export const userAccountSchema = z.object({
     .min(3, 'Nickname must be at least 3 characters long.')
     .max(30, 'Nickname must be at least 30 characters long.')
     .regex(REGEX.nickName, 'Invalid nickname pattern'),
-
   password: z
     .string({
       required_error: 'Password is required',

@@ -18,7 +18,12 @@ import { ZodValidationPipe } from 'src/common/pipes';
 
 import { User } from 'src/modules/user/model';
 
-import { UpdatePasswordDto, updatePasswordSchema } from '../dto';
+import {
+  UpdatePasswordDto,
+  updatePasswordSchema,
+  UpdateUserDto,
+  updateUserSchema,
+} from '../dto';
 import { UsersService } from '../service';
 
 @Controller('user')
@@ -43,6 +48,13 @@ export class UsersController extends AppService {
   async deleteUser(@UserData('id') id: string, @Res() res: Response) {
     await this.usersService.deleteUser(id);
     return this.deleteCookieResponse(res, CredEnum.Refresh_token).send();
+  }
+
+  @Patch()
+  async updateUser(
+    @Body(new ZodValidationPipe(updateUserSchema)) updateUserDto: UpdateUserDto,
+  ) {
+    return updateUserDto;
   }
 
   @Patch('password')
