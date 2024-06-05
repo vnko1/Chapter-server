@@ -8,8 +8,8 @@ import {
   AuthModule,
   MailModule,
   TasksModule,
-  PostModule,
   UsersModule,
+  PostModule,
   PostsModule,
 } from './modules';
 import { User, UserSubscribers } from './modules/user/model';
@@ -17,7 +17,6 @@ import { Post } from './modules/post/model';
 
 @Module({
   imports: [
-    UsersModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env'] }),
     ScheduleModule.forRoot(),
     SequelizeModule.forRootAsync({
@@ -37,6 +36,7 @@ import { Post } from './modules/post/model';
     UserModule,
     AuthModule,
     TasksModule,
+    UsersModule,
     UsersModule,
     PostModule,
     PostsModule,
