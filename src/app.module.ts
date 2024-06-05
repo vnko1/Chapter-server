@@ -11,12 +11,11 @@ import {
   PostModule,
   UsersModule,
 } from './modules';
-import { User, UserSubscribers } from './modules/user/model';
-import { Post } from './modules/post/model';
+// import { User, UserSubscribers } from './modules/user/model';
+// import { Post } from './modules/post/model';
 
 @Module({
   imports: [
-    PostModule,
     UsersModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env'] }),
     ScheduleModule.forRoot(),
@@ -30,7 +29,7 @@ import { Post } from './modules/post/model';
         database: process.env.DB_DATABASE,
         synchronize: true,
         autoLoadModels: true,
-        models: [User, UserSubscribers, Post],
+        // models: [User, UserSubscribers],
       }),
     }),
     MailModule,
@@ -38,7 +37,7 @@ import { Post } from './modules/post/model';
     AuthModule,
     TasksModule,
     UsersModule,
-    PostModule,
+    // PostModule,
   ],
 })
 export class AppModule {}
