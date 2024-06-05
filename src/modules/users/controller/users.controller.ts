@@ -33,14 +33,14 @@ import {
 } from '../dto';
 import { UsersService } from '../service';
 
-@Controller('user')
+@Controller('users')
 export class UsersController extends AppService {
   constructor(private usersService: UsersService) {
     super();
   }
 
   @Public()
-  @Get(':id')
+  @Get('user/:id')
   async getUserById(@Param('id') id: string) {
     return await this.usersService.getUserById(id, {
       include: [
@@ -50,7 +50,7 @@ export class UsersController extends AppService {
     });
   }
 
-  @Get('/profile/:id')
+  @Get('profile/:id')
   async getProfileById(@Param('id') id: string) {
     return await this.usersService.getUserById(id, undefined, 'publicScope');
   }
