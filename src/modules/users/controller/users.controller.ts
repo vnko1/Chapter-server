@@ -15,7 +15,9 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+import { diskStorage } from 'multer';
 
+import { multerConfig } from 'src/utils';
 import { CredEnum } from 'src/types';
 import { AppService } from 'src/common/services';
 import { Public, UserData } from 'src/common/decorators';
@@ -30,8 +32,6 @@ import {
   updateUserSchema,
 } from '../dto';
 import { UsersService } from '../service';
-import { diskStorage } from 'multer';
-import { multerConfig } from 'src/utils';
 
 @Controller('user')
 export class UsersController extends AppService {
@@ -42,12 +42,25 @@ export class UsersController extends AppService {
   @Public()
   @Get(':id')
   async getUserById(@Param('id') id: string) {
-    return await this.usersService.getUserById(id, {
-      include: [
-        { model: User, as: 'subscribers' },
-        { model: User, as: 'subscribedTo' },
-      ],
-    });
+    return await this.usersService.getUserById(
+      id,
+      {
+        include: [
+          { model: User, as: 'subscribers' },
+          { model: User, as: 'subscribedTo' },
+        ],
+      },
+      'onlyProfileData',
+    );
+  }
+
+  @Get('/profile/:id')
+  async getProfileById(@Param('id') id: string) {
+    return await this.usersService.getUserById(
+      id,
+      undefined,
+      'onlyProfileData',
+    );
   }
 
   @Get()
