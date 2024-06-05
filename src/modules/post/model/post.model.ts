@@ -5,7 +5,9 @@ import {
   DataType,
   AllowNull,
   Default,
+  ForeignKey,
 } from 'sequelize-typescript';
+import { User } from 'src/modules/user/model';
 
 @Table
 export class Post extends Model {
@@ -22,4 +24,8 @@ export class Post extends Model {
   @Default('')
   @Column({ type: DataType.STRING })
   text: string;
+
+  @ForeignKey(() => User)
+  @Column
+  userId: string;
 }

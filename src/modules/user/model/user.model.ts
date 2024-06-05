@@ -8,6 +8,7 @@ import {
   Column,
   DataType,
   Default,
+  HasMany,
   Model,
   PrimaryKey,
   Scopes,
@@ -16,6 +17,8 @@ import {
 import * as bcrypt from 'bcrypt';
 
 import { TIMEOUT_VALUES } from 'src/utils';
+import { Post } from 'src/modules/post/model';
+
 import { UserSubscribers } from './userSubscribers.model';
 
 @Scopes(() => ({
@@ -218,4 +221,11 @@ export class User extends Model {
 
   @BelongsToMany(() => User, () => UserSubscribers, 'subscriberId', 'userId')
   subscribedTo: User[];
+
+  @HasMany(() => Post, {
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  posts: Post[];
 }
