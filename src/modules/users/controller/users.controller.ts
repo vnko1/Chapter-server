@@ -54,13 +54,8 @@ export class UsersController extends AppService {
   async getMe(@UserData('id') id: string) {
     return await this.usersService.getUserById(
       id,
-      {
-        include: [
-          { model: User, as: 'subscribers' },
-          { model: User, as: 'subscribedTo' },
-        ],
-      },
-      'withoutSensitiveData',
+      undefined,
+      'onlyProfileData',
     );
   }
 
@@ -113,12 +108,12 @@ export class UsersController extends AppService {
   }
 
   @Get('subscribe/subscribers')
-  getUserSubscribers(@UserData() user: User) {
-    return user.subscribers;
+  async getUserSubscribers(@UserData('id') id: string) {
+    return await this.usersService.getSubscribers(id);
   }
 
   @Get('subscribe/subscriptions')
-  getUserSubscriptions(@UserData() user: User) {
-    return user.subscribedTo;
+  async getUserSubscriptions(@UserData('id') id: string) {
+    return await this.usersService.getSubscription(id);
   }
 }

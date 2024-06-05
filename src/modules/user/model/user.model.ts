@@ -19,9 +19,14 @@ import { TIMEOUT_VALUES } from 'src/utils';
 import { UserSubscribers } from './userSubscribers.model';
 
 @Scopes(() => ({
+  onlyProfileData: {
+    attributes: {
+      exclude: ['password', 'otp', 'accountStatus'],
+    },
+  },
   withoutSensitiveData: {
     attributes: {
-      exclude: ['password', 'otp'],
+      exclude: ['password', 'otp', 'accountStatus'],
     },
     include: [
       {

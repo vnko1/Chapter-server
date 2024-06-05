@@ -89,4 +89,23 @@ export class UsersService extends AppService {
 
     return await user.$add('subscribedTo', subscribedTo);
   }
+
+  async getSubscribers(id: string) {
+    const user = await this.userService.findUserByPK(
+      id,
+      undefined,
+      'withoutSensitiveData',
+    );
+    return user.subscribers;
+  }
+
+  async getSubscription(id: string) {
+    const user = await this.userService.findUserByPK(
+      id,
+      undefined,
+      'withoutSensitiveData',
+    );
+
+    return user.subscribedTo;
+  }
 }
