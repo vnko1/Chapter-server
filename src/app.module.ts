@@ -11,8 +11,8 @@ import {
   PostModule,
   UsersModule,
 } from './modules';
-// import { User, UserSubscribers } from './modules/user/model';
-// import { Post } from './modules/post/model';
+import { User, UserSubscribers } from './modules/user/model';
+import { Post } from './modules/post/model';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import {
         database: process.env.DB_DATABASE,
         synchronize: true,
         autoLoadModels: true,
-        // models: [User, UserSubscribers],
+        models: [User, UserSubscribers, Post],
       }),
     }),
     MailModule,
@@ -37,7 +37,7 @@ import {
     AuthModule,
     TasksModule,
     UsersModule,
-    // PostModule,
+    PostModule,
   ],
 })
 export class AppModule {}
