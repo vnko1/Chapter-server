@@ -10,6 +10,7 @@ import {
   TasksModule,
   PostModule,
   UsersModule,
+  PostsModule,
 } from './modules';
 import { User, UserSubscribers } from './modules/user/model';
 import { Post } from './modules/post/model';
@@ -38,6 +39,7 @@ import { Post } from './modules/post/model';
     TasksModule,
     UsersModule,
     PostModule,
+    PostsModule,
   ],
 })
 export class AppModule {}
