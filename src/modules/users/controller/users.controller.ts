@@ -24,6 +24,7 @@ import { Public, UserData } from 'src/common/decorators';
 import { ZodValidationPipe } from 'src/common/pipes';
 
 import { User } from 'src/modules/user/model';
+import { Post } from 'src/modules/post/model';
 
 import {
   UpdatePasswordDto,
@@ -46,6 +47,7 @@ export class UsersController extends AppService {
       include: [
         { model: User, as: 'subscribers' },
         { model: User, as: 'subscribedTo' },
+        { model: Post, as: 'posts' },
       ],
     });
   }
