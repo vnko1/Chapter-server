@@ -11,7 +11,7 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
-  Post,
+  Put,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
@@ -89,21 +89,12 @@ export class UsersController extends AppService {
     return await this.usersService.changeUserPassword(user, updatePasswordDto);
   }
 
-  @Post('subscribe/:subscribedToId')
+  @Put('subscribe/:subscribedToId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async subscribe(
     @UserData() user: User,
     @Param('subscribedToId') subscribedToId: string,
   ) {
-    return await this.usersService.subscribeUser(user, subscribedToId);
-  }
-
-  @Delete('subscribe/:subscribedToId')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async unsubscribe(
-    @UserData() user: User,
-    @Param('subscribedToId') subscribedToId: string,
-  ) {
-    return await this.usersService.unsubscribeUser(user, subscribedToId);
+    return await this.usersService.subscribeToggler(user, subscribedToId);
   }
 }

@@ -84,15 +84,14 @@ export class UsersService extends AppService {
     }
   }
 
-  async subscribeUser(user: User, subscribedToId: string) {
+  async subscribeToggler(user: User, subscribedToId: string) {
     const subscribedTo = await this.userService.findUserByPK(subscribedToId);
     if (!subscribedTo) throw new NotFoundException('User not exists');
-    await user.$add('subscribedTo', subscribedTo);
-  }
 
-  async unsubscribeUser(user: User, subscribedToId: string) {
-    const subscribedTo = await this.userService.findUserByPK(subscribedToId);
-    if (!subscribedTo) throw new NotFoundException('User not exists');
-    await user.$remove('subscribedTo', subscribedTo);
+    const isSubscribed = await user.$has('subscribedTo', subscribedTo);
+
+    if (isSubscribed) return await user.$remove('subscribedTo', subscribedTo);
+
+    return await user.$add('subscribedTo', subscribedTo);
   }
 }
