@@ -27,6 +27,6 @@ export class Post extends Model {
 
   @ForeignKey(() => User)
   @AllowNull(false)
-  @Column
+  @Column({ type: DataType.UUID })
   userId: string;
 }
