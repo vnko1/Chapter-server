@@ -52,20 +52,12 @@ export class UsersController extends AppService {
 
   @Get('/profile/:id')
   async getProfileById(@Param('id') id: string) {
-    return await this.usersService.getUserById(
-      id,
-      undefined,
-      'onlyProfileData',
-    );
+    return await this.usersService.getUserById(id, undefined, 'publicScope');
   }
 
   @Get()
   async getMe(@UserData('id') id: string) {
-    return await this.usersService.getUserById(
-      id,
-      undefined,
-      'onlyProfileData',
-    );
+    return await this.usersService.getUserById(id, undefined, 'privateScope');
   }
 
   @Delete()

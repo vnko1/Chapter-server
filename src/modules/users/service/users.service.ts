@@ -94,7 +94,7 @@ export class UsersService extends AppService {
     const user = await this.userService.findUserByPK(
       id,
       undefined,
-      'withoutSensitiveData',
+      'privateScopeWithAssociation',
     );
     return user.subscribers;
   }
@@ -103,7 +103,7 @@ export class UsersService extends AppService {
     const user = await this.userService.findUserByPK(
       id,
       undefined,
-      'withoutSensitiveData',
+      'privateScopeWithAssociation',
     );
 
     return user.subscribedTo;
