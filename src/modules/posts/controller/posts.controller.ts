@@ -39,6 +39,6 @@ export class PostsController {
     if (!parsedSchema.success)
       throw new BadRequestException(parsedSchema.error.errors[0].message);
 
-    return parsedSchema.data;
+    return await this.postsService.addPost(parsedSchema.data, id);
   }
 }

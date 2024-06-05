@@ -79,7 +79,12 @@ export class UsersService extends AppService {
     }
   }
 
-  async subscribeToggler(user: User, subscribedToId: string) {
+  async subscribeToggler(id: string, subscribedToId: string) {
+    const user = await this.userService.findUserByPK(
+      id,
+      undefined,
+      'privateScopeWithAssociation',
+    );
     const subscribedTo = await this.userService.findUserByPK(subscribedToId);
     if (!subscribedTo) throw new NotFoundException('User not exists');
 

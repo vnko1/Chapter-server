@@ -8,7 +8,6 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from 'src/modules/user/service';
-import { User } from 'src/modules/user/model';
 
 import { AppService } from 'src/common/services';
 import { IS_PUBLIC_KEY, REFRESH_TOKEN } from 'src/common/decorators';
@@ -48,12 +47,7 @@ export class AuthGuard extends AppService implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
 
-      const user = await this.userService.findUserByPK(payload.sub, {
-        include: [
-          { model: User, as: 'subscribers' },
-          { model: User, as: 'subscribedTo' },
-        ],
-      });
+      const user = await this.userService.findUserByPK(payload.sub);
       if (!user) throw new UnauthorizedException();
 
       request['user'] = user;

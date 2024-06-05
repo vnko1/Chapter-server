@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { UploadApiOptions } from 'cloudinary';
+import { randomUUID } from 'crypto';
 
 import { AppService } from 'src/common/services';
+
 import { PostService } from 'src/modules/post/service';
-import { CreatePostDto } from '../dto';
 import { CloudsService } from 'src/modules/clouds/service';
-import { UploadApiOptions } from 'cloudinary';
+import { Post } from 'src/modules/post/model';
+
+import { CreatePostDto } from '../dto';
 
 @Injectable()
 export class PostsService extends AppService {
@@ -17,15 +21,30 @@ export class PostsService extends AppService {
 
   private uploadOption: UploadApiOptions = {
     resource_type: 'image',
-    folder: 'chapter/avatar',
-    overwrite: true,
+    folder: 'chapter/posts',
+    overwrite: false,
   };
 
   async addPost(createPostDto: CreatePostDto, id: string) {
     const { image, ...postData } = createPostDto;
 
-    const post: CreatePostDto = { ...postData };
+    const post: Partial<Post> = { ...postData };
 
-    //   if(image)
+    if (image) {
+      post.imageUrl = await this.uploadAvatar(image, id);
+    }
+    return this.postService.createPost(post, id);
+  }
+
+  private async uploadAvatar(image: Express.Multer.File, id: string) {
+    const res = await this.cloudsService.upload(image.path, {
+      ...this.uploadOption,
+      public_id: id + '/' + randomUUID(),
+    });
+
+    return await this.cloudsService.edit(res.secure_url, {
+      fetch_format: 'auto',
+      quality: 'auto',
+    });
   }
 }

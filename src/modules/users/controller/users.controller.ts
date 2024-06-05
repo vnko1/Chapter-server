@@ -102,10 +102,10 @@ export class UsersController extends AppService {
   @Put('subscribe/:subscribedToId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async toggleSubscribe(
-    @UserData() user: User,
+    @UserData('id') id: string,
     @Param('subscribedToId') subscribedToId: string,
   ) {
-    return await this.usersService.subscribeToggler(user, subscribedToId);
+    return await this.usersService.subscribeToggler(id, subscribedToId);
   }
 
   @Get('subscribe/subscribers')
