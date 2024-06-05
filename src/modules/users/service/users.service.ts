@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UploadApiOptions } from 'cloudinary';
 
 import { UserScope } from 'src/types';
@@ -82,11 +86,13 @@ export class UsersService extends AppService {
 
   async subscribeUser(user: User, subscribedToId: string) {
     const subscribedTo = await this.userService.findUserByPK(subscribedToId);
+    if (!subscribedTo) throw new NotFoundException('User not exists');
     await user.$add('subscribedTo', subscribedTo);
   }
 
   async unsubscribeUser(user: User, subscribedToId: string) {
     const subscribedTo = await this.userService.findUserByPK(subscribedToId);
+    if (!subscribedTo) throw new NotFoundException('User not exists');
     await user.$remove('subscribedTo', subscribedTo);
   }
 }
