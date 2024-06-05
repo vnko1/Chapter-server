@@ -20,11 +20,10 @@ import { diskStorage } from 'multer';
 import { multerConfig } from 'src/utils';
 import { CredEnum } from 'src/types';
 import { AppService } from 'src/common/services';
-import { Public, UserData } from 'src/common/decorators';
+import { UserData } from 'src/common/decorators';
 import { ZodValidationPipe } from 'src/common/pipes';
 
 import { User } from 'src/modules/user/model';
-import { Post } from 'src/modules/post/model';
 
 import {
   UpdatePasswordDto,
@@ -38,18 +37,6 @@ import { UsersService } from '../service';
 export class UsersController extends AppService {
   constructor(private usersService: UsersService) {
     super();
-  }
-
-  @Public()
-  @Get('user/:id')
-  async getUserById(@Param('id') id: string) {
-    return await this.usersService.getUserById(id, {
-      include: [
-        { model: User, as: 'subscribers' },
-        { model: User, as: 'subscribedTo' },
-        { model: Post, as: 'posts' },
-      ],
-    });
   }
 
   @Get('profile/:id')

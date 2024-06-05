@@ -11,6 +11,7 @@ import {
   UsersModule,
   PostModule,
   PostsModule,
+  AdminModule,
 } from './modules';
 import { User, UserSubscribers } from './modules/user/model';
 import { Post } from './modules/post/model';
@@ -39,6 +40,7 @@ import { Post } from './modules/post/model';
     TasksModule,
     UsersModule,
     PostsModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

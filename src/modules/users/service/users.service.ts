@@ -3,6 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { FindOptions } from 'sequelize';
 import { UploadApiOptions } from 'cloudinary';
 
 import { UserScope } from 'src/types';
@@ -13,7 +14,6 @@ import { CloudsService } from 'src/modules/clouds/service';
 import { User } from 'src/modules/user/model';
 
 import { UpdatePasswordDto, UpdateUserDto } from '../dto';
-import { FindOptions } from 'sequelize';
 
 @Injectable()
 export class UsersService extends AppService {
