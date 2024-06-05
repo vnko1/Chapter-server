@@ -1,5 +1,4 @@
 export type UserScope =
-  | ''
+  | 'defaultScope'
   | 'withoutSensitiveData'
-  | 'withoutSensitiveAndAccStatusData'
-  | 'withoutAdminData';
+  | 'withoutProfileData';

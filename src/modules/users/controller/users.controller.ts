@@ -42,12 +42,26 @@ export class UsersController extends AppService {
   @Public()
   @Get(':id')
   async getUserById(@Param('id') id: string) {
-    return await this.usersService.getUserById(id);
+    return await this.usersService.getUserById(id, {
+      include: [
+        { model: User, as: 'subscribers' },
+        { model: User, as: 'subscribedTo' },
+      ],
+    });
   }
 
   @Get()
   async getMe(@UserData('id') id: string) {
-    return await this.usersService.getUserById(id, 'withoutAdminData');
+    return await this.usersService.getUserById(
+      id,
+      {
+        include: [
+          { model: User, as: 'subscribers' },
+          { model: User, as: 'subscribedTo' },
+        ],
+      },
+      'withoutSensitiveData',
+    );
   }
 
   @Delete()
@@ -91,7 +105,7 @@ export class UsersController extends AppService {
 
   @Put('subscribe/:subscribedToId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async subscribe(
+  async toggleSubscribe(
     @UserData() user: User,
     @Param('subscribedToId') subscribedToId: string,
   ) {

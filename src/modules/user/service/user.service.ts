@@ -31,11 +31,15 @@ export class UserService extends AppService {
     return this.userModel.create(userData);
   }
 
-  findUser(findOpt: FindOptions, scope: UserScope = '') {
+  findUser(findOpt: FindOptions, scope: UserScope = 'defaultScope') {
     return this.userModel.scope(scope).findOne(findOpt);
   }
 
-  findUserByPK(pk: string, opt?: FindOptions, scope: UserScope = '') {
+  findUserByPK(
+    pk: string,
+    opt?: FindOptions,
+    scope: UserScope = 'defaultScope',
+  ) {
     return this.userModel.scope(scope).findByPk(pk, opt);
   }
 

@@ -13,6 +13,7 @@ import { CloudsService } from 'src/modules/clouds/service';
 import { User } from 'src/modules/user/model';
 
 import { UpdatePasswordDto, UpdateUserDto } from '../dto';
+import { FindOptions } from 'sequelize';
 
 @Injectable()
 export class UsersService extends AppService {
@@ -45,17 +46,8 @@ export class UsersService extends AppService {
     return this.userService.deleteUser({ where: { id } });
   }
 
-  async getUserById(id: string, scope?: UserScope) {
-    return this.userService.findUserByPK(
-      id,
-      {
-        include: [
-          { model: User, as: 'subscribers' },
-          { model: User, as: 'subscribedTo' },
-        ],
-      },
-      scope,
-    );
+  async getUserById(id: string, findOptions?: FindOptions, scope?: UserScope) {
+    return this.userService.findUserByPK(id, findOptions, scope);
   }
 
   async changeUserPassword(

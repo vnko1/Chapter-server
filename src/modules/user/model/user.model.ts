@@ -20,12 +20,53 @@ import { UserSubscribers } from './userSubscribers.model';
 
 @Scopes(() => ({
   withoutSensitiveData: {
-    attributes: { exclude: ['password', 'otp'] },
+    attributes: {
+      exclude: ['password', 'otp'],
+    },
+    include: [
+      {
+        model: User,
+        as: 'subscribers',
+        attributes: {
+          exclude: [
+            'password',
+            'otp',
+            'accountStatus',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+            'status',
+            'location',
+            'cookieAccepted',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
+      },
+      {
+        model: User,
+        as: 'subscribedTo',
+        attributes: {
+          exclude: [
+            'password',
+            'otp',
+            'accountStatus',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+            'status',
+            'location',
+            'cookieAccepted',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
+      },
+    ],
   },
-  withoutSensitiveAndAccStatusData: {
-    attributes: { exclude: ['password', 'otp', 'accountStatus'] },
-  },
-  withoutAdminData: {
+  withoutProfileData: {
     attributes: {
       exclude: [
         'password',
@@ -34,8 +75,56 @@ import { UserSubscribers } from './userSubscribers.model';
         'deletedAt',
         'createdAt',
         'updatedAt',
+        'status',
+        'location',
+        'cookieAccepted',
+        'deletedAt',
+        'createdAt',
+        'updatedAt',
       ],
     },
+    include: [
+      {
+        model: User,
+        as: 'subscribers',
+        attributes: {
+          exclude: [
+            'password',
+            'otp',
+            'accountStatus',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+            'status',
+            'location',
+            'cookieAccepted',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
+      },
+      {
+        model: User,
+        as: 'subscribedTo',
+        attributes: {
+          exclude: [
+            'password',
+            'otp',
+            'accountStatus',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+            'status',
+            'location',
+            'cookieAccepted',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
+      },
+    ],
   },
 }))
 @Table({ paranoid: true })
