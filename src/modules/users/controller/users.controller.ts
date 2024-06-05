@@ -42,16 +42,12 @@ export class UsersController extends AppService {
   @Public()
   @Get(':id')
   async getUserById(@Param('id') id: string) {
-    return await this.usersService.getUserById(
-      id,
-      {
-        include: [
-          { model: User, as: 'subscribers' },
-          { model: User, as: 'subscribedTo' },
-        ],
-      },
-      'onlyProfileData',
-    );
+    return await this.usersService.getUserById(id, {
+      include: [
+        { model: User, as: 'subscribers' },
+        { model: User, as: 'subscribedTo' },
+      ],
+    });
   }
 
   @Get('/profile/:id')
