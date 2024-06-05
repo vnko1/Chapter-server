@@ -5,13 +5,13 @@ export const updateUserSchema = z
   .object({
     firstName: z
       .string()
-      .min(2, 'he length of characters should not exceed 2 characters long.')
-      .max(40, 'First name must be at least 40 characters long.')
+      .min(2, 'Must be at least 2 characters long.')
+      .max(40, 'The length of characters should not exceed 40 characters long.')
       .optional(),
     lastName: z
       .string()
       .min(2, 'Must be at least 2 characters long.')
-      .max(40, 'he length of characters should not exceed 40 characters long.')
+      .max(40, 'The length of characters should not exceed 40 characters long.')
       .optional(),
     status: z
       .string()

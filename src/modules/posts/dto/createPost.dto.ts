@@ -3,25 +3,22 @@ import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from 'src/utils';
 
 export const createPostSchema = z
   .object({
-    firstName: z
-      .string()
-      .min(2, 'he length of characters should not exceed 2 characters long.')
-      .max(40, 'First name must be at least 40 characters long.')
-      .optional(),
-    lastName: z
-      .string()
-      .min(2, 'Must be at least 2 characters long.')
-      .max(40, 'he length of characters should not exceed 40 characters long.')
-      .optional(),
-    status: z
+    title: z
       .string()
       .min(2, 'Must be at least 2 characters long.')
       .max(
-        120,
-        'The length of characters should not exceed 120 characters long.',
+        100,
+        'The length of characters should not exceed 100 characters long.',
       )
       .optional(),
-    location: z.string().min(2).optional(),
+    text: z
+      .string()
+      .min(2, 'Must be at least 2 characters long.')
+      .max(
+        500,
+        'The length of characters should not exceed 500 characters long.',
+      )
+      .optional(),
     image: z
       .any()
       .refine((image) => {
