@@ -26,6 +26,7 @@ export class Post extends Model {
   text: string;
 
   @ForeignKey(() => User)
+  @AllowNull(false)
   @Column
   userId: string;
 }
