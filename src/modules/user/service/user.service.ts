@@ -12,15 +12,13 @@ import {
 import { UserScope } from 'src/types';
 import { AppService } from 'src/common/services';
 
-import { User, UserSubscribers } from '../model';
+import { User } from '../model';
 
 @Injectable()
 export class UserService extends AppService {
   constructor(
     @InjectModel(User)
     private userModel: typeof User,
-    @InjectModel(UserSubscribers)
-    private userSubscribersModel: typeof UserSubscribers,
   ) {
     super();
   }

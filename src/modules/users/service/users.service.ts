@@ -1,4 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UploadApiOptions } from 'cloudinary';
 
 import { UserScope } from 'src/types';
 import { AppService } from 'src/common/services';
@@ -8,7 +9,6 @@ import { CloudsService } from 'src/modules/clouds/service';
 import { User } from 'src/modules/user/model';
 
 import { UpdatePasswordDto, UpdateUserDto } from '../dto';
-import { UploadApiOptions } from 'cloudinary';
 
 @Injectable()
 export class UsersService extends AppService {
@@ -42,7 +42,16 @@ export class UsersService extends AppService {
   }
 
   async getUserById(id: string, scope?: UserScope) {
-    return this.userService.findUserByPK(id, undefined, scope);
+    return this.userService.findUserByPK(
+      id,
+      {
+        include: [
+          { model: User, as: 'subscribers' },
+          { model: User, as: 'subscribedTo' },
+        ],
+      },
+      scope,
+    );
   }
 
   async changeUserPassword(
@@ -69,5 +78,15 @@ export class UsersService extends AppService {
       user.avatarUrl = await this.uploadAvatar(image, user.id);
       await user.save();
     }
+  }
+
+  async subscribeUser(user: User, subscribedToId: string) {
+    const subscribedTo = await this.userService.findUserByPK(subscribedToId);
+    await user.$add('subscribedTo', subscribedTo);
+  }
+
+  async unsubscribeUser(user: User, subscribedToId: string) {
+    const subscribedTo = await this.userService.findUserByPK(subscribedToId);
+    await user.$remove('subscribedTo', subscribedTo);
   }
 }
