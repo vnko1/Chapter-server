@@ -4,6 +4,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -15,7 +16,7 @@ import { multerConfig } from 'src/utils';
 import { UserData } from 'src/common/decorators';
 
 import { PostsService } from '../service';
-import { CreatePostDto, createPostSchema } from '../dto';
+import { PostDto, postSchema } from '../dto';
 
 @Controller('posts')
 export class PostsController {
@@ -28,10 +29,10 @@ export class PostsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async createPost(
     @UserData('id') id: string,
-    @Body() createPostDto: CreatePostDto,
+    @Body() createPostDto: PostDto,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    const parsedSchema = createPostSchema.safeParse({
+    const parsedSchema = postSchema.safeParse({
       ...createPostDto,
       image,
     });
@@ -41,4 +42,8 @@ export class PostsController {
 
     return await this.postsService.addPost(parsedSchema.data, id);
   }
+
+  @Patch('post')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async updatePost() {}
 }

@@ -8,7 +8,7 @@ import { PostService } from 'src/modules/post/service';
 import { CloudsService } from 'src/modules/clouds/service';
 import { Post } from 'src/modules/post/model';
 
-import { CreatePostDto } from '../dto';
+import { PostDto } from '../dto';
 
 @Injectable()
 export class PostsService extends AppService {
@@ -25,7 +25,7 @@ export class PostsService extends AppService {
     overwrite: false,
   };
 
-  async addPost(createPostDto: CreatePostDto, id: string) {
+  async addPost(createPostDto: PostDto, id: string) {
     const { image, ...postData } = createPostDto;
 
     const post: Partial<Post> = { ...postData };

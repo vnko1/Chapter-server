@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from 'src/utils';
 
-export const createPostSchema = z
+export const postSchema = z
   .object({
     title: z
       .string()
@@ -39,4 +39,4 @@ export const createPostSchema = z
     },
   );
 
-export type CreatePostDto = z.infer<typeof createPostSchema>;
+export type PostDto = z.infer<typeof postSchema>;
