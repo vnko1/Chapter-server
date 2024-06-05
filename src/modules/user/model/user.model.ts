@@ -4,10 +4,10 @@ import {
   AfterValidate,
   AllowNull,
   BeforeValidate,
+  BelongsToMany,
   Column,
   DataType,
   Default,
-  HasMany,
   Model,
   PrimaryKey,
   Scopes,
@@ -16,6 +16,7 @@ import {
 import * as bcrypt from 'bcrypt';
 
 import { TIMEOUT_VALUES } from 'src/utils';
+import { UserSubscribers } from './userSubscribers.model';
 
 @Scopes(() => ({
   withoutSensitiveData: {
@@ -110,6 +111,9 @@ export class User extends Model {
   @Column
   cookieAccepted: boolean;
 
-  // @HasMany(() => User, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  // subscribers: User[];
+  @BelongsToMany(() => User, () => UserSubscribers, 'userId', 'subscriberId')
+  subscribers: User[];
+
+  @BelongsToMany(() => User, () => UserSubscribers, 'subscriberId', 'userId')
+  subscribedTo: User[];
 }

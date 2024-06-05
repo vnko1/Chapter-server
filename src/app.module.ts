@@ -5,7 +5,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 import { UserModule, AuthModule, MailModule, TasksModule } from './modules';
-import { User } from './modules/user/model';
+import { User, UserSubscribers } from './modules/user/model';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { User } from './modules/user/model';
         database: process.env.DB_DATABASE,
         synchronize: true,
         autoLoadModels: true,
-        models: [User],
+        models: [User, UserSubscribers],
       }),
     }),
     MailModule,
