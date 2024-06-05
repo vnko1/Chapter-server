@@ -1,21 +1,22 @@
 import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { join } from 'path';
+
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+
+import { getPath } from 'src/utils';
 import { MailService } from './service';
 
 @Module({
   imports: [
     MailerModule.forRootAsync({
       useFactory: () => {
-        const templatesDir = join(
+        const templatesDir = getPath(
           process.cwd(),
           'src',
           'modules',
           'mail',
           'templates',
         );
-
         return {
           transport: {
             host: process.env.MAIL_HOST,

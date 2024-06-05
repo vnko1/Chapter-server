@@ -4,6 +4,7 @@ import {
   AfterValidate,
   AllowNull,
   BeforeValidate,
+  BelongsToMany,
   Column,
   DataType,
   Default,
@@ -15,15 +16,62 @@ import {
 import * as bcrypt from 'bcrypt';
 
 import { TIMEOUT_VALUES } from 'src/utils';
+import { UserSubscribers } from './userSubscribers.model';
 
 @Scopes(() => ({
+  onlyProfileData: {
+    attributes: {
+      exclude: ['password', 'otp', 'accountStatus'],
+    },
+  },
   withoutSensitiveData: {
-    attributes: { exclude: ['password', 'otp'] },
+    attributes: {
+      exclude: ['password', 'otp', 'accountStatus'],
+    },
+    include: [
+      {
+        model: User,
+        as: 'subscribers',
+        attributes: {
+          exclude: [
+            'password',
+            'otp',
+            'accountStatus',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+            'status',
+            'location',
+            'cookieAccepted',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
+      },
+      {
+        model: User,
+        as: 'subscribedTo',
+        attributes: {
+          exclude: [
+            'password',
+            'otp',
+            'accountStatus',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+            'status',
+            'location',
+            'cookieAccepted',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
+      },
+    ],
   },
-  withoutSensitiveAndAccStatusData: {
-    attributes: { exclude: ['password', 'otp', 'accountStatus'] },
-  },
-  withoutAdminData: {
+  withoutProfileData: {
     attributes: {
       exclude: [
         'password',
@@ -32,8 +80,56 @@ import { TIMEOUT_VALUES } from 'src/utils';
         'deletedAt',
         'createdAt',
         'updatedAt',
+        'status',
+        'location',
+        'cookieAccepted',
+        'deletedAt',
+        'createdAt',
+        'updatedAt',
       ],
     },
+    include: [
+      {
+        model: User,
+        as: 'subscribers',
+        attributes: {
+          exclude: [
+            'password',
+            'otp',
+            'accountStatus',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+            'status',
+            'location',
+            'cookieAccepted',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
+      },
+      {
+        model: User,
+        as: 'subscribedTo',
+        attributes: {
+          exclude: [
+            'password',
+            'otp',
+            'accountStatus',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+            'status',
+            'location',
+            'cookieAccepted',
+            'deletedAt',
+            'createdAt',
+            'updatedAt',
+          ],
+        },
+      },
+    ],
   },
 }))
 @Table({ paranoid: true })
@@ -74,32 +170,26 @@ export class User extends Model {
   password: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   firstName: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   lastName: string | null;
 
   @AllowNull
-  @Default(null)
   @Column({ unique: true })
   nickName: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   status: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   location: string | null;
 
   @AllowNull
-  @Default(null)
   @Column
   avatarUrl: string | null;
 
@@ -108,10 +198,16 @@ export class User extends Model {
   otp: string | null;
 
   @Default('unconfirmed')
-  @Column
+  @Column(DataType.ENUM('unconfirmed', 'confirmed', 'completed', 'restoring'))
   accountStatus: 'unconfirmed' | 'confirmed' | 'completed' | 'restoring';
 
   @Default(false)
   @Column
   cookieAccepted: boolean;
+
+  @BelongsToMany(() => User, () => UserSubscribers, 'userId', 'subscriberId')
+  subscribers: User[];
+
+  @BelongsToMany(() => User, () => UserSubscribers, 'subscriberId', 'userId')
+  subscribedTo: User[];
 }

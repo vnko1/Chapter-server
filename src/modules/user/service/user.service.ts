@@ -9,15 +9,10 @@ import {
   UpdateOptions,
 } from 'sequelize';
 
+import { UserScope } from 'src/types';
 import { AppService } from 'src/common/services';
 
 import { User } from '../model';
-
-type UserScope =
-  | ''
-  | 'withoutSensitiveData'
-  | 'withoutSensitiveAndAccStatusData'
-  | 'withoutAdminData';
 
 @Injectable()
 export class UserService extends AppService {
@@ -27,6 +22,7 @@ export class UserService extends AppService {
   ) {
     super();
   }
+
   findOrCreateUserInstance(options: FindOrCreateOptions) {
     return this.userModel.findOrCreate(options);
   }
@@ -35,11 +31,15 @@ export class UserService extends AppService {
     return this.userModel.create(userData);
   }
 
-  findUser(findOpt: FindOptions, scope: UserScope = '') {
+  findUser(findOpt: FindOptions, scope: UserScope = 'defaultScope') {
     return this.userModel.scope(scope).findOne(findOpt);
   }
 
-  findUserByPK(pk: string, opt?: FindOptions, scope: UserScope = '') {
+  findUserByPK(
+    pk: string,
+    opt?: FindOptions,
+    scope: UserScope = 'defaultScope',
+  ) {
     return this.userModel.scope(scope).findByPk(pk, opt);
   }
 
@@ -54,6 +54,7 @@ export class UserService extends AppService {
   restoreUser(opt: RestoreOptions) {
     return this.userModel.restore(opt);
   }
+
   getAllUsers(opt: FindOptions) {
     return this.userModel.findAll(opt);
   }
