@@ -111,4 +111,14 @@ export class UsersController extends AppService {
   ) {
     return await this.usersService.subscribeToggler(user, subscribedToId);
   }
+
+  @Get('subscribe/subscribers')
+  getUserSubscribers(@UserData() user: User) {
+    return user.subscribers;
+  }
+
+  @Get('subscribe/subscriptions')
+  getUserSubscriptions(@UserData() user: User) {
+    return user.subscribedTo;
+  }
 }

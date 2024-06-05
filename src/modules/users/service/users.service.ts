@@ -47,7 +47,10 @@ export class UsersService extends AppService {
   }
 
   async getUserById(id: string, findOptions?: FindOptions, scope?: UserScope) {
-    return this.userService.findUserByPK(id, findOptions, scope);
+    const user = await this.userService.findUserByPK(id, findOptions, scope);
+
+    if (!user) throw new NotFoundException('User not exists');
+    return user;
   }
 
   async changeUserPassword(
