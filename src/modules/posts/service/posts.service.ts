@@ -30,9 +30,7 @@ export class PostsService extends AppService {
 
     const post: Partial<Post> = { ...postData };
 
-    if (image) {
-      post.imageUrl = await this.uploadImage(image, userId);
-    }
+    if (image) post.imageUrl = await this.uploadImage(image, userId);
     return this.postService.createPost(post, userId);
   }
 
@@ -41,9 +39,7 @@ export class PostsService extends AppService {
 
     const post: Partial<Post> = { ...postData };
 
-    if (image) {
-      post.imageUrl = await this.uploadImage(image, userId);
-    }
+    if (image) post.imageUrl = await this.uploadImage(image, userId);
     return this.postService.editPost(post, { where: { id: postId } });
   }
 
