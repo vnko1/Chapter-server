@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UploadApiOptions } from 'cloudinary';
 import { randomUUID } from 'crypto';
 
@@ -54,6 +54,13 @@ export class PostsService extends AppService {
     if (post.imageUrl) await this.cloudsService.delete(post.imageUrl);
 
     return post.destroy();
+  }
+
+  async getPostById(postId: string) {
+    const post = await this.postService.findPostByPK(postId);
+    if (!post) throw new NotFoundException('Post not found');
+
+    return post;
   }
 
   private async uploadImage(image: Express.Multer.File, userId: string) {

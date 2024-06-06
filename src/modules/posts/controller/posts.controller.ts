@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -69,10 +70,16 @@ export class PostsController {
 
     return await this.postsService.editPost(parsedSchema.data, postId, userId);
   }
+
   @UseGuards(PostGuard)
   @Delete('post/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deletePost(@Param('id') postId: string) {
     return await this.postsService.deletePost(postId);
+  }
+
+  @Get('post/:id')
+  async getPostById(@Param('id') postId: string) {
+    return await this.postsService.getPostById(postId);
   }
 }
