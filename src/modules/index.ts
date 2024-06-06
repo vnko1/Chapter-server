@@ -7,3 +7,4 @@ export { UsersModule } from './users/users.module';
 export { CloudsModule } from './clouds/clouds.module';
 export { PostModule } from './post/post.module';
 export { AdminModule } from './admin/admin.module';
+export { LikeModule } from './like/like.module';

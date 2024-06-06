@@ -6,7 +6,9 @@ import {
   AllowNull,
   Default,
   ForeignKey,
+  HasMany,
 } from 'sequelize-typescript';
+import { Like } from 'src/modules/like/model';
 import { User } from 'src/modules/user/model';
 
 @Table
@@ -29,4 +31,7 @@ export class Post extends Model {
   @AllowNull(false)
   @Column({ type: DataType.UUID })
   userId: string;
+
+  @HasMany(() => Like, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  likes: Like[];
 }

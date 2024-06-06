@@ -18,6 +18,7 @@ import * as bcrypt from 'bcrypt';
 
 import { TIMEOUT_VALUES } from 'src/utils';
 import { Post } from 'src/modules/post/model';
+import { Like } from 'src/modules/like/model';
 
 import { UserSubscribers } from './userSubscribers.model';
 
@@ -228,4 +229,7 @@ export class User extends Model {
     onUpdate: 'CASCADE',
   })
   posts: Post[];
+
+  @HasMany(() => Like, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  likes: Like[];
 }

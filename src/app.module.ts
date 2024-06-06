@@ -12,9 +12,11 @@ import {
   PostModule,
   PostsModule,
   AdminModule,
+  LikeModule,
 } from './modules';
 import { User, UserSubscribers } from './modules/user/model';
 import { Post } from './modules/post/model';
+import { Like } from './modules/like/model';
 
 @Module({
   imports: [
@@ -30,11 +32,12 @@ import { Post } from './modules/post/model';
         database: process.env.DB_DATABASE,
         synchronize: true,
         autoLoadModels: true,
-        models: [Post, User, UserSubscribers],
+        models: [User, UserSubscribers, Like, Post],
       }),
     }),
     UserModule,
     PostModule,
+    LikeModule,
     MailModule,
     AuthModule,
     TasksModule,

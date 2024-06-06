@@ -3,10 +3,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
 
 import { UserService } from './service';
 import { User, UserSubscribers } from './model';
-import { Post } from '../post/model';
 
 @Module({
-  imports: [SequelizeModule.forFeature([User, UserSubscribers, Post])],
+  imports: [SequelizeModule.forFeature([User, UserSubscribers])],
   providers: [UserService],
   exports: [UserService],
 })
