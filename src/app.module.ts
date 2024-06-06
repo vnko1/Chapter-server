@@ -1,15 +1,25 @@
-import { UsersModule } from './modules/users/users.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SequelizeModule } from '@nestjs/sequelize';
 
-import { UserModule, AuthModule, MailModule, TasksModule } from './modules';
+import {
+  UserModule,
+  AuthModule,
+  MailModule,
+  TasksModule,
+  UsersModule,
+  PostModule,
+  PostsModule,
+  AdminModule,
+  LikeModule,
+} from './modules';
 import { User, UserSubscribers } from './modules/user/model';
+import { Post } from './modules/post/model';
+import { Like } from './modules/like/model';
 
 @Module({
   imports: [
-    UsersModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env'] }),
     ScheduleModule.forRoot(),
     SequelizeModule.forRootAsync({
@@ -22,14 +32,18 @@ import { User, UserSubscribers } from './modules/user/model';
         database: process.env.DB_DATABASE,
         synchronize: true,
         autoLoadModels: true,
-        models: [User, UserSubscribers],
+        models: [User, UserSubscribers, Like, Post],
       }),
     }),
-    MailModule,
     UserModule,
+    PostModule,
+    LikeModule,
+    MailModule,
     AuthModule,
     TasksModule,
     UsersModule,
+    PostsModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

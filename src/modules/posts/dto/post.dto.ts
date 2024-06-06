@@ -1,27 +1,24 @@
 import { z } from 'zod';
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from 'src/utils';
 
-export const updateUserSchema = z
+export const postSchema = z
   .object({
-    firstName: z
-      .string()
-      .min(2, 'Must be at least 2 characters long.')
-      .max(40, 'The length of characters should not exceed 40 characters long.')
-      .optional(),
-    lastName: z
-      .string()
-      .min(2, 'Must be at least 2 characters long.')
-      .max(40, 'The length of characters should not exceed 40 characters long.')
-      .optional(),
-    status: z
+    title: z
       .string()
       .min(2, 'Must be at least 2 characters long.')
       .max(
-        120,
-        'The length of characters should not exceed 120 characters long.',
+        100,
+        'The length of characters should not exceed 100 characters long.',
       )
       .optional(),
-    location: z.string().min(2).optional(),
+    text: z
+      .string()
+      .min(2, 'Must be at least 2 characters long.')
+      .max(
+        500,
+        'The length of characters should not exceed 500 characters long.',
+      )
+      .optional(),
     image: z
       .any()
       .refine((image) => {
@@ -42,4 +39,4 @@ export const updateUserSchema = z
     },
   );
 
-export type UpdateUserDto = z.infer<typeof updateUserSchema>;
+export type PostDto = z.infer<typeof postSchema>;

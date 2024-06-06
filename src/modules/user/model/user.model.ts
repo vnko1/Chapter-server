@@ -8,6 +8,7 @@ import {
   Column,
   DataType,
   Default,
+  HasMany,
   Model,
   PrimaryKey,
   Scopes,
@@ -16,15 +17,18 @@ import {
 import * as bcrypt from 'bcrypt';
 
 import { TIMEOUT_VALUES } from 'src/utils';
+import { Post } from 'src/modules/post/model';
+import { Like } from 'src/modules/like/model';
+
 import { UserSubscribers } from './userSubscribers.model';
 
 @Scopes(() => ({
-  onlyProfileData: {
+  privateScope: {
     attributes: {
       exclude: ['password', 'otp', 'accountStatus'],
     },
   },
-  withoutSensitiveData: {
+  privateScopeWithAssociation: {
     attributes: {
       exclude: ['password', 'otp', 'accountStatus'],
     },
@@ -71,18 +75,26 @@ import { UserSubscribers } from './userSubscribers.model';
       },
     ],
   },
-  withoutProfileData: {
+  publicScope: {
     attributes: {
       exclude: [
+        'cookieAccepted',
         'password',
         'otp',
         'accountStatus',
         'deletedAt',
         'createdAt',
         'updatedAt',
-        'status',
-        'location',
+      ],
+    },
+  },
+  publicScopeWithAssociation: {
+    attributes: {
+      exclude: [
         'cookieAccepted',
+        'password',
+        'otp',
+        'accountStatus',
         'deletedAt',
         'createdAt',
         'updatedAt',
@@ -148,7 +160,7 @@ export class User extends Model {
 
   @BeforeValidate
   static async hashPass(instance: User) {
-    if (instance.password) {
+    if (instance.changed('password')) {
       const salt = await bcrypt.genSalt();
       const hashedPass = await bcrypt.hash(instance.password, salt);
       instance.password = hashedPass;
@@ -210,4 +222,27 @@ export class User extends Model {
 
   @BelongsToMany(() => User, () => UserSubscribers, 'subscriberId', 'userId')
   subscribedTo: User[];
+
+  @HasMany(() => Post, {
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  posts: Post[];
+
+  @HasMany(() => Like, {
+    foreignKey: 'userId',
+    as: 'likesGiven',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  likesGiven: Like[];
+
+  @HasMany(() => Like, {
+    foreignKey: 'postId',
+    as: 'likesReceived',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  likesReceived: Like[];
 }

@@ -3,6 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { FindOptions } from 'sequelize';
 import { UploadApiOptions } from 'cloudinary';
 
 import { UserScope } from 'src/types';
@@ -13,7 +14,6 @@ import { CloudsService } from 'src/modules/clouds/service';
 import { User } from 'src/modules/user/model';
 
 import { UpdatePasswordDto, UpdateUserDto } from '../dto';
-import { FindOptions } from 'sequelize';
 
 @Injectable()
 export class UsersService extends AppService {
@@ -79,7 +79,12 @@ export class UsersService extends AppService {
     }
   }
 
-  async subscribeToggler(user: User, subscribedToId: string) {
+  async subscribeToggler(id: string, subscribedToId: string) {
+    const user = await this.userService.findUserByPK(
+      id,
+      undefined,
+      'privateScopeWithAssociation',
+    );
     const subscribedTo = await this.userService.findUserByPK(subscribedToId);
     if (!subscribedTo) throw new NotFoundException('User not exists');
 
@@ -94,7 +99,7 @@ export class UsersService extends AppService {
     const user = await this.userService.findUserByPK(
       id,
       undefined,
-      'withoutSensitiveData',
+      'privateScopeWithAssociation',
     );
     return user.subscribers;
   }
@@ -103,7 +108,7 @@ export class UsersService extends AppService {
     const user = await this.userService.findUserByPK(
       id,
       undefined,
-      'withoutSensitiveData',
+      'privateScopeWithAssociation',
     );
 
     return user.subscribedTo;

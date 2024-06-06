@@ -20,7 +20,7 @@ import { diskStorage } from 'multer';
 import { multerConfig } from 'src/utils';
 import { CredEnum } from 'src/types';
 import { AppService } from 'src/common/services';
-import { Public, UserData } from 'src/common/decorators';
+import { UserData } from 'src/common/decorators';
 import { ZodValidationPipe } from 'src/common/pipes';
 
 import { User } from 'src/modules/user/model';
@@ -33,39 +33,20 @@ import {
 } from '../dto';
 import { UsersService } from '../service';
 
-@Controller('user')
+@Controller('users')
 export class UsersController extends AppService {
   constructor(private usersService: UsersService) {
     super();
   }
 
-  @Public()
-  @Get(':id')
-  async getUserById(@Param('id') id: string) {
-    return await this.usersService.getUserById(id, {
-      include: [
-        { model: User, as: 'subscribers' },
-        { model: User, as: 'subscribedTo' },
-      ],
-    });
-  }
-
-  @Get('/profile/:id')
+  @Get('profile/:id')
   async getProfileById(@Param('id') id: string) {
-    return await this.usersService.getUserById(
-      id,
-      undefined,
-      'onlyProfileData',
-    );
+    return await this.usersService.getUserById(id, undefined, 'publicScope');
   }
 
   @Get()
   async getMe(@UserData('id') id: string) {
-    return await this.usersService.getUserById(
-      id,
-      undefined,
-      'onlyProfileData',
-    );
+    return await this.usersService.getUserById(id, undefined, 'privateScope');
   }
 
   @Delete()
@@ -110,10 +91,10 @@ export class UsersController extends AppService {
   @Put('subscribe/:subscribedToId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async toggleSubscribe(
-    @UserData() user: User,
+    @UserData('id') id: string,
     @Param('subscribedToId') subscribedToId: string,
   ) {
-    return await this.usersService.subscribeToggler(user, subscribedToId);
+    return await this.usersService.subscribeToggler(id, subscribedToId);
   }
 
   @Get('subscribe/subscribers')

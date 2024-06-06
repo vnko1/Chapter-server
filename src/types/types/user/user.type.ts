@@ -1,5 +1,6 @@
 export type UserScope =
   | 'defaultScope'
-  | 'withoutSensitiveData'
-  | 'withoutProfileData'
-  | 'onlyProfileData';
+  | 'privateScope'
+  | 'privateScopeWithAssociation'
+  | 'publicScope'
+  | 'publicScopeWithAssociation';
