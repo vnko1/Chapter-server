@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import {
   CountOptions,
   DestroyOptions,
+  FindAndCountOptions,
   FindOptions,
   FindOrCreateOptions,
   Optional,
@@ -60,7 +61,14 @@ export class UserService extends AppService {
     return this.userModel.findAll(opt);
   }
 
-  countUsers(opt?: Omit<CountOptions<any>, 'group'>) {
+  countData(opt?: Omit<CountOptions<any>, 'group'>) {
     return this.userModel.count(opt);
+  }
+
+  findAndCountUsers(
+    opt?: Omit<FindAndCountOptions<any>, 'group'>,
+    scope: UserScope = 'defaultScope',
+  ) {
+    return this.userModel.scope(scope).findAndCountAll(opt);
   }
 }
