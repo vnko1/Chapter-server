@@ -1,6 +1,11 @@
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable } from '@nestjs/common';
-import { DestroyOptions, FindAndCountOptions, FindOptions } from 'sequelize';
+import {
+  CreateOptions,
+  DestroyOptions,
+  FindAndCountOptions,
+  FindOptions,
+} from 'sequelize';
 
 import { AppService } from 'src/common/services';
 
@@ -12,8 +17,8 @@ export class LikeService extends AppService {
     super();
   }
 
-  async addLike(postId: string, userId: string) {
-    return this.likeModel.create({ postId, userId });
+  async addLike(postId: string, userId: string, opt?: CreateOptions) {
+    return this.likeModel.create({ postId, userId }, opt);
   }
 
   async findLike(opt?: FindOptions) {

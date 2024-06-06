@@ -14,6 +14,7 @@ import {
   PostsModule,
   AdminModule,
   LikeModule,
+  CommentsModule,
 } from './modules';
 import { User, UserSubscribers } from './modules/user/model';
 import { Post } from './modules/post/model';
@@ -46,6 +47,7 @@ import { Comment } from './modules/comment/model';
     TasksModule,
     UsersModule,
     PostsModule,
+    CommentsModule,
     AdminModule,
   ],
 })

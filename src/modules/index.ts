@@ -9,3 +9,4 @@ export { PostModule } from './post/post.module';
 export { AdminModule } from './admin/admin.module';
 export { LikeModule } from './like/like.module';
 export { CommentModule } from './comment/comment.module';
+export { CommentsModule } from './comments/comments.module';
