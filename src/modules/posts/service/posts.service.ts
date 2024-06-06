@@ -49,9 +49,7 @@ export class PostsService extends AppService {
 
   async deletePost(postId: string) {
     const post = await this.postService.findPostByPK(postId);
-    if (post.imageUrl) {
-      await this.deleteImage(post.imageUrl);
-    }
+    if (post.imageUrl) await this.cloudsService.delete(post.imageUrl);
 
     return post.destroy();
   }
@@ -66,9 +64,5 @@ export class PostsService extends AppService {
       fetch_format: 'auto',
       quality: 'auto',
     });
-  }
-
-  private async deleteImage(url: string) {
-    return this.cloudsService.delete(url);
   }
 }

@@ -13,7 +13,12 @@ import { CloudsResponse, DeleteOptions } from './clouds.type';
 @Injectable()
 export class CloudsService extends AppService {
   private getPublicIdFromUrl(url: string, sliceValue: number = -4) {
-    return url.split('/').slice(sliceValue).join('/').split('.')[0];
+    return url
+      .split('/')
+      .slice(sliceValue)
+      .join('/')
+      .split('.')[0]
+      .split('?')[0];
   }
 
   async upload(
@@ -30,8 +35,6 @@ export class CloudsService extends AppService {
   async delete(url: string, options?: Partial<DeleteOptions>) {
     try {
       const publicId = this.getPublicIdFromUrl(url, options?.sliceValue);
-      console.log('🚀 ~ CloudsService ~ delete ~ publicId:', publicId);
-
       return await clouds.uploader.destroy(publicId, options);
     } catch (error) {
       throw new ServiceUnavailableException(error.message);
