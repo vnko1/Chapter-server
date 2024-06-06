@@ -86,10 +86,14 @@ export class PostsService extends AppService {
     return { count, posts: rows };
   }
 
-  async likeToggler(postId: string, userId: string) {}
+  async likeToggler(postId: string, userId: string) {
+    const like = await this.likeService.findLike({ where: { postId, userId } });
+    if (like) await like.destroy();
+    else await this.likeService.addLike(postId, userId);
+    const likes = await this.likeService.findLikes({
+      where: { postId },
+      attributes: ['userId'],
+    });
+    return likes.map((like) => like.userId);
+  }
 }
-// async toggleLike(postId: string, userId: string) {
-//   const like = await this.likeModel.findOne({ where: { postId, userId } });
-//   if (like) await like.destroy();
-//   else await this.likeModel.create({ postId, userId });
-// }

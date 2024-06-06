@@ -103,4 +103,9 @@ export class PostsController {
   ) {
     return await this.postsService.getPostsById(userId, offset, limit);
   }
+
+  @Post('post/:id/like')
+  async addPost(@Param('id') postId: string, @UserData('id') userId: string) {
+    return await this.postsService.likeToggler(postId, userId);
+  }
 }
