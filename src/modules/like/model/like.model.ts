@@ -5,6 +5,7 @@ import {
   AllowNull,
   ForeignKey,
   DataType,
+  BelongsTo,
 } from 'sequelize-typescript';
 import { Post } from 'src/modules/post/model';
 import { User } from 'src/modules/user/model';
@@ -20,4 +21,10 @@ export class Like extends Model {
   @AllowNull(false)
   @Column({ type: DataType.UUID })
   userId: string;
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => User)
+  post: Post;
 }
