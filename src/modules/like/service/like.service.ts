@@ -32,8 +32,3 @@ export class LikeService extends AppService {
     return this.likeModel.destroy(opt);
   }
 }
-// async toggleLike(postId: string, userId: string) {
-//   const like = await this.likeModel.findOne({ where: { postId, userId } });
-//   if (like) await like.destroy();
-//   else await this.likeModel.create({ postId, userId });
-// }

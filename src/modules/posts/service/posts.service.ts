@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 
 import { AppService } from 'src/common/services';
 
+import { LikeService } from 'src/modules/like/service';
 import { PostService } from 'src/modules/post/service';
 import { CloudsService } from 'src/modules/clouds/service';
 import { Post } from 'src/modules/post/model';
@@ -15,6 +16,7 @@ export class PostsService extends AppService {
   constructor(
     private postService: PostService,
     private cloudsService: CloudsService,
+    private likeService: LikeService,
   ) {
     super();
   }
@@ -83,4 +85,11 @@ export class PostsService extends AppService {
     });
     return { count, posts: rows };
   }
+
+  async likeToggler(postId: string, userId: string) {}
 }
+// async toggleLike(postId: string, userId: string) {
+//   const like = await this.likeModel.findOne({ where: { postId, userId } });
+//   if (like) await like.destroy();
+//   else await this.likeModel.create({ postId, userId });
+// }
