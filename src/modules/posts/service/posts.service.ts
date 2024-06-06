@@ -75,7 +75,7 @@ export class PostsService extends AppService {
     return post;
   }
 
-  async getOwnerPosts(userId: string, offset: number, limit: number) {
+  async getPostsById(userId: string, offset: number, limit: number) {
     const { count, rows } = await this.postService.findAndCountPosts({
       where: { userId },
       offset,

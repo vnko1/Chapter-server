@@ -92,6 +92,15 @@ export class PostsController {
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
     @UserData('id') userId: string,
   ) {
-    return await this.postsService.getOwnerPosts(userId, offset, limit);
+    return await this.postsService.getPostsById(userId, offset, limit);
+  }
+
+  @Get('user/:id')
+  async getUserPosts(
+    @Query('limit', new DefaultValuePipe(LIMIT), ParseIntPipe) limit: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+    @Param('id') userId: string,
+  ) {
+    return await this.postsService.getPostsById(userId, offset, limit);
   }
 }
