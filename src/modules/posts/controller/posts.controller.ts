@@ -2,13 +2,16 @@ import {
   BadRequestException,
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -16,7 +19,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
-import { multerConfig } from 'src/utils';
+import { LIMIT, multerConfig } from 'src/utils';
 import { UserData } from 'src/common/decorators';
 
 import { PostsService } from '../service';
@@ -81,5 +84,14 @@ export class PostsController {
   @Get('post/:id')
   async getPostById(@Param('id') postId: string) {
     return await this.postsService.getPostById(postId);
+  }
+
+  @Get('own')
+  async getOwnPosts(
+    @Query('limit', new DefaultValuePipe(LIMIT), ParseIntPipe) limit: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+    @UserData('id') userId: string,
+  ) {
+    return await this.postsService.getOwnerPosts(userId, offset, limit);
   }
 }

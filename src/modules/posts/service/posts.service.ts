@@ -25,6 +25,18 @@ export class PostsService extends AppService {
     overwrite: false,
   };
 
+  private async uploadImage(image: Express.Multer.File, userId: string) {
+    const res = await this.cloudsService.upload(image.path, {
+      ...this.uploadOption,
+      public_id: userId + '/' + randomUUID(),
+    });
+
+    return await this.cloudsService.edit(res.secure_url, {
+      fetch_format: 'auto',
+      quality: 'auto',
+    });
+  }
+
   async addPost(postDto: PostDto, userId: string) {
     const { image, ...postData } = postDto;
 
@@ -63,15 +75,12 @@ export class PostsService extends AppService {
     return post;
   }
 
-  private async uploadImage(image: Express.Multer.File, userId: string) {
-    const res = await this.cloudsService.upload(image.path, {
-      ...this.uploadOption,
-      public_id: userId + '/' + randomUUID(),
+  async getOwnerPosts(userId: string, offset: number, limit: number) {
+    const { count, rows } = await this.postService.findAndCountPosts({
+      where: { userId },
+      offset,
+      limit,
     });
-
-    return await this.cloudsService.edit(res.secure_url, {
-      fetch_format: 'auto',
-      quality: 'auto',
-    });
+    return { count, posts: rows };
   }
 }

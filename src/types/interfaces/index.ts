@@ -1,2 +1,2 @@
 export * from './cred/cred.interface';
-export * from './searchParam/searchParam.interface';
+export * from './searchParams/searchParams.interface';

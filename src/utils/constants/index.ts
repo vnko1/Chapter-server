@@ -7,3 +7,4 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/png',
   'image/webp',
 ];
+export const LIMIT = 10;
