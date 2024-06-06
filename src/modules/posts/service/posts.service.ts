@@ -10,6 +10,7 @@ import { CloudsService } from 'src/modules/clouds/service';
 import { Post } from 'src/modules/post/model';
 
 import { PostDto } from '../dto';
+import { User } from 'src/modules/user/model';
 
 @Injectable()
 export class PostsService extends AppService {
@@ -100,5 +101,46 @@ export class PostsService extends AppService {
       attributes: ['userId'],
     });
     return likes.map((like) => like.userId);
+  }
+
+  async getPostLikes(postId: string) {
+    const post = await this.postService.findPostByPK(postId);
+    if (!post) throw new NotFoundException('Post not found');
+
+    const likes = await this.likeService.findLikes({
+      where: { postId },
+      include: [
+        {
+          model: User,
+          as: 'liker',
+          attributes: [
+            'id',
+            'email',
+            'firstName',
+            'lastName',
+            'nickName',
+            'status',
+            'location',
+            'avatarUrl',
+          ],
+        },
+      ],
+    });
+    return likes.map((like) => like.liker);
+  }
+
+  async getUserLikedPosts(userId: string, offset: number, limit: number) {
+    const { count, rows } = await this.likeService.findAndCountLikes({
+      where: { userId },
+      offset,
+      limit,
+      attributes: {
+        exclude: ['id', 'postId', 'userId', 'createdAt', 'updatedAt'],
+      },
+      include: {
+        model: Post,
+      },
+    });
+    return { count, posts: rows.map((row) => row.likedPost) };
   }
 }

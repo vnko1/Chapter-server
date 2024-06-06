@@ -22,9 +22,9 @@ export class Like extends Model {
   @Column({ type: DataType.UUID })
   userId: string;
 
-  @BelongsTo(() => User)
-  user: User;
+  @BelongsTo(() => User, { as: 'liker' })
+  liker: User;
 
-  @BelongsTo(() => User)
-  post: Post;
+  @BelongsTo(() => Post, { as: 'likedPost' })
+  likedPost: Post;
 }

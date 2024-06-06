@@ -230,6 +230,19 @@ export class User extends Model {
   })
   posts: Post[];
 
-  @HasMany(() => Like, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  likes: Like[];
+  @HasMany(() => Like, {
+    foreignKey: 'userId',
+    as: 'likesGiven',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  likesGiven: Like[];
+
+  @HasMany(() => Like, {
+    foreignKey: 'postId',
+    as: 'likesReceived',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  likesReceived: Like[];
 }

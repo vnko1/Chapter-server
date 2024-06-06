@@ -109,4 +109,18 @@ export class PostsController {
   async addPost(@Param('id') postId: string, @UserData('id') userId: string) {
     return await this.postsService.likeToggler(postId, userId);
   }
+
+  @Get('post/:id/likes')
+  async getLikedUsers(@Param('id') postId: string) {
+    return await this.postsService.getPostLikes(postId);
+  }
+
+  @Get('own/likes')
+  async getOwnLikedPosts(
+    @UserData('id') userId: string,
+    @Query('limit', new DefaultValuePipe(LIMIT), ParseIntPipe) limit: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+  ) {
+    return await this.postsService.getUserLikedPosts(userId, offset, limit);
+  }
 }
