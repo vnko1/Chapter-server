@@ -34,13 +34,20 @@ export class PostsService extends AppService {
     return this.postService.createPost(post, userId);
   }
 
-  async editPost(postDto: PostDto, postId: string, userId: string) {
-    const { image, ...postData } = postDto;
-
-    const post: Partial<Post> = { ...postData };
-
-    if (image) post.imageUrl = await this.uploadImage(image, userId);
-    return this.postService.editPost(post, { where: { id: postId } });
+  async editPost(
+    { image, text, title }: PostDto,
+    postId: string,
+    userId: string,
+  ) {
+    const post = await this.postService.findPostByPK(postId);
+    if (image) {
+      await this.cloudsService.delete(post.imageUrl);
+      post.imageUrl = await this.uploadImage(image, userId);
+    }
+    if (title) post.title = title;
+    if (text) post.text = text;
+    return post.save();
+    // return this.postService.editPost(post, { where: { id: postId } });
   }
 
   async deletePost(postId: string) {
