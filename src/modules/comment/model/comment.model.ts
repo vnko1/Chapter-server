@@ -55,4 +55,14 @@ export class Comment extends Model {
     onUpdate: 'CASCADE',
   })
   userComment: User;
+
+  @ForeignKey(() => Comment)
+  @Column({ type: DataType.UUID })
+  parentId: string;
+
+  @BelongsTo(() => Comment, { as: 'parentComment' })
+  parent: Comment;
+
+  @HasMany(() => Comment, 'parentId')
+  replies: Comment[];
 }
