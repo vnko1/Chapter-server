@@ -47,7 +47,6 @@ export class PostsService extends AppService {
     if (title) post.title = title;
     if (text) post.text = text;
     return post.save();
-    // return this.postService.editPost(post, { where: { id: postId } });
   }
 
   async deletePost(postId: string) {
