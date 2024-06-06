@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import {
   CountOptions,
   DestroyOptions,
+  FindAndCountOptions,
   FindOptions,
   Optional,
   UpdateOptions,
@@ -46,5 +47,9 @@ export class PostService extends AppService {
 
   countPosts(opt?: Omit<CountOptions<any>, 'group'>) {
     return this.postModel.count(opt);
+  }
+
+  findAndCountPosts(opt?: Omit<FindAndCountOptions<any>, 'group'>) {
+    return this.postModel.findAndCountAll(opt);
   }
 }
