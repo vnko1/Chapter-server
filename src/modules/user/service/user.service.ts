@@ -65,7 +65,7 @@ export class UserService extends AppService {
     return this.userModel.count(opt);
   }
 
-  findAndCountUsers(
+  findAndCountData(
     opt?: Omit<FindAndCountOptions<any>, 'group'>,
     scope: UserScope = 'defaultScope',
   ) {
