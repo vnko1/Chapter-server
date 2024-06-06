@@ -21,6 +21,7 @@ import { Post } from 'src/modules/post/model';
 import { Like } from 'src/modules/like/model';
 
 import { UserSubscribers } from './userSubscribers.model';
+import { Comment } from 'src/modules/comment/model';
 
 @Scopes(() => ({
   privateScope: {
@@ -245,4 +246,12 @@ export class User extends Model {
     onUpdate: 'CASCADE',
   })
   likesReceived: Like[];
+
+  @HasMany(() => Comment, {
+    foreignKey: 'userId',
+    as: 'userComments',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  comments: Comment[];
 }
