@@ -77,10 +77,9 @@ export class PostsController {
 
   @UseGuards(DataGuard)
   @Delete('post/:postId')
-  // @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deletePost(@Param('postId') postId: string) {
-    return postId;
-    // return await this.postsService.deletePost(postId);
+    return await this.postsService.deletePost(postId);
   }
 
   @Get('post/:postId')
