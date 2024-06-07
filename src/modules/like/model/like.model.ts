@@ -6,6 +6,7 @@ import {
   ForeignKey,
   DataType,
   BelongsTo,
+  BeforeSave,
 } from 'sequelize-typescript';
 import { Comment } from 'src/modules/comment/model';
 import { Post } from 'src/modules/post/model';
@@ -18,15 +19,15 @@ export class Like extends Model {
   @Column
   postId: number;
 
+  @ForeignKey(() => Comment)
+  @AllowNull(true)
+  @Column({ type: DataType.UUID })
+  commentId: string | null;
+
   @ForeignKey(() => User)
   @AllowNull(false)
   @Column({ type: DataType.UUID })
   userId: string;
-
-  @ForeignKey(() => Comment)
-  @AllowNull(false)
-  @Column({ type: DataType.UUID })
-  commentId: string;
 
   @BelongsTo(() => User, { as: 'liker' })
   liker: User;
@@ -34,6 +35,13 @@ export class Like extends Model {
   @BelongsTo(() => Post, { as: 'likedPost' })
   likedPost: Post;
 
-  @BelongsTo(() => Comment)
-  comment: Comment;
+  @BelongsTo(() => Comment, { as: 'likedComment' })
+  likedComment: Comment;
+
+  @BeforeSave
+  static async validateLike(instance: Like) {
+    if (!instance.postId && !instance.commentId) {
+      throw new Error('Either postId or commentId must be provided.');
+    }
+  }
 }

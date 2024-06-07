@@ -27,20 +27,12 @@ export class Comment extends Model {
   @Column
   text: string;
 
-  @HasMany(() => Like, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  likes: Like[];
-
   @ForeignKey(() => Post)
   @AllowNull(false)
   @Column
   postId: number;
 
-  @BelongsTo(() => Post, {
-    foreignKey: 'postId',
-    targetKey: 'id',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
+  @BelongsTo(() => Post, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   commentedPost: Post;
 
   @ForeignKey(() => User)
@@ -49,20 +41,22 @@ export class Comment extends Model {
   userId: string;
 
   @BelongsTo(() => User, {
-    foreignKey: 'userId',
-    targetKey: 'id',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   userComment: User;
 
   @ForeignKey(() => Comment)
+  @AllowNull(true)
   @Column({ type: DataType.UUID })
-  parentId: string;
+  parentId: string | null;
 
-  @BelongsTo(() => Comment, { as: 'parentComment' })
-  parent: Comment;
+  @BelongsTo(() => Comment, { onDelete: 'CASCADE' })
+  parentComment: Comment;
 
-  @HasMany(() => Comment, 'parentId')
+  @HasMany(() => Comment, { foreignKey: 'parentId', onDelete: 'CASCADE' })
   replies: Comment[];
+
+  @HasMany(() => Like, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  likes: Like[];
 }
