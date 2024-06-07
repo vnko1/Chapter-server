@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   HttpStatus,
   Param,
@@ -39,13 +40,19 @@ export class CommentsController {
 
   @UseGuards(DataGuard)
   @Patch('comment/:commentId')
-  // @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async updateComment(
     @Body(new ZodValidationPipe(commentSchema))
     commentDto: CommentDto,
-    @UserData('userId') userId: string,
     @Param('commentId') commentId: string,
   ) {
-    return commentId;
+    return await this.commentsService.updateComment(commentDto, commentId);
+  }
+
+  @UseGuards(DataGuard)
+  @Delete('comment/:commentId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteComment(@Param('commentId') commentId: string) {
+    return await this.commentsService.deleteComment(commentId);
   }
 }

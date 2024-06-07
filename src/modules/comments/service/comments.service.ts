@@ -39,4 +39,14 @@ export class CommentsService extends AppService {
       parentId: parentId || null,
     });
   }
+
+  async updateComment(commentDto: CommentDto, commentId: string) {
+    return this.commentService.editComment(commentDto, {
+      where: { commentId },
+    });
+  }
+
+  async deleteComment(commentId: string) {
+    return this.commentService.deleteComment({ where: { commentId } });
+  }
 }
