@@ -81,16 +81,15 @@ export class AuthService extends AppService {
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
 
-    const user = await this.userService.createUserInstance({
-      ...userEmailDto,
-      otp,
-    });
-
     await this.mailService.sendEmail(
       this.mailService.mailSendOpt(userEmailDto.email, otp, 'confirmEmail'),
     );
 
-    return { id: user.id };
+    const { id } = await this.userService.createUserInstance({
+      ...userEmailDto,
+      otp,
+    });
+    return { id };
   }
 
   async confirmEmail(userData: User, otpDto: OTPDto) {
@@ -119,11 +118,6 @@ export class AuthService extends AppService {
   ) {
     const otp = this.genOtp();
 
-    await this.userService.updateUser(
-      { otp },
-      { where: { email: userEmailDto.email }, paranoid: false },
-    );
-
     const sendOpt = this.mailService.mailSendOpt(
       userEmailDto.email,
       otp,
@@ -131,6 +125,11 @@ export class AuthService extends AppService {
     );
 
     await this.mailService.sendEmail(sendOpt);
+
+    await this.userService.updateUser(
+      { otp },
+      { where: { email: userEmailDto.email }, paranoid: false },
+    );
   }
 
   async nickNameValidate(nickName: string) {
@@ -184,13 +183,13 @@ export class AuthService extends AppService {
   async sendRestoreOtp(user: User) {
     const otp = this.genOtp();
 
-    user.otp = otp;
-    user.accountStatus = 'restoring';
-    await user.save();
-
     await this.mailService.sendEmail(
       this.mailService.mailSendOpt(user.email, otp, 'restoreAccount'),
     );
+
+    user.otp = otp;
+    user.accountStatus = 'restoring';
+    await user.save();
 
     return user;
   }
