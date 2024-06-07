@@ -17,6 +17,10 @@ export class LikeService extends AppService {
     super();
   }
 
+  queryOpt: FindOptions = {
+    include: [{ model: Like, as: 'likes', attributes: ['userId'] }],
+  };
+
   async addLike(postId: string, userId: string, opt?: CreateOptions) {
     return this.likeModel.create({ postId, userId }, opt);
   }

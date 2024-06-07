@@ -33,6 +33,7 @@ import { Comment } from './modules/comment/model';
         username: process.env.DB_USERNAME,
         password: process.env.DB_ROOT_PASSWORD,
         database: process.env.DB_DATABASE,
+        retryAttempts: 1,
         synchronize: true,
         autoLoadModels: true,
         models: [User, UserSubscribers, Like, Post, Comment],
