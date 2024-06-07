@@ -6,11 +6,12 @@ import { AppService } from 'src/common/services';
 
 import { LikeService } from 'src/modules/like/service';
 import { PostService } from 'src/modules/post/service';
+import { CommentService } from 'src/modules/comment/service';
 import { CloudsService } from 'src/modules/clouds/service';
 import { Post } from 'src/modules/post/model';
+import { User } from 'src/modules/user/model';
 
 import { PostDto } from '../dto';
-import { User } from 'src/modules/user/model';
 
 @Injectable()
 export class PostsService extends AppService {
@@ -18,6 +19,7 @@ export class PostsService extends AppService {
     private postService: PostService,
     private cloudsService: CloudsService,
     private likeService: LikeService,
+    private commentService: CommentService,
   ) {
     super();
   }
@@ -72,17 +74,18 @@ export class PostsService extends AppService {
   }
 
   async getPostById(postId: string) {
-    const post = await this.postService.findPostByPK(postId);
-    if (!post) throw new NotFoundException('Post not found');
-
-    return post;
+    return await this.postService.findPostByPK(
+      postId,
+      this.commentService.queryOpt,
+    );
   }
 
-  async getPostsById(userId: string, offset: number, limit: number) {
+  async getPostsByUserId(userId: string, offset: number, limit: number) {
     const { count, rows } = await this.postService.findAndCountPosts({
       where: { userId },
       offset,
       limit,
+      ...this.commentService.queryOpt,
     });
     return { count, posts: rows };
   }
@@ -103,7 +106,7 @@ export class PostsService extends AppService {
     return likes.map((like) => like.userId);
   }
 
-  async getPostLikes(postId: string) {
+  async getUsersLikedPost(postId: string) {
     const post = await this.postService.findPostByPK(postId);
     if (!post) throw new NotFoundException('Post not found');
 
@@ -129,7 +132,7 @@ export class PostsService extends AppService {
     return likes.map((like) => like.liker);
   }
 
-  async getUserLikedPosts(userId: string, offset: number, limit: number) {
+  async getPostsLikedByUser(userId: string, offset: number, limit: number) {
     const { count, rows } = await this.likeService.findAndCountLikes({
       where: { userId },
       offset,
@@ -137,9 +140,12 @@ export class PostsService extends AppService {
       attributes: {
         exclude: ['likeId', 'postId', 'userId', 'createdAt', 'updatedAt'],
       },
-      include: {
-        model: Post,
-      },
+      include: [
+        {
+          model: Post,
+          include: [this.commentService.queryOpt.include[0]],
+        },
+      ],
     });
     return { count, posts: rows.map((row) => row.likedPost) };
   }

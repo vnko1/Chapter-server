@@ -14,12 +14,33 @@ import {
   Optional,
   UpdateOptions,
 } from 'sequelize';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class CommentService extends AppService {
   constructor(@InjectModel(Comment) private commentModel: typeof Comment) {
     super();
   }
+
+  queryOpt: FindOptions = {
+    order: [['createdAt', 'ASC']],
+    include: [
+      {
+        model: Comment,
+        where: { parentId: { [Op.is]: null } },
+        required: false,
+        order: [['createdAt', 'ASC']],
+        include: [
+          {
+            model: Comment,
+            as: 'replies',
+            order: [['createdAt', 'ASC']],
+            required: false,
+          },
+        ],
+      },
+    ],
+  };
 
   async createInstance(values?: Optional<any, string>, opt?: BuildOptions) {
     return new Comment(values, opt);
