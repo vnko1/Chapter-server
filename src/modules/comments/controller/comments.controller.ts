@@ -63,8 +63,10 @@ export class CommentsController {
 
   @Get(':postId')
   async getComments(
-    @Param('postId') commentId: string,
-    @Query('limit', new DefaultValuePipe(LIMIT), ParseIntPipe) limit: number,
+    @Param('postId') postId: string,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-  ) {}
+    @Query('limit', new DefaultValuePipe(LIMIT), ParseIntPipe) limit: number,
+  ) {
+    return await this.commentsService.getPostComments(postId, offset, limit);
+  }
 }
