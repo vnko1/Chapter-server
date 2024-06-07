@@ -1,4 +1,11 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 
 import { UserData } from 'src/common/decorators';
 import { ZodValidationPipe } from 'src/common/pipes';
@@ -11,6 +18,7 @@ export class CommentsController {
   constructor(private commentsService: CommentsService) {}
 
   @Post('comment/:postId/:parentId?')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async addComment(
     @Body(new ZodValidationPipe(commentSchema))
     commentDto: CommentDto,
