@@ -4,7 +4,9 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 
 import { UserData } from 'src/common/decorators';
@@ -12,6 +14,7 @@ import { ZodValidationPipe } from 'src/common/pipes';
 
 import { CommentsService } from '../service';
 import { CommentDto, commentSchema } from '../dto';
+import { DataGuard } from 'src/common/guards';
 
 @Controller('comments')
 export class CommentsController {
@@ -32,5 +35,17 @@ export class CommentsController {
       postId,
       parentId,
     );
+  }
+
+  @UseGuards(DataGuard)
+  @Patch('comment/:commentId')
+  // @HttpCode(HttpStatus.NO_CONTENT)
+  async updateComment(
+    @Body(new ZodValidationPipe(commentSchema))
+    commentDto: CommentDto,
+    @UserData('userId') userId: string,
+    @Param('commentId') commentId: string,
+  ) {
+    return commentId;
   }
 }

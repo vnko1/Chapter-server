@@ -21,11 +21,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
 import { LIMIT, multerConfig } from 'src/utils';
+import { DataGuard } from 'src/common/guards';
 import { UserData } from 'src/common/decorators';
 
 import { PostsService } from '../service';
 import { PostDto, postSchema } from '../dto';
-import { PostGuard } from '../guards';
 
 @Controller('posts')
 export class PostsController {
@@ -52,7 +52,7 @@ export class PostsController {
     return await this.postsService.addPost(parsedSchema.data, userId);
   }
 
-  @UseGuards(PostGuard)
+  @UseGuards(DataGuard)
   @Patch('post/:postId')
   @UseInterceptors(
     FileInterceptor('image', { storage: diskStorage(multerConfig) }),
@@ -75,11 +75,12 @@ export class PostsController {
     return await this.postsService.editPost(parsedSchema.data, postId, userId);
   }
 
-  @UseGuards(PostGuard)
+  @UseGuards(DataGuard)
   @Delete('post/:postId')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  // @HttpCode(HttpStatus.NO_CONTENT)
   async deletePost(@Param('postId') postId: string) {
-    return await this.postsService.deletePost(postId);
+    return postId;
+    // return await this.postsService.deletePost(postId);
   }
 
   @Get('post/:postId')
