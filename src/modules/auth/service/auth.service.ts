@@ -9,13 +9,12 @@ import { randomUUID } from 'crypto';
 import { generate } from 'otp-generator';
 
 import { AppService } from 'src/common/services';
-import { UserAccountDto, UserEmailDto } from 'src/common/dto';
 
 import { MailService } from 'src/modules/mail/service';
 import { User } from 'src/modules/user/model';
 import { UserService } from 'src/modules/user/service';
 
-import { OTPDto, SignInDto } from '../dto';
+import { OTPDto, SignInDto, UserAccountDto, UserEmailDto } from '../dto';
 
 interface Options {
   digits?: boolean;

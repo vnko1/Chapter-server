@@ -15,12 +15,7 @@ import { CredEnum } from 'src/types';
 import { AppService } from 'src/common/services';
 import { ZodValidationPipe } from 'src/common/pipes';
 import { AccountStatus, Public, RToken, UserData } from 'src/common/decorators';
-import {
-  UserAccountDto,
-  userAccountSchema,
-  UserEmailDto,
-  userEmailSchema,
-} from 'src/common/dto';
+
 import { AccountGuard } from 'src/common/guards';
 
 import { User } from 'src/modules/user/model';
@@ -34,6 +29,10 @@ import {
   passwordSchema,
   SignInDto,
   signInSchema,
+  UserAccountDto,
+  userAccountSchema,
+  UserEmailDto,
+  userEmailSchema,
 } from '../dto';
 
 @UseGuards(AccountGuard)
