@@ -14,18 +14,19 @@ export class DataGuard extends AppService implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const [key] = Object.keys(request.params);
-
     const user = request.user as User;
+
     const isOwn = await user.$has(
       this.getPropertyKey(key),
       request.params[key],
     );
+
     if (!isOwn) throw new ForbiddenException();
     return true;
   }
 
   private getPropertyKey(key: string) {
     if (key === 'postId') return 'posts';
-    return 'comments';
+    return 'userComments';
   }
 }
