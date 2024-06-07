@@ -172,7 +172,7 @@ export class User extends Model {
   @AllowNull(false)
   @Default(DataType.UUIDV4)
   @Column({ type: DataType.UUID })
-  id: string;
+  userId: string;
 
   @AllowNull(false)
   @Column({ unique: true, type: DataType.STRING })

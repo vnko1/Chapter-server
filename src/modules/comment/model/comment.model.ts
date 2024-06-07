@@ -29,8 +29,8 @@ export class Comment extends Model {
 
   @ForeignKey(() => Post)
   @AllowNull(false)
-  @Column
-  postId: number;
+  @Column({ type: DataType.UUID })
+  postId: string;
 
   @BelongsTo(() => Post, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   commentedPost: Post;

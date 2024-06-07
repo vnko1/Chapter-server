@@ -37,7 +37,7 @@ export class PostsController {
   )
   @HttpCode(HttpStatus.NO_CONTENT)
   async createPost(
-    @UserData('id') userId: string,
+    @UserData('userId') userId: string,
     @Body() createPostDto: PostDto,
     @UploadedFile() image: Express.Multer.File,
   ) {
@@ -59,7 +59,7 @@ export class PostsController {
   )
   @HttpCode(HttpStatus.NO_CONTENT)
   async updatePost(
-    @UserData('id') userId: string,
+    @UserData('userId') userId: string,
     @Param('id') postId: string,
     @Body() createPostDto: PostDto,
     @UploadedFile() image: Express.Multer.File,
@@ -91,7 +91,7 @@ export class PostsController {
   async getOwnPosts(
     @Query('limit', new DefaultValuePipe(LIMIT), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-    @UserData('id') userId: string,
+    @UserData('userId') userId: string,
   ) {
     return await this.postsService.getPostsById(userId, offset, limit);
   }
@@ -106,7 +106,10 @@ export class PostsController {
   }
 
   @Put('post/:id/like')
-  async addPost(@Param('id') postId: string, @UserData('id') userId: string) {
+  async addPost(
+    @Param('id') postId: string,
+    @UserData('userId') userId: string,
+  ) {
     return await this.postsService.likeToggler(postId, userId);
   }
 
@@ -117,7 +120,7 @@ export class PostsController {
 
   @Get('own/likes')
   async getOwnLikedPosts(
-    @UserData('id') userId: string,
+    @UserData('userId') userId: string,
     @Query('limit', new DefaultValuePipe(LIMIT), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
   ) {

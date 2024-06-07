@@ -7,6 +7,7 @@ import {
   Default,
   ForeignKey,
   HasMany,
+  PrimaryKey,
 } from 'sequelize-typescript';
 import { Comment } from 'src/modules/comment/model';
 import { Like } from 'src/modules/like/model';
@@ -14,6 +15,12 @@ import { User } from 'src/modules/user/model';
 
 @Table
 export class Post extends Model {
+  @PrimaryKey
+  @AllowNull(false)
+  @Default(DataType.UUIDV4)
+  @Column({ type: DataType.UUID })
+  postId: string;
+
   @AllowNull
   @Column({ type: DataType.STRING })
   imageUrl: string;

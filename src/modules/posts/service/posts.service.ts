@@ -114,7 +114,7 @@ export class PostsService extends AppService {
           model: User,
           as: 'liker',
           attributes: [
-            'id',
+            'userId',
             'email',
             'firstName',
             'lastName',
@@ -135,7 +135,7 @@ export class PostsService extends AppService {
       offset,
       limit,
       attributes: {
-        exclude: ['id', 'postId', 'userId', 'createdAt', 'updatedAt'],
+        exclude: ['likeId', 'postId', 'userId', 'createdAt', 'updatedAt'],
       },
       include: {
         model: Post,

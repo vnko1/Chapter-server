@@ -16,7 +16,11 @@ export class AdminService extends AppService {
     super();
   }
 
-  async getUserById(id: string, findOptions?: FindOptions, scope?: UserScope) {
-    return this.userService.findUserByPK(id, findOptions, scope);
+  async getUserById(
+    userId: string,
+    findOptions?: FindOptions,
+    scope?: UserScope,
+  ) {
+    return this.userService.findUserByPK(userId, findOptions, scope);
   }
 }

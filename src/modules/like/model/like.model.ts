@@ -7,6 +7,8 @@ import {
   DataType,
   BelongsTo,
   BeforeSave,
+  PrimaryKey,
+  Default,
 } from 'sequelize-typescript';
 import { Comment } from 'src/modules/comment/model';
 import { Post } from 'src/modules/post/model';
@@ -14,10 +16,16 @@ import { User } from 'src/modules/user/model';
 
 @Table
 export class Like extends Model {
+  @PrimaryKey
+  @AllowNull(false)
+  @Default(DataType.UUIDV4)
+  @Column({ type: DataType.UUID })
+  likeId: string;
+
   @ForeignKey(() => Post)
   @AllowNull(false)
-  @Column
-  postId: number;
+  @Column({ type: DataType.UUID })
+  postId: string;
 
   @ForeignKey(() => Comment)
   @AllowNull(true)

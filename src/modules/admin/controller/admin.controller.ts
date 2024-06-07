@@ -13,8 +13,8 @@ export class AdminController {
 
   @Public()
   @Get('user/:id')
-  async getUser(@Param('id') id: string) {
-    return await this.adminService.getUserById(id, {
+  async getUser(@Param('id') userId: string) {
+    return await this.adminService.getUserById(userId, {
       include: [
         { model: User, as: 'subscribers' },
         { model: User, as: 'subscribedTo' },

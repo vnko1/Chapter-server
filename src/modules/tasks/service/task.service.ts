@@ -29,7 +29,7 @@ export class TaskService extends AppService {
       for (const user of users) {
         if (user.deletedAt < expStamp)
           await this.userService.deleteUser({
-            where: { id: user.id },
+            where: { userId: user.userId },
             force: true,
           });
       }
