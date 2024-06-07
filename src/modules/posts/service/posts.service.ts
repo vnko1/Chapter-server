@@ -98,14 +98,14 @@ export class PostsService extends AppService {
     return { count, posts: rows };
   }
 
-  async likeToggler(postId: string, userId: string) {
+  async postLikeToggler(postId: string, userId: string) {
     const post = await this.postService.findPostByPK(postId);
     if (!post) throw new NotFoundException('Post not found');
 
     const like = await this.likeService.findLike({ where: { postId, userId } });
 
     if (like) await like.destroy();
-    else await this.likeService.addLike(postId, userId);
+    else await this.likeService.addLike({ postId, userId, commentId: null });
 
     const likes = await this.likeService.findLikes({
       where: { postId },

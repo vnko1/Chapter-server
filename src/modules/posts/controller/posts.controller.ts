@@ -106,11 +106,11 @@ export class PostsController {
   }
 
   @Put('post/:postId/like')
-  async addPost(
+  async likePost(
     @Param('postId') postId: string,
     @UserData('userId') userId: string,
   ) {
-    return await this.postsService.likeToggler(postId, userId);
+    return await this.postsService.postLikeToggler(postId, userId);
   }
 
   @Get('post/:postId/likers')

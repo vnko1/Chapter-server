@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -68,5 +69,13 @@ export class CommentsController {
     @Query('limit', new DefaultValuePipe(LIMIT), ParseIntPipe) limit: number,
   ) {
     return await this.commentsService.getPostComments(postId, offset, limit);
+  }
+
+  @Put(':commentId/like')
+  async likeComment(
+    @Param('commentId') commentId: string,
+    @UserData('userId') userId: string,
+  ) {
+    return await this.commentsService.commentLikeToggler(commentId, userId);
   }
 }

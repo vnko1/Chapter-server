@@ -72,4 +72,23 @@ export class CommentsService extends AppService {
     });
     return { count, comments: rows };
   }
+
+  async commentLikeToggler(commentId: string, userId: string) {
+    const comment = await this.commentService.findCommentByPK(commentId);
+
+    if (!comment) throw new NotFoundException('Comment not found');
+    const like = await this.likeService.findLike({
+      where: { commentId, userId },
+    });
+
+    if (like) await like.destroy();
+    else await this.likeService.addLike({ commentId, userId, postId: null });
+
+    const likes = await this.likeService.findLikes({
+      where: { commentId },
+      attributes: ['userId'],
+    });
+
+    return likes.map((like) => like.userId);
+  }
 }

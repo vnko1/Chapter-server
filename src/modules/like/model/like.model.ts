@@ -23,7 +23,7 @@ export class Like extends Model {
   likeId: string;
 
   @ForeignKey(() => Post)
-  @AllowNull(false)
+  @AllowNull(null)
   @Column({ type: DataType.UUID })
   postId: string;
 

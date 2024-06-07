@@ -5,6 +5,7 @@ import {
   DestroyOptions,
   FindAndCountOptions,
   FindOptions,
+  Optional,
 } from 'sequelize';
 
 import { AppService } from 'src/common/services';
@@ -21,10 +22,6 @@ export class LikeService extends AppService {
     include: [{ model: Like, as: 'likes', attributes: ['userId'] }],
   };
 
-  async addLike(postId: string, userId: string, opt?: CreateOptions) {
-    return this.likeModel.create({ postId, userId }, opt);
-  }
-
   async findLike(opt?: FindOptions) {
     return this.likeModel.findOne(opt);
   }
@@ -39,5 +36,12 @@ export class LikeService extends AppService {
 
   async deleteLike(opt?: DestroyOptions) {
     return this.likeModel.destroy(opt);
+  }
+
+  async addLike<T extends Optional<any, string>>(
+    values: T,
+    opt?: CreateOptions,
+  ) {
+    return this.likeModel.create(values, opt);
   }
 }
