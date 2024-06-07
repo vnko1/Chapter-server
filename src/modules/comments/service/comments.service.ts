@@ -1,14 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { FindOptions, Op } from 'sequelize';
 
 import { AppService } from 'src/common/services';
 
+import { Like } from 'src/modules/like/model';
+import { Comment } from 'src/modules/comment/model';
 import { CommentService } from 'src/modules/comment/service';
 import { LikeService } from 'src/modules/like/service';
 import { PostService } from 'src/modules/post/service';
 
 import { CommentDto } from '../dto';
-import { Comment } from 'src/modules/comment/model';
-import { Op } from 'sequelize';
 
 @Injectable()
 export class CommentsService extends AppService {
@@ -19,6 +20,29 @@ export class CommentsService extends AppService {
   ) {
     super();
   }
+
+  queryOpt: FindOptions = {
+    include: [
+      {
+        model: Comment,
+        as: 'replies',
+        order: [['createdAt', 'ASC']],
+        required: false,
+        include: [
+          {
+            model: Like,
+            as: 'replyLikes',
+            attributes: ['userId'],
+          },
+        ],
+      },
+      {
+        model: Like,
+        as: 'commentLikes',
+        attributes: ['userId'],
+      },
+    ],
+  };
 
   async addComment(
     commentDto: CommentDto,
@@ -61,14 +85,7 @@ export class CommentsService extends AppService {
       order: [['createdAt', 'ASC']],
       offset,
       limit,
-      include: [
-        {
-          model: Comment,
-          as: 'replies',
-          order: [['createdAt', 'ASC']],
-          required: false,
-        },
-      ],
+      include: [this.queryOpt.include[0]],
     });
     return { count, comments: rows };
   }

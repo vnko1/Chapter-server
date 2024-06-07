@@ -57,6 +57,19 @@ export class Comment extends Model {
   @HasMany(() => Comment, { foreignKey: 'parentId', onDelete: 'CASCADE' })
   replies: Comment[];
 
-  @HasMany(() => Like, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  likes: Like[];
+  @HasMany(() => Like, {
+    foreignKey: 'commentId',
+    as: 'commentLikes',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  commentLikes: Like[];
+
+  @HasMany(() => Like, {
+    foreignKey: 'commentId',
+    as: 'replyLikes',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  replyLikes: Like[];
 }
