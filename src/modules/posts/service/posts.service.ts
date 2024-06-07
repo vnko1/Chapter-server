@@ -74,10 +74,10 @@ export class PostsService extends AppService {
   }
 
   async getPostById(postId: string) {
-    return await this.postService.findPostByPK(
-      postId,
-      this.commentService.queryOpt,
-    );
+    return await this.postService.findPostByPK(postId, {
+      order: [['createdAt', 'ASC']],
+      include: [this.commentService.queryOpt.include[0]],
+    });
   }
 
   async getPostsByUserId(userId: string, offset: number, limit: number) {
@@ -85,7 +85,8 @@ export class PostsService extends AppService {
       where: { userId },
       offset,
       limit,
-      ...this.commentService.queryOpt,
+      order: [['createdAt', 'ASC']],
+      include: [this.commentService.queryOpt.include[0]],
     });
     return { count, posts: rows };
   }

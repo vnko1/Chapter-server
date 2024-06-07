@@ -23,7 +23,6 @@ export class CommentService extends AppService {
   }
 
   queryOpt: FindOptions = {
-    order: [['createdAt', 'ASC']],
     include: [
       {
         model: Comment,
