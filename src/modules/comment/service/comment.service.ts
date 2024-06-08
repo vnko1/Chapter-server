@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-
-import { AppService } from 'src/common/services';
-
-import { Comment } from '../model';
 import {
   BuildOptions,
   CountOptions,
@@ -14,69 +10,16 @@ import {
   Optional,
   UpdateOptions,
 } from 'sequelize';
-import { Op } from 'sequelize';
 
-import { Like } from 'src/modules/like/model';
+import { AppService } from 'src/common/services';
+
+import { Comment } from '../model';
 
 @Injectable()
 export class CommentService extends AppService {
   constructor(@InjectModel(Comment) private commentModel: typeof Comment) {
     super();
   }
-
-  commentsQueryOpt: FindOptions = {
-    include: [
-      {
-        model: Like,
-        as: 'commentLikes',
-        attributes: ['userId'],
-      },
-      {
-        model: Comment,
-        as: 'replies',
-        order: [['createdAt', 'ASC']],
-        required: false,
-        include: [
-          {
-            model: Like,
-            as: 'replyLikes',
-            attributes: ['userId'],
-          },
-        ],
-      },
-    ],
-  };
-
-  postsQueryOpt: FindOptions = {
-    include: [
-      {
-        model: Comment,
-        where: { parentId: { [Op.is]: null } },
-        required: false,
-        order: [['createdAt', 'ASC']],
-        include: [
-          {
-            model: Like,
-            as: 'commentLikes',
-            attributes: ['userId'],
-          },
-          {
-            model: Comment,
-            as: 'replies',
-            order: [['createdAt', 'ASC']],
-            required: false,
-            include: [
-              {
-                model: Like,
-                as: 'replyLikes',
-                attributes: ['userId'],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
 
   async createInstance(values?: Optional<any, string>, opt?: BuildOptions) {
     return new Comment(values, opt);

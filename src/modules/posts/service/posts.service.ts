@@ -1,18 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { FindOptions, Op } from 'sequelize';
 import { UploadApiOptions } from 'cloudinary';
 import { randomUUID } from 'crypto';
 
 import { AppService } from 'src/common/services';
 
+import { Like } from 'src/modules/like/model';
 import { LikeService } from 'src/modules/like/service';
-import { PostService } from 'src/modules/post/service';
-import { CommentService } from 'src/modules/comment/service';
-import { CloudsService } from 'src/modules/clouds/service';
-import { UserService } from 'src/modules/user/service';
 import { Post } from 'src/modules/post/model';
+import { PostService } from 'src/modules/post/service';
+import { Comment } from 'src/modules/comment/model';
+import { User } from 'src/modules/user/model';
+import { CloudsService } from 'src/modules/clouds/service';
 
 import { PostDto } from '../dto';
-import { Like } from 'src/modules/like/model';
 
 @Injectable()
 export class PostsService extends AppService {
@@ -20,11 +21,60 @@ export class PostsService extends AppService {
     private postService: PostService,
     private cloudsService: CloudsService,
     private likeService: LikeService,
-    private commentService: CommentService,
-    private userService: UserService,
   ) {
     super();
   }
+  private likeQueryOpt: FindOptions = {
+    include: [{ model: Like, as: 'likes', attributes: ['userId'] }],
+  };
+  private commentsQueryOpt = {
+    include: [
+      {
+        model: User,
+        as: 'liker',
+        attributes: [
+          'userId',
+          'email',
+          'firstName',
+          'lastName',
+          'nickName',
+          'status',
+          'location',
+          'avatarUrl',
+        ],
+      },
+    ],
+  };
+  private postsQueryOpt: FindOptions = {
+    include: [
+      {
+        model: Comment,
+        where: { parentId: { [Op.is]: null } },
+        required: false,
+        order: [['createdAt', 'ASC']],
+        include: [
+          {
+            model: Like,
+            as: 'commentLikes',
+            attributes: ['userId'],
+          },
+          {
+            model: Comment,
+            as: 'replies',
+            order: [['createdAt', 'ASC']],
+            required: false,
+            include: [
+              {
+                model: Like,
+                as: 'replyLikes',
+                attributes: ['userId'],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
 
   private uploadOption: UploadApiOptions = {
     resource_type: 'image',
@@ -78,10 +128,7 @@ export class PostsService extends AppService {
   async getPostById(postId: string) {
     return await this.postService.findPostByPK(postId, {
       order: [['createdAt', 'ASC']],
-      include: [
-        this.commentService.postsQueryOpt.include[0],
-        this.likeService.queryOpt.include[0],
-      ],
+      include: [this.postsQueryOpt.include[0], this.likeQueryOpt.include[0]],
     });
   }
 
@@ -91,10 +138,7 @@ export class PostsService extends AppService {
       offset,
       limit,
       order: [['createdAt', 'ASC']],
-      include: [
-        this.likeService.queryOpt.include[0],
-        this.commentService.postsQueryOpt.include[0],
-      ],
+      include: [this.likeQueryOpt.include[0], this.postsQueryOpt.include[0]],
     });
 
     return { count, posts: rows };
@@ -122,7 +166,7 @@ export class PostsService extends AppService {
 
     const likes = await this.likeService.findLikes({
       where: { postId },
-      include: [...this.userService.commentsQueryOpt.include],
+      include: [...this.commentsQueryOpt.include],
     });
     return likes.map((like) => like.liker);
   }
@@ -136,7 +180,7 @@ export class PostsService extends AppService {
       },
       include: [
         { model: Like, as: 'likes', attributes: ['userId'], where: { userId } },
-        this.commentService.postsQueryOpt.include[0],
+        this.postsQueryOpt.include[0],
       ],
     });
     return { count, posts: rows };

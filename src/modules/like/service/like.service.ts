@@ -18,10 +18,6 @@ export class LikeService extends AppService {
     super();
   }
 
-  queryOpt: FindOptions = {
-    include: [{ model: Like, as: 'likes', attributes: ['userId'] }],
-  };
-
   async findLike(opt?: FindOptions) {
     return this.likeModel.findOne(opt);
   }
