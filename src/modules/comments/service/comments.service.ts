@@ -3,13 +3,11 @@ import { FindOptions, Op } from 'sequelize';
 
 import { AppService } from 'src/common/services';
 
-import { CommentService } from 'src/modules/comment/service';
-import { LikeService } from 'src/modules/like/service';
-import { PostService } from 'src/modules/post/service';
+import { CommentService, Comment } from 'src/modules/comment';
+import { LikeService, Like } from 'src/modules/like';
+import { PostService } from 'src/modules/post';
 
 import { CommentDto } from '../dto';
-import { Like } from 'src/modules/like/model';
-import { Comment } from 'src/modules/comment/model';
 
 @Injectable()
 export class CommentsService extends AppService {

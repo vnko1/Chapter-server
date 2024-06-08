@@ -3,15 +3,14 @@ import { FindOptions, Op } from 'sequelize';
 import { UploadApiOptions } from 'cloudinary';
 import { randomUUID } from 'crypto';
 
+import { COMMENTS_LIMIT } from 'src/utils';
 import { AppService } from 'src/common/services';
 
-import { Like } from 'src/modules/like/model';
-import { LikeService } from 'src/modules/like/service';
-import { Post } from 'src/modules/post/model';
-import { PostService } from 'src/modules/post/service';
-import { Comment } from 'src/modules/comment/model';
-import { User } from 'src/modules/user/model';
-import { CloudsService } from 'src/modules/clouds/service';
+import { Like, LikeService } from 'src/modules/like';
+import { Post, PostService } from 'src/modules/post';
+import { Comment } from 'src/modules/comment';
+import { User } from 'src/modules/user';
+import { CloudsService } from 'src/modules/clouds';
 
 import { PostDto } from '../dto';
 
@@ -50,6 +49,7 @@ export class PostsService extends AppService {
       {
         model: Comment,
         where: { parentId: { [Op.is]: null } },
+        limit: COMMENTS_LIMIT,
         required: false,
         order: [['createdAt', 'ASC']],
         include: [

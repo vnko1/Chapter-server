@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 
-import { Like } from './model';
-import { LikeService } from './service';
+import { Like, LikeService } from '.';
 
 @Module({
   imports: [SequelizeModule.forFeature([Like])],

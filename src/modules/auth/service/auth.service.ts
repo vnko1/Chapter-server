@@ -10,9 +10,8 @@ import { generate } from 'otp-generator';
 
 import { AppService } from 'src/common/services';
 
-import { MailService } from 'src/modules/mail/service';
-import { User } from 'src/modules/user/model';
-import { UserService } from 'src/modules/user/service';
+import { MailService } from 'src/modules/mail';
+import { User, UserService } from 'src/modules/user';
 
 import { OTPDto, SignInDto, UserAccountDto, UserEmailDto } from '../dto';
 

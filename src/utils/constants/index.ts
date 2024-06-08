@@ -8,3 +8,4 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/webp',
 ];
 export const LIMIT = 10;
+export const COMMENTS_LIMIT = 3;

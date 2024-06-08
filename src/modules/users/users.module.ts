@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 
 import { CloudsModule } from '../clouds/clouds.module';
-import { UserModule } from '../user/user.module';
 
-import { UsersService } from './service';
-import { UsersController } from './controller';
+import { UserModule } from '..';
+
+import { UsersService, UsersController } from '.';
 
 @Module({
   imports: [CloudsModule, UserModule],

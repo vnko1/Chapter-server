@@ -4,7 +4,7 @@ import { Op } from 'sequelize';
 import { addDays } from 'date-fns';
 
 import { AppService } from 'src/common/services';
-import { UserService } from 'src/modules/user/service';
+import { UserService } from 'src/modules/user';
 
 @Injectable()
 export class TaskService extends AppService {

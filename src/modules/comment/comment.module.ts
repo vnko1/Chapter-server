@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 
-import { CommentService } from './service';
-import { Comment } from './model';
+import { CommentService, Comment } from '.';
 
 @Module({
   imports: [SequelizeModule.forFeature([Comment])],

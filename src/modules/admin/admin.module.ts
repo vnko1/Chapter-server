@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { UserModule } from '../user/user.module';
-import { PostModule } from '../post/post.module';
+import { UserModule, PostModule } from 'src/modules';
 
-import { AdminService } from './service';
-import { AdminController } from './controller';
+import { AdminService, AdminController } from '.';
 
 @Module({
   imports: [UserModule, PostModule],

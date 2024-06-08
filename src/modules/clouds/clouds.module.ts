@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { CloudsService } from './service';
-import { CloudsProvider } from './provider';
+import { CloudsService, CloudsProvider } from '.';
 
 @Module({
   providers: [CloudsProvider, CloudsService],

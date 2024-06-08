@@ -4,8 +4,8 @@ import { FindOptions } from 'sequelize';
 import { UserScope } from 'src/types';
 import { AppService } from 'src/common/services';
 
-import { UserService } from 'src/modules/user/service';
-import { PostService } from 'src/modules/post/service';
+import { UserService } from 'src/modules/user';
+import { PostService } from 'src/modules/post';
 
 @Injectable()
 export class AdminService extends AppService {

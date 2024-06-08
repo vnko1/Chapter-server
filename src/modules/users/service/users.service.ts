@@ -9,9 +9,8 @@ import { UploadApiOptions } from 'cloudinary';
 import { UserScope } from 'src/types';
 import { AppService } from 'src/common/services';
 
-import { UserService } from 'src/modules/user/service';
-import { CloudsService } from 'src/modules/clouds/service';
-import { User } from 'src/modules/user/model';
+import { UserService, User } from 'src/modules/user';
+import { CloudsService } from 'src/modules/clouds';
 
 import { UpdatePasswordDto, UpdateUserDto } from '../dto';
 

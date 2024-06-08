@@ -10,9 +10,10 @@ import {
   PrimaryKey,
   Default,
 } from 'sequelize-typescript';
+
+import { User } from 'src/modules/user';
 import { Comment } from 'src/modules/comment/model';
 import { Post } from 'src/modules/post/model';
-import { User } from 'src/modules/user/model';
 
 @Table
 export class Like extends Model {

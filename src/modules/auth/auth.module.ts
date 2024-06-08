@@ -8,8 +8,7 @@ import { UserMiddleware } from 'src/common/middlewares';
 import { UserModule } from '../user/user.module';
 import { MailModule } from '../mail/mail.module';
 
-import { AuthService } from './service';
-import { AuthController } from './controller';
+import { AuthService, AuthController } from '.';
 
 @Module({
   imports: [

@@ -23,7 +23,7 @@ import { AppService } from 'src/common/services';
 import { UserData } from 'src/common/decorators';
 import { ZodValidationPipe } from 'src/common/pipes';
 
-import { User } from 'src/modules/user/model';
+import { User } from 'src/modules/user';
 
 import {
   UpdatePasswordDto,
