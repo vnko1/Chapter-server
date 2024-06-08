@@ -18,7 +18,8 @@ import { AccountStatus, Public, RToken, UserData } from 'src/common/decorators';
 
 import { AccountGuard } from 'src/common/guards';
 
-import { User } from 'src/modules/user/model';
+import { User } from 'src/modules/user';
+
 import { AuthService } from '../service';
 import {
   NickNameDto,

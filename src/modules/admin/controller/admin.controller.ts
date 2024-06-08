@@ -2,8 +2,8 @@ import { Controller, Get, Param } from '@nestjs/common';
 
 import { Public } from 'src/common/decorators';
 
-import { User } from 'src/modules/user/model';
-import { Post } from 'src/modules/post/model';
+import { User } from 'src/modules/user';
+import { Post } from 'src/modules/post';
 
 import { AdminService } from '../service';
 

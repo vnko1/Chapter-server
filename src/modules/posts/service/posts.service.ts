@@ -5,13 +5,11 @@ import { randomUUID } from 'crypto';
 
 import { AppService } from 'src/common/services';
 
-import { Like } from 'src/modules/like/model';
-import { LikeService } from 'src/modules/like/service';
-import { Post } from 'src/modules/post/model';
-import { PostService } from 'src/modules/post/service';
-import { Comment } from 'src/modules/comment/model';
-import { User } from 'src/modules/user/model';
-import { CloudsService } from 'src/modules/clouds/service';
+import { Like, LikeService } from 'src/modules/like';
+import { Post, PostService } from 'src/modules/post';
+import { Comment } from 'src/modules/comment';
+import { User } from 'src/modules/user';
+import { CloudsService } from 'src/modules/clouds';
 
 import { PostDto } from '../dto';
 

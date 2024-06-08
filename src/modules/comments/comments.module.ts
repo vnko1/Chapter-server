@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { CommentModule } from '../comment/comment.module';
-import { LikeModule } from '../like/like.module';
-import { PostModule } from '../post/post.module';
+import { CommentModule, LikeModule, PostModule } from '..';
 
-import { CommentsController } from './controller';
-import { CommentsService } from './service';
+import { CommentsController, CommentsService } from '.';
 
 @Module({
   imports: [CommentModule, LikeModule, PostModule],

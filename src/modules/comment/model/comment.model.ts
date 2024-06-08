@@ -11,9 +11,9 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 
-import { Like } from 'src/modules/like/model';
+import { Like } from 'src/modules/like';
+import { User } from 'src/modules/user';
 import { Post } from 'src/modules/post/model';
-import { User } from 'src/modules/user/model';
 
 @Table
 export class Comment extends Model {

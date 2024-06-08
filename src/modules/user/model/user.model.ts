@@ -17,11 +17,12 @@ import {
 import * as bcrypt from 'bcrypt';
 
 import { TIMEOUT_VALUES } from 'src/utils';
+
+import { Like } from 'src/modules/like';
+import { Comment } from 'src/modules/comment';
 import { Post } from 'src/modules/post/model';
-import { Like } from 'src/modules/like/model';
 
 import { UserSubscribers } from './userSubscribers.model';
-import { Comment } from 'src/modules/comment/model';
 
 @Scopes(() => ({
   privateScope: {

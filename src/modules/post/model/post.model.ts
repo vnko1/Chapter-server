@@ -9,9 +9,10 @@ import {
   HasMany,
   PrimaryKey,
 } from 'sequelize-typescript';
-import { Comment } from 'src/modules/comment/model';
-import { Like } from 'src/modules/like/model';
-import { User } from 'src/modules/user/model';
+
+import { Comment } from 'src/modules/comment';
+import { Like } from 'src/modules/like';
+import { User } from 'src/modules/user';
 
 @Table
 export class Post extends Model {
