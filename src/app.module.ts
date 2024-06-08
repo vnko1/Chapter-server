@@ -17,6 +17,7 @@ import {
   CommentsModule,
   FeedModule,
   BookModule,
+  BooksModule,
 } from './modules';
 import { Post } from './modules/post';
 import { User, UserSubscribers } from './modules/user';
@@ -55,6 +56,7 @@ import { Book } from './modules/book';
     FeedModule,
     AdminModule,
     BookModule,
+    BooksModule,
   ],
 })
 export class AppModule {}

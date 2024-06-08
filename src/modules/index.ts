@@ -12,3 +12,4 @@ export { CommentModule } from './comment/comment.module';
 export { CommentsModule } from './comments/comments.module';
 export { FeedModule } from './feed/feed.module';
 export { BookModule } from './book/book.module';
+export { BooksModule } from './books/books.module';

@@ -12,7 +12,9 @@ import {
 import { AppService } from 'src/common/services';
 
 import { Book } from '../model';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class BookService extends AppService {
   constructor(@InjectModel(Book) private readonly bookModel: typeof Book) {
     super();
