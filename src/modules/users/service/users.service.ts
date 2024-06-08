@@ -30,10 +30,10 @@ export class UsersService extends AppService {
     overwrite: true,
   };
 
-  private async uploadAvatar(image: Express.Multer.File, id: string) {
+  private async uploadAvatar(image: Express.Multer.File, userId: string) {
     const res = await this.cloudsService.upload(image.path, {
       ...this.uploadOption,
-      public_id: id,
+      public_id: userId,
     });
 
     return await this.cloudsService.edit(res.secure_url, {
@@ -42,12 +42,20 @@ export class UsersService extends AppService {
     });
   }
 
-  async deleteUser(id: string) {
-    return this.userService.deleteUser({ where: { id } });
+  async deleteUser(userId: string) {
+    return this.userService.deleteUser({ where: { userId } });
   }
 
-  async getUserById(id: string, findOptions?: FindOptions, scope?: UserScope) {
-    const user = await this.userService.findUserByPK(id, findOptions, scope);
+  async getUserById(
+    userId: string,
+    findOptions?: FindOptions,
+    scope?: UserScope,
+  ) {
+    const user = await this.userService.findUserByPK(
+      userId,
+      findOptions,
+      scope,
+    );
 
     if (!user) throw new NotFoundException('User not exists');
     return user;
@@ -64,24 +72,26 @@ export class UsersService extends AppService {
 
     return this.userService.updateUser(
       { password: newPassword },
-      { where: { id: user.id } },
+      { where: { userId: user.userId } },
     );
   }
 
   async updateUser(user: User, updateUserDto: UpdateUserDto) {
     const { image, ...userData } = updateUserDto;
 
-    await this.userService.updateUser(userData, { where: { id: user.id } });
+    await this.userService.updateUser(userData, {
+      where: { userId: user.userId },
+    });
 
     if (image) {
-      user.avatarUrl = await this.uploadAvatar(image, user.id);
+      user.avatarUrl = await this.uploadAvatar(image, user.userId);
       await user.save();
     }
   }
 
-  async subscribeToggler(id: string, subscribedToId: string) {
+  async subscribeToggler(userId: string, subscribedToId: string) {
     const user = await this.userService.findUserByPK(
-      id,
+      userId,
       undefined,
       'privateScopeWithAssociation',
     );
@@ -95,18 +105,18 @@ export class UsersService extends AppService {
     return await user.$add('subscribedTo', subscribedTo);
   }
 
-  async getSubscribers(id: string) {
+  async getSubscribers(userId: string) {
     const user = await this.userService.findUserByPK(
-      id,
+      userId,
       undefined,
       'privateScopeWithAssociation',
     );
     return user.subscribers;
   }
 
-  async getSubscription(id: string) {
+  async getSubscription(userId: string) {
     const user = await this.userService.findUserByPK(
-      id,
+      userId,
       undefined,
       'privateScopeWithAssociation',
     );

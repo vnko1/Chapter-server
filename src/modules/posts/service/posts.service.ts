@@ -1,16 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { FindOptions, Op } from 'sequelize';
 import { UploadApiOptions } from 'cloudinary';
 import { randomUUID } from 'crypto';
 
 import { AppService } from 'src/common/services';
 
+import { Like } from 'src/modules/like/model';
 import { LikeService } from 'src/modules/like/service';
-import { PostService } from 'src/modules/post/service';
-import { CloudsService } from 'src/modules/clouds/service';
 import { Post } from 'src/modules/post/model';
+import { PostService } from 'src/modules/post/service';
+import { Comment } from 'src/modules/comment/model';
+import { User } from 'src/modules/user/model';
+import { CloudsService } from 'src/modules/clouds/service';
 
 import { PostDto } from '../dto';
-import { User } from 'src/modules/user/model';
 
 @Injectable()
 export class PostsService extends AppService {
@@ -21,6 +24,57 @@ export class PostsService extends AppService {
   ) {
     super();
   }
+  private likeQueryOpt: FindOptions = {
+    include: [{ model: Like, as: 'likes', attributes: ['userId'] }],
+  };
+  private commentsQueryOpt = {
+    include: [
+      {
+        model: User,
+        as: 'liker',
+        attributes: [
+          'userId',
+          'email',
+          'firstName',
+          'lastName',
+          'nickName',
+          'status',
+          'location',
+          'avatarUrl',
+        ],
+      },
+    ],
+  };
+  private postsQueryOpt: FindOptions = {
+    include: [
+      {
+        model: Comment,
+        where: { parentId: { [Op.is]: null } },
+        required: false,
+        order: [['createdAt', 'ASC']],
+        include: [
+          {
+            model: Like,
+            as: 'commentLikes',
+            attributes: ['userId'],
+          },
+          {
+            model: Comment,
+            as: 'replies',
+            order: [['createdAt', 'ASC']],
+            required: false,
+            include: [
+              {
+                model: Like,
+                as: 'replyLikes',
+                attributes: ['userId'],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
 
   private uploadOption: UploadApiOptions = {
     resource_type: 'image',
@@ -72,29 +126,32 @@ export class PostsService extends AppService {
   }
 
   async getPostById(postId: string) {
-    const post = await this.postService.findPostByPK(postId);
-    if (!post) throw new NotFoundException('Post not found');
-
-    return post;
+    return await this.postService.findPostByPK(postId, {
+      order: [['createdAt', 'ASC']],
+      include: [this.postsQueryOpt.include[0], this.likeQueryOpt.include[0]],
+    });
   }
 
-  async getPostsById(userId: string, offset: number, limit: number) {
+  async getPostsByUserId(userId: string, offset: number, limit: number) {
     const { count, rows } = await this.postService.findAndCountPosts({
       where: { userId },
       offset,
       limit,
+      order: [['createdAt', 'ASC']],
+      include: [this.likeQueryOpt.include[0], this.postsQueryOpt.include[0]],
     });
+
     return { count, posts: rows };
   }
 
-  async likeToggler(postId: string, userId: string) {
+  async postLikeToggler(postId: string, userId: string) {
     const post = await this.postService.findPostByPK(postId);
     if (!post) throw new NotFoundException('Post not found');
 
     const like = await this.likeService.findLike({ where: { postId, userId } });
 
     if (like) await like.destroy();
-    else await this.likeService.addLike(postId, userId);
+    else await this.likeService.addLike({ postId, userId, commentId: null });
 
     const likes = await this.likeService.findLikes({
       where: { postId },
@@ -103,44 +160,29 @@ export class PostsService extends AppService {
     return likes.map((like) => like.userId);
   }
 
-  async getPostLikes(postId: string) {
+  async getUsersLikedPost(postId: string) {
     const post = await this.postService.findPostByPK(postId);
     if (!post) throw new NotFoundException('Post not found');
 
     const likes = await this.likeService.findLikes({
       where: { postId },
-      include: [
-        {
-          model: User,
-          as: 'liker',
-          attributes: [
-            'id',
-            'email',
-            'firstName',
-            'lastName',
-            'nickName',
-            'status',
-            'location',
-            'avatarUrl',
-          ],
-        },
-      ],
+      include: [...this.commentsQueryOpt.include],
     });
     return likes.map((like) => like.liker);
   }
 
-  async getUserLikedPosts(userId: string, offset: number, limit: number) {
-    const { count, rows } = await this.likeService.findAndCountLikes({
-      where: { userId },
+  async getPostsLikedByUser(userId: string, offset: number, limit: number) {
+    const { count, rows } = await this.postService.findAndCountPosts({
       offset,
       limit,
       attributes: {
-        exclude: ['id', 'postId', 'userId', 'createdAt', 'updatedAt'],
+        exclude: ['likeId'],
       },
-      include: {
-        model: Post,
-      },
+      include: [
+        { model: Like, as: 'likes', attributes: ['userId'], where: { userId } },
+        this.postsQueryOpt.include[0],
+      ],
     });
-    return { count, posts: rows.map((row) => row.likedPost) };
+    return { count, posts: rows };
   }
 }

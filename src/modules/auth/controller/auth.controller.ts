@@ -15,12 +15,7 @@ import { CredEnum } from 'src/types';
 import { AppService } from 'src/common/services';
 import { ZodValidationPipe } from 'src/common/pipes';
 import { AccountStatus, Public, RToken, UserData } from 'src/common/decorators';
-import {
-  UserAccountDto,
-  userAccountSchema,
-  UserEmailDto,
-  userEmailSchema,
-} from 'src/common/dto';
+
 import { AccountGuard } from 'src/common/guards';
 
 import { User } from 'src/modules/user/model';
@@ -34,6 +29,10 @@ import {
   passwordSchema,
   SignInDto,
   signInSchema,
+  UserAccountDto,
+  userAccountSchema,
+  UserEmailDto,
+  userEmailSchema,
 } from '../dto';
 
 @UseGuards(AccountGuard)
@@ -94,16 +93,17 @@ export class AuthController extends AppService {
   @AccountStatus(['confirmed'])
   @HttpCode(HttpStatus.NO_CONTENT)
   async createUserAccount(
-    @Param('id') id: string,
+    @Param('id') userId: string,
     @Body(new ZodValidationPipe(userAccountSchema))
     userAccountDto: UserAccountDto,
   ) {
-    return await this.authService.createAccount(userAccountDto, id);
+    return await this.authService.createAccount(userAccountDto, userId);
   }
 
   @Public()
   @Post('register/otp')
   @AccountStatus(['unconfirmed'])
+  @HttpCode(HttpStatus.NO_CONTENT)
   async resentOtp(
     @Body(new ZodValidationPipe(userEmailSchema)) userEmailDto: UserEmailDto,
   ) {
@@ -119,7 +119,7 @@ export class AuthController extends AppService {
   @RToken()
   @Post('refresh')
   async refreshAccessToken(@UserData() user: User, @Res() res: Response) {
-    const cred = await this.authService.createCred({ sub: user.id });
+    const cred = await this.authService.createCred({ sub: user.userId });
     return this.setCookieResponse(
       res,
       cred,

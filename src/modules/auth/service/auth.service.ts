@@ -9,13 +9,12 @@ import { randomUUID } from 'crypto';
 import { generate } from 'otp-generator';
 
 import { AppService } from 'src/common/services';
-import { UserAccountDto, UserEmailDto } from 'src/common/dto';
 
 import { MailService } from 'src/modules/mail/service';
 import { User } from 'src/modules/user/model';
 import { UserService } from 'src/modules/user/service';
 
-import { OTPDto, SignInDto } from '../dto';
+import { OTPDto, SignInDto, UserAccountDto, UserEmailDto } from '../dto';
 
 interface Options {
   digits?: boolean;
@@ -81,16 +80,15 @@ export class AuthService extends AppService {
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
 
-    const user = await this.userService.createUserInstance({
-      ...userEmailDto,
-      otp,
-    });
-
     await this.mailService.sendEmail(
       this.mailService.mailSendOpt(userEmailDto.email, otp, 'confirmEmail'),
     );
 
-    return { id: user.id };
+    const { userId } = await this.userService.createUserInstance({
+      ...userEmailDto,
+      otp,
+    });
+    return { userId };
   }
 
   async confirmEmail(userData: User, otpDto: OTPDto) {
@@ -107,10 +105,10 @@ export class AuthService extends AppService {
         otp: null,
         accountStatus: 'confirmed',
       },
-      { where: { id: user.id }, paranoid: false },
+      { where: { userId: user.userId }, paranoid: false },
     );
 
-    return { id: user.id, email: user.email };
+    return { userId: user.userId, email: user.email };
   }
 
   async resentOtp(
@@ -119,11 +117,6 @@ export class AuthService extends AppService {
   ) {
     const otp = this.genOtp();
 
-    await this.userService.updateUser(
-      { otp },
-      { where: { email: userEmailDto.email }, paranoid: false },
-    );
-
     const sendOpt = this.mailService.mailSendOpt(
       userEmailDto.email,
       otp,
@@ -131,6 +124,11 @@ export class AuthService extends AppService {
     );
 
     await this.mailService.sendEmail(sendOpt);
+
+    await this.userService.updateUser(
+      { otp },
+      { where: { email: userEmailDto.email }, paranoid: false },
+    );
   }
 
   async nickNameValidate(nickName: string) {
@@ -143,10 +141,10 @@ export class AuthService extends AppService {
     return user;
   }
 
-  async createAccount(userAccountDto: UserAccountDto, id: string) {
+  async createAccount(userAccountDto: UserAccountDto, userId: string) {
     return await this.userService.updateUser(
       { ...userAccountDto, accountStatus: 'completed' },
-      { where: { id } },
+      { where: { userId } },
     );
   }
 
@@ -159,7 +157,7 @@ export class AuthService extends AppService {
     if (!isValidPass)
       throw new UnauthorizedException('Wrong email or password');
     const payload = {
-      sub: userData.id,
+      sub: userData.userId,
     };
     return await this.createCred(payload);
   }
@@ -177,20 +175,20 @@ export class AuthService extends AppService {
   async passUpdate(user: User, password: string) {
     return this.userService.updateUser(
       { password, otp: null },
-      { where: { id: user.id } },
+      { where: { userId: user.userId } },
     );
   }
 
   async sendRestoreOtp(user: User) {
     const otp = this.genOtp();
 
-    user.otp = otp;
-    user.accountStatus = 'restoring';
-    await user.save();
-
     await this.mailService.sendEmail(
       this.mailService.mailSendOpt(user.email, otp, 'restoreAccount'),
     );
+
+    user.otp = otp;
+    user.accountStatus = 'restoring';
+    await user.save();
 
     return user;
   }
@@ -203,13 +201,13 @@ export class AuthService extends AppService {
       'Invalid otp',
       400,
     );
-    await this.userService.restoreUser({ where: { id: user.id } });
+    await this.userService.restoreUser({ where: { userId: user.userId } });
     return this.userService.updateUser(
       {
         otp: null,
         accountStatus: 'completed',
       },
-      { where: { id: user.id } },
+      { where: { userId: user.userId } },
     );
   }
 }

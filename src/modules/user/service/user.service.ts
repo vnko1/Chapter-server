@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import {
   CountOptions,
+  CreateOptions,
   DestroyOptions,
   FindAndCountOptions,
   FindOptions,
@@ -29,8 +30,11 @@ export class UserService extends AppService {
     return this.userModel.findOrCreate(options);
   }
 
-  createUserInstance<T extends Optional<any, string>>(userData: T) {
-    return this.userModel.create(userData);
+  createUserInstance<T extends Optional<any, string>>(
+    values: T,
+    opt?: CreateOptions,
+  ) {
+    return this.userModel.create(values, opt);
   }
 
   findUser(opt: FindOptions, scope: UserScope = 'defaultScope') {
@@ -45,8 +49,8 @@ export class UserService extends AppService {
     return this.userModel.scope(scope).findByPk(pk, opt);
   }
 
-  updateUser<T extends object>(userData: T, opt: UpdateOptions) {
-    return this.userModel.update(userData, opt);
+  updateUser<T extends object>(values: T, opt: UpdateOptions) {
+    return this.userModel.update(values, opt);
   }
 
   deleteUser(opt: DestroyOptions) {

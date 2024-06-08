@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import {
   CountOptions,
+  CreateOptions,
   DestroyOptions,
   FindAndCountOptions,
   FindOptions,
@@ -21,12 +22,16 @@ export class PostService extends AppService {
     super();
   }
 
-  createPost<T extends Optional<any, string>>(postData: T, userId: string) {
-    return this.postModel.create({ ...postData, userId });
+  createPost<T extends Optional<any, string>>(
+    values: T,
+    userId: string,
+    opt?: CreateOptions,
+  ) {
+    return this.postModel.create({ ...values, userId }, opt);
   }
 
-  editPost<T extends object>(postData: T, opt: UpdateOptions) {
-    return this.postModel.update(postData, opt);
+  editPost<T extends object>(values: T, opt: UpdateOptions) {
+    return this.postModel.update(values, opt);
   }
 
   deletePost(opt: DestroyOptions) {

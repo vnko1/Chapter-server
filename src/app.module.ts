@@ -10,13 +10,16 @@ import {
   TasksModule,
   UsersModule,
   PostModule,
+  CommentModule,
   PostsModule,
   AdminModule,
   LikeModule,
+  CommentsModule,
 } from './modules';
 import { User, UserSubscribers } from './modules/user/model';
 import { Post } from './modules/post/model';
 import { Like } from './modules/like/model';
+import { Comment } from './modules/comment/model';
 
 @Module({
   imports: [
@@ -30,19 +33,22 @@ import { Like } from './modules/like/model';
         username: process.env.DB_USERNAME,
         password: process.env.DB_ROOT_PASSWORD,
         database: process.env.DB_DATABASE,
+        retryAttempts: 1,
         synchronize: true,
         autoLoadModels: true,
-        models: [User, UserSubscribers, Like, Post],
+        models: [User, UserSubscribers, Like, Post, Comment],
       }),
     }),
     UserModule,
     PostModule,
     LikeModule,
+    CommentModule,
     MailModule,
     AuthModule,
     TasksModule,
     UsersModule,
     PostsModule,
+    CommentsModule,
     AdminModule,
   ],
 })

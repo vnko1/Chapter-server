@@ -40,19 +40,27 @@ export class UsersController extends AppService {
   }
 
   @Get('profile/:id')
-  async getProfileById(@Param('id') id: string) {
-    return await this.usersService.getUserById(id, undefined, 'publicScope');
+  async getProfileById(@Param('id') userId: string) {
+    return await this.usersService.getUserById(
+      userId,
+      undefined,
+      'publicScope',
+    );
   }
 
   @Get()
-  async getMe(@UserData('id') id: string) {
-    return await this.usersService.getUserById(id, undefined, 'privateScope');
+  async getMe(@UserData('userId') userId: string) {
+    return await this.usersService.getUserById(
+      userId,
+      undefined,
+      'privateScope',
+    );
   }
 
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteUser(@UserData('id') id: string, @Res() res: Response) {
-    await this.usersService.deleteUser(id);
+  async deleteUser(@UserData('userId') userId: string, @Res() res: Response) {
+    await this.usersService.deleteUser(userId);
     return this.deleteCookieResponse(res, CredEnum.Refresh_token).send();
   }
 
@@ -91,19 +99,19 @@ export class UsersController extends AppService {
   @Put('subscribe/:subscribedToId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async toggleSubscribe(
-    @UserData('id') id: string,
+    @UserData('userId') userId: string,
     @Param('subscribedToId') subscribedToId: string,
   ) {
-    return await this.usersService.subscribeToggler(id, subscribedToId);
+    return await this.usersService.subscribeToggler(userId, subscribedToId);
   }
 
   @Get('subscribe/subscribers')
-  async getUserSubscribers(@UserData('id') id: string) {
-    return await this.usersService.getSubscribers(id);
+  async getUserSubscribers(@UserData('userId') userId: string) {
+    return await this.usersService.getSubscribers(userId);
   }
 
   @Get('subscribe/subscriptions')
-  async getUserSubscriptions(@UserData('id') id: string) {
-    return await this.usersService.getSubscription(id);
+  async getUserSubscriptions(@UserData('userId') userId: string) {
+    return await this.usersService.getSubscription(userId);
   }
 }
