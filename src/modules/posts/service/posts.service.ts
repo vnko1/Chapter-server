@@ -3,6 +3,7 @@ import { FindOptions, Op } from 'sequelize';
 import { UploadApiOptions } from 'cloudinary';
 import { randomUUID } from 'crypto';
 
+import { COMMENTS_LIMIT } from 'src/utils';
 import { AppService } from 'src/common/services';
 
 import { Like, LikeService } from 'src/modules/like';
@@ -48,6 +49,7 @@ export class PostsService extends AppService {
       {
         model: Comment,
         where: { parentId: { [Op.is]: null } },
+        limit: COMMENTS_LIMIT,
         required: false,
         order: [['createdAt', 'ASC']],
         include: [

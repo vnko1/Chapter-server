@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Op } from 'sequelize';
+
+import { COMMENTS_LIMIT } from 'src/utils';
 import { AppService } from 'src/common/services';
 import { Comment } from 'src/modules/comment';
 import { Like } from 'src/modules/like';
@@ -24,6 +26,7 @@ export class FeedService extends AppService {
         {
           model: Comment,
           where: { parentId: { [Op.is]: null } },
+          limit: COMMENTS_LIMIT,
           required: false,
           order: [['createdAt', 'ASC']],
           include: [
