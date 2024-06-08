@@ -16,13 +16,38 @@ import {
 } from 'sequelize';
 import { Op } from 'sequelize';
 
+import { Like } from 'src/modules/like/model';
+
 @Injectable()
 export class CommentService extends AppService {
   constructor(@InjectModel(Comment) private commentModel: typeof Comment) {
     super();
   }
 
-  queryOpt: FindOptions = {
+  commentsQueryOpt: FindOptions = {
+    include: [
+      {
+        model: Like,
+        as: 'commentLikes',
+        attributes: ['userId'],
+      },
+      {
+        model: Comment,
+        as: 'replies',
+        order: [['createdAt', 'ASC']],
+        required: false,
+        include: [
+          {
+            model: Like,
+            as: 'replyLikes',
+            attributes: ['userId'],
+          },
+        ],
+      },
+    ],
+  };
+
+  postsQueryOpt: FindOptions = {
     include: [
       {
         model: Comment,
@@ -31,10 +56,22 @@ export class CommentService extends AppService {
         order: [['createdAt', 'ASC']],
         include: [
           {
+            model: Like,
+            as: 'commentLikes',
+            attributes: ['userId'],
+          },
+          {
             model: Comment,
             as: 'replies',
             order: [['createdAt', 'ASC']],
             required: false,
+            include: [
+              {
+                model: Like,
+                as: 'replyLikes',
+                attributes: ['userId'],
+              },
+            ],
           },
         ],
       },

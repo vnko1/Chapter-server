@@ -26,6 +26,25 @@ export class UserService extends AppService {
     super();
   }
 
+  commentsQueryOpt = {
+    include: [
+      {
+        model: User,
+        as: 'liker',
+        attributes: [
+          'userId',
+          'email',
+          'firstName',
+          'lastName',
+          'nickName',
+          'status',
+          'location',
+          'avatarUrl',
+        ],
+      },
+    ],
+  };
+
   findOrCreateUserInstance(options: FindOrCreateOptions) {
     return this.userModel.findOrCreate(options);
   }

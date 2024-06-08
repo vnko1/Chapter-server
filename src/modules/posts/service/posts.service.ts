@@ -8,8 +8,8 @@ import { LikeService } from 'src/modules/like/service';
 import { PostService } from 'src/modules/post/service';
 import { CommentService } from 'src/modules/comment/service';
 import { CloudsService } from 'src/modules/clouds/service';
+import { UserService } from 'src/modules/user/service';
 import { Post } from 'src/modules/post/model';
-import { User } from 'src/modules/user/model';
 
 import { PostDto } from '../dto';
 
@@ -20,6 +20,7 @@ export class PostsService extends AppService {
     private cloudsService: CloudsService,
     private likeService: LikeService,
     private commentService: CommentService,
+    private userService: UserService,
   ) {
     super();
   }
@@ -77,7 +78,7 @@ export class PostsService extends AppService {
     return await this.postService.findPostByPK(postId, {
       order: [['createdAt', 'ASC']],
       include: [
-        this.commentService.queryOpt.include[0],
+        this.commentService.postsQueryOpt.include[0],
         this.likeService.queryOpt.include[0],
       ],
     });
@@ -90,8 +91,8 @@ export class PostsService extends AppService {
       limit,
       order: [['createdAt', 'ASC']],
       include: [
-        this.commentService.queryOpt.include[0],
         this.likeService.queryOpt.include[0],
+        this.commentService.postsQueryOpt.include[0],
       ],
     });
 
@@ -120,22 +121,7 @@ export class PostsService extends AppService {
 
     const likes = await this.likeService.findLikes({
       where: { postId },
-      include: [
-        {
-          model: User,
-          as: 'liker',
-          attributes: [
-            'userId',
-            'email',
-            'firstName',
-            'lastName',
-            'nickName',
-            'status',
-            'location',
-            'avatarUrl',
-          ],
-        },
-      ],
+      include: [...this.userService.commentsQueryOpt.include],
     });
     return likes.map((like) => like.liker);
   }
@@ -152,8 +138,8 @@ export class PostsService extends AppService {
         {
           model: Post,
           include: [
-            this.commentService.queryOpt.include[0],
             this.likeService.queryOpt.include[0],
+            this.commentService.postsQueryOpt.include[0],
           ],
         },
       ],

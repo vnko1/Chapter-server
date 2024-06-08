@@ -7,9 +7,10 @@ import { CommentModule } from '../comment/comment.module';
 
 import { PostsService } from './service';
 import { PostsController } from './controller';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [CloudsModule, PostModule, LikeModule, CommentModule],
+  imports: [CloudsModule, PostModule, LikeModule, CommentModule, UserModule],
   controllers: [PostsController],
   providers: [PostsService],
 })
