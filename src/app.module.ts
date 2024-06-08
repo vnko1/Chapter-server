@@ -16,11 +16,13 @@ import {
   LikeModule,
   CommentsModule,
   FeedModule,
+  BookModule,
 } from './modules';
-import { User, UserSubscribers } from './modules/user/model';
-import { Post } from './modules/post/model';
-import { Like } from './modules/like/model';
-import { Comment } from './modules/comment/model';
+import { Post } from './modules/post';
+import { User, UserSubscribers } from './modules/user';
+import { Like } from './modules/like';
+import { Comment } from './modules/comment';
+import { Book } from './modules/book';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { Comment } from './modules/comment/model';
         retryAttempts: +process.env.DB_CONNECTIONS_ATTEMPTS || 5,
         synchronize: true,
         autoLoadModels: true,
-        models: [User, UserSubscribers, Like, Post, Comment],
+        models: [User, UserSubscribers, Comment, Like, Post, Book],
       }),
     }),
     UserModule,
@@ -52,6 +54,7 @@ import { Comment } from './modules/comment/model';
     CommentsModule,
     FeedModule,
     AdminModule,
+    BookModule,
   ],
 })
 export class AppModule {}
