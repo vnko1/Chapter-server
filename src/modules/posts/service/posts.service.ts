@@ -12,6 +12,7 @@ import { UserService } from 'src/modules/user/service';
 import { Post } from 'src/modules/post/model';
 
 import { PostDto } from '../dto';
+import { Like } from 'src/modules/like/model';
 
 @Injectable()
 export class PostsService extends AppService {
@@ -127,23 +128,17 @@ export class PostsService extends AppService {
   }
 
   async getPostsLikedByUser(userId: string, offset: number, limit: number) {
-    const { count, rows } = await this.likeService.findAndCountLikes({
-      where: { userId },
+    const { count, rows } = await this.postService.findAndCountPosts({
       offset,
       limit,
       attributes: {
-        exclude: ['likeId', 'postId', 'userId', 'createdAt', 'updatedAt'],
+        exclude: ['likeId'],
       },
       include: [
-        {
-          model: Post,
-          include: [
-            this.likeService.queryOpt.include[0],
-            this.commentService.postsQueryOpt.include[0],
-          ],
-        },
+        { model: Like, as: 'likes', attributes: ['userId'], where: { userId } },
+        this.commentService.postsQueryOpt.include[0],
       ],
     });
-    return { count, posts: rows.map((row) => row.likedPost) };
+    return { count, posts: rows };
   }
 }
