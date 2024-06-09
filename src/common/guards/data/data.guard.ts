@@ -14,6 +14,7 @@ export class DataGuard extends AppService implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const [key] = Object.keys(request.params);
+
     const user = request.user as User;
 
     const isOwn = await user.$has(
@@ -27,6 +28,7 @@ export class DataGuard extends AppService implements CanActivate {
 
   private getPropertyKey(key: string) {
     if (key === 'postId') return 'posts';
+    if (key === 'bookId') return 'userBooks';
     return 'userComments';
   }
 }

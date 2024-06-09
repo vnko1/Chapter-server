@@ -23,12 +23,14 @@ import { Comment } from 'src/modules/comment';
 import { Post } from 'src/modules/post/model';
 
 import { UserSubscribers } from './userSubscribers.model';
+import { Book } from 'src/modules/book';
 
 @Scopes(() => ({
   privateScope: {
     attributes: {
       exclude: ['password', 'otp', 'accountStatus'],
     },
+    include: [{ model: Book }],
   },
   privateScopeWithAssociation: {
     attributes: {
@@ -89,6 +91,7 @@ import { UserSubscribers } from './userSubscribers.model';
         'updatedAt',
       ],
     },
+    include: [{ model: Book }],
   },
   publicScopeWithAssociation: {
     attributes: {
@@ -255,4 +258,12 @@ export class User extends Model {
     onUpdate: 'CASCADE',
   })
   comments: Comment[];
+
+  @HasMany(() => Book, {
+    foreignKey: 'userId',
+    as: 'userBooks',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  books: Book[];
 }

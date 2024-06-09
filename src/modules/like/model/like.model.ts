@@ -12,8 +12,8 @@ import {
 } from 'sequelize-typescript';
 
 import { User } from 'src/modules/user';
-import { Comment } from 'src/modules/comment/model';
 import { Post } from 'src/modules/post/model';
+import { Comment } from 'src/modules/comment';
 
 @Table
 export class Like extends Model {
