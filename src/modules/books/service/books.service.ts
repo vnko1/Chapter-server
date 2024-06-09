@@ -34,10 +34,6 @@ export class BooksService extends AppService {
     });
   }
 
-  async getAllBooks() {
-    return this.bookService.findBooks();
-  }
-
   async addBook(bookDto: AddBookDto, userId: string) {
     const { image, ...book } = bookDto;
 

@@ -28,11 +28,6 @@ import { BooksService } from '../service';
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
-  @Get()
-  async getBooks() {
-    return await this.booksService.getAllBooks();
-  }
-
   @UseInterceptors(
     FileInterceptor('image', { storage: diskStorage(multerConfig) }),
   )
