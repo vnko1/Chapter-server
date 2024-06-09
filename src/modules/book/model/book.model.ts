@@ -7,6 +7,7 @@ import {
   DataType,
   PrimaryKey,
   Default,
+  BelongsTo,
 } from 'sequelize-typescript';
 import { User } from 'src/modules/user';
 
@@ -39,4 +40,7 @@ export class Book extends Model {
   @AllowNull(null)
   @Column({ type: DataType.UUID })
   userId: string;
+
+  @BelongsTo(() => User)
+  user: User;
 }
