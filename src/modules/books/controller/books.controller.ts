@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -76,8 +77,20 @@ export class BooksController {
     return await this.booksService.deleteBook(bookId);
   }
 
-  @Get(':bookId')
+  @Get('book/:bookId')
   async getBook(@Param('bookId') bookId: string) {
     return await this.booksService.getBook(bookId);
+  }
+
+  @UseGuards(DataGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Put(':bookId')
+  async toggleFavorite(@Param('bookId') bookId: string) {
+    return await this.booksService.toggleFavorite(bookId);
+  }
+
+  @Get('favorites')
+  async getFavorites(@UserData('userId') userId: string) {
+    return await this.booksService.getFavorites(userId);
   }
 }

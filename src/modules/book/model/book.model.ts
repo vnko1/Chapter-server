@@ -36,6 +36,10 @@ export class Book extends Model {
   @Column(DataType.ENUM('read', 'reading', 'finished'))
   bookStatus: 'read' | 'reading' | 'finished';
 
+  @Default(false)
+  @Column(DataType.BOOLEAN)
+  favorite: boolean;
+
   @ForeignKey(() => User)
   @AllowNull(null)
   @Column({ type: DataType.UUID })

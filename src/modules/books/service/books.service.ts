@@ -73,4 +73,14 @@ export class BooksService extends AppService {
     if (!book) throw new NotFoundException('Book not found');
     return book;
   }
+
+  async toggleFavorite(bookId: string) {
+    const book = await this.bookService.findBookByPK(bookId);
+    book.favorite = !book.favorite;
+    return book.save();
+  }
+
+  async getFavorites(userId: string) {
+    return this.bookService.findBooks({ where: { userId, favorite: true } });
+  }
 }
