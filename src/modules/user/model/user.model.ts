@@ -30,6 +30,7 @@ import { Book } from 'src/modules/book';
     attributes: {
       exclude: ['password', 'otp', 'accountStatus'],
     },
+    include: [{ model: Book }],
   },
   privateScopeWithAssociation: {
     attributes: {
@@ -90,6 +91,7 @@ import { Book } from 'src/modules/book';
         'updatedAt',
       ],
     },
+    include: [{ model: Book }],
   },
   publicScopeWithAssociation: {
     attributes: {
