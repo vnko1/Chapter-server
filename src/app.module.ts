@@ -18,6 +18,7 @@ import {
   FeedModule,
   BookModule,
   BooksModule,
+  SearchModule,
 } from './modules';
 import { Post } from './modules/post';
 import { User, UserSubscribers } from './modules/user';
@@ -57,6 +58,7 @@ import { Book } from './modules/book';
     AdminModule,
     BookModule,
     BooksModule,
+    SearchModule,
   ],
 })
 export class AppModule {}
