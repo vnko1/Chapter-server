@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 
 import { AppService } from 'src/common/services';
@@ -20,9 +19,9 @@ export class SearchService extends AppService {
   }
 
   async searchData(query: string) {
-    const user = this.userService.getAllUsers({
+    const user = await this.userService.getAllUsers({
       where: Sequelize.literal(
-        `MATCH (firsName, nickName, lastName, status, location) AGAINST('${query}' IN NATURAL LANGUAGE MODE)`,
+        `MATCH (firstName, nickName, lastName, status, location) AGAINST('${query}' IN NATURAL LANGUAGE MODE)`,
       ),
     });
 
