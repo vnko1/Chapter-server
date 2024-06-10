@@ -1,11 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { SearchService } from '../service';
 
 @Controller('search')
 export class SearchController {
-  constructor() {}
+  constructor(private searchService: SearchService) {}
 
   @Get()
   async searchData(@Query('query') query: string) {
-    return query;
+    return await this.searchService.searchData(query);
   }
 }

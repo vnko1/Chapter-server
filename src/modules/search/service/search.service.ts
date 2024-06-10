@@ -22,8 +22,14 @@ export class SearchService extends AppService {
   async searchData(query: string) {
     const transaction = await this.sequelize.transaction();
     try {
-      const user = this.userSerVice.getAllUsers({ where: { [Op.and]: [{}] } });
+      const user = this.userSerVice.getAllUsers({
+        where: Sequelize.literal(
+          `MATCH (firsName, nickName, lastName, status, location) AGAINST('${query}' IN NATURAL LANGUAGE MODE)`,
+        ),
+        transaction,
+      });
       await transaction.commit();
+      return user;
     } catch (error) {
       await transaction.rollback();
       throw error;
