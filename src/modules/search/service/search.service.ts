@@ -24,12 +24,12 @@ export class SearchService extends AppService {
       {
         where: {
           [Op.or]: [
-            { email: query },
-            { firstName: query },
-            { lastName: query },
-            { nickName: query },
-            { location: query },
-            { status: query },
+            { email: { [Op.like]: `%${query}%` } },
+            { firstName: { [Op.like]: `%${query}%` } },
+            { lastName: { [Op.like]: `%${query}%` } },
+            { nickName: { [Op.like]: `%${query}%` } },
+            { location: { [Op.like]: `%${query}%` } },
+            { status: { [Op.like]: `%${query}%` } },
           ],
         },
       },
