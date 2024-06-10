@@ -1,5 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
 import { SearchService } from '../service';
+import { searchSchema } from '../dto';
 
 @Controller('search')
 export class SearchController {
@@ -7,6 +8,11 @@ export class SearchController {
 
   @Get()
   async searchData(@Query('query') query: string) {
-    return await this.searchService.searchData(query);
+    const parsedSchema = searchSchema.safeParse(query);
+
+    if (!parsedSchema.success)
+      throw new BadRequestException(parsedSchema.error.errors[0].message);
+
+    return await this.searchService.searchData(parsedSchema.data);
   }
 }
