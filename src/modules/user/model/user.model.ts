@@ -222,4 +222,12 @@ export class User extends Model {
     onUpdate: 'CASCADE',
   })
   books: Book[];
+
+  static indexes = [
+    {
+      fields: ['firstName', 'nickName', 'lastName', 'status', 'location'],
+      type: 'FULLTEXT',
+      name: 'fulltext_index',
+    },
+  ];
 }
