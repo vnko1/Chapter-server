@@ -25,125 +25,81 @@ import { Post } from 'src/modules/post/model';
 import { UserSubscribers } from './userSubscribers.model';
 import { Book } from 'src/modules/book';
 
+const excludeAttributes = [
+  'password',
+  'otp',
+  'accountStatus',
+  'deletedAt',
+  'createdAt',
+  'updatedAt',
+  'status',
+  'location',
+  'cookieAccepted',
+];
+
+const excludeServiceAttributes = [
+  'cookieAccepted',
+  'password',
+  'otp',
+  'accountStatus',
+  'deletedAt',
+  'createdAt',
+  'updatedAt',
+];
+
+const excludeSensitiveAttributes = ['password', 'otp', 'accountStatus'];
+
 @Scopes(() => ({
   privateScope: {
     attributes: {
-      exclude: ['password', 'otp', 'accountStatus'],
+      exclude: excludeSensitiveAttributes,
     },
     include: [{ model: Book }],
   },
   privateScopeWithAssociation: {
     attributes: {
-      exclude: ['password', 'otp', 'accountStatus'],
+      exclude: excludeSensitiveAttributes,
     },
     include: [
       {
         model: User,
         as: 'subscribers',
         attributes: {
-          exclude: [
-            'password',
-            'otp',
-            'accountStatus',
-            'deletedAt',
-            'createdAt',
-            'updatedAt',
-            'status',
-            'location',
-            'cookieAccepted',
-            'deletedAt',
-            'createdAt',
-            'updatedAt',
-          ],
+          exclude: excludeAttributes,
         },
       },
       {
         model: User,
         as: 'subscribedTo',
         attributes: {
-          exclude: [
-            'password',
-            'otp',
-            'accountStatus',
-            'deletedAt',
-            'createdAt',
-            'updatedAt',
-            'status',
-            'location',
-            'cookieAccepted',
-            'deletedAt',
-            'createdAt',
-            'updatedAt',
-          ],
+          exclude: excludeAttributes,
         },
       },
     ],
   },
   publicScope: {
     attributes: {
-      exclude: [
-        'cookieAccepted',
-        'password',
-        'otp',
-        'accountStatus',
-        'deletedAt',
-        'createdAt',
-        'updatedAt',
-      ],
+      exclude: excludeServiceAttributes,
     },
     include: [{ model: Book }],
   },
   publicScopeWithAssociation: {
     attributes: {
-      exclude: [
-        'cookieAccepted',
-        'password',
-        'otp',
-        'accountStatus',
-        'deletedAt',
-        'createdAt',
-        'updatedAt',
-      ],
+      exclude: excludeServiceAttributes,
     },
     include: [
       {
         model: User,
         as: 'subscribers',
         attributes: {
-          exclude: [
-            'password',
-            'otp',
-            'accountStatus',
-            'deletedAt',
-            'createdAt',
-            'updatedAt',
-            'status',
-            'location',
-            'cookieAccepted',
-            'deletedAt',
-            'createdAt',
-            'updatedAt',
-          ],
+          exclude: excludeAttributes,
         },
       },
       {
         model: User,
         as: 'subscribedTo',
         attributes: {
-          exclude: [
-            'password',
-            'otp',
-            'accountStatus',
-            'deletedAt',
-            'createdAt',
-            'updatedAt',
-            'status',
-            'location',
-            'cookieAccepted',
-            'deletedAt',
-            'createdAt',
-            'updatedAt',
-          ],
+          exclude: excludeAttributes,
         },
       },
     ],

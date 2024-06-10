@@ -12,7 +12,7 @@ import { UserService } from 'src/modules/user';
 export class SearchService extends AppService {
   constructor(
     private sequelize: Sequelize,
-    private userSerVice: UserService,
+    private userService: UserService,
     private postService: PostService,
     private bookService: BookService,
   ) {
@@ -20,19 +20,12 @@ export class SearchService extends AppService {
   }
 
   async searchData(query: string) {
-    const transaction = await this.sequelize.transaction();
-    try {
-      const user = this.userSerVice.getAllUsers({
-        where: Sequelize.literal(
-          `MATCH (firsName, nickName, lastName, status, location) AGAINST('${query}' IN NATURAL LANGUAGE MODE)`,
-        ),
-        transaction,
-      });
-      await transaction.commit();
-      return user;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
-    }
+    const user = this.userService.getAllUsers({
+      where: Sequelize.literal(
+        `MATCH (firsName, nickName, lastName, status, location) AGAINST('${query}' IN NATURAL LANGUAGE MODE)`,
+      ),
+    });
+
+    return user;
   }
 }
