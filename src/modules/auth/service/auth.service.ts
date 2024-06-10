@@ -8,6 +8,8 @@ import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import { generate } from 'otp-generator';
 
+import { GoogleProfile } from 'src/types';
+
 import { AppService } from 'src/common/services';
 
 import { MailService } from 'src/modules/mail';
@@ -76,6 +78,30 @@ export class AuthService extends AppService {
     };
   }
 
+  async googleLogin(req: Request) {
+    const user: GoogleProfile = req['user'];
+    if (!user) throw new UnauthorizedException();
+
+    const [userData] = await this.userService.findOrCreateUserInstance({
+      where: { email: user.email },
+      defaults: {
+        provider: user.provider,
+        email: user.email,
+        avatarUrl: user.picture,
+        accountStatus: 'confirmed',
+      },
+    });
+
+    if (userData.accountStatus === 'completed') {
+      const payload = {
+        sub: userData.userId,
+      };
+      return await this.createCred(payload);
+    }
+
+    return { userId: userData.userId, email: user.email };
+  }
+
   async registerEmail(userEmailDto: UserEmailDto) {
     const otp = this.genOtp();
 
@@ -86,6 +112,7 @@ export class AuthService extends AppService {
     const { userId } = await this.userService.createUserInstance({
       ...userEmailDto,
       otp,
+      provider: 'email',
     });
     return { userId };
   }
@@ -179,6 +206,10 @@ export class AuthService extends AppService {
   }
 
   async sendRestoreOtp(user: User) {
+    if (user.provider === 'google') {
+      user.accountStatus === 'completed';
+      return await user.save();
+    }
     const otp = this.genOtp();
 
     await this.mailService.sendEmail(
