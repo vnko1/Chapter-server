@@ -9,6 +9,7 @@ import { UserModule } from '../user/user.module';
 import { MailModule } from '../mail/mail.module';
 
 import { AuthService, AuthController } from '.';
+import { GoogleStrategy } from './strategies';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AuthService, AuthController } from '.';
       useClass: AuthGuard,
     },
     AuthService,
+    GoogleStrategy,
   ],
   controllers: [AuthController],
 })

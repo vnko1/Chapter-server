@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
   Patch,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -35,12 +37,35 @@ import {
   UserEmailDto,
   userEmailSchema,
 } from '../dto';
+import { GoogleOauthGuard } from '../guards';
 
 @UseGuards(AccountGuard)
 @Controller('auth')
 export class AuthController extends AppService {
   constructor(private authService: AuthService) {
     super();
+  }
+
+  @Get('google')
+  @Public()
+  @UseGuards(GoogleOauthGuard)
+  async auth() {}
+
+  @Get('google/callback')
+  @Public()
+  @UseGuards(GoogleOauthGuard)
+  async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
+    const cred = await this.authService.googleLogin(req);
+    if ('access_token' in cred && 'refresh_token' in cred)
+      return this.setCookieResponse(
+        res,
+        cred,
+        +process.env.REFRESH_TOKEN_AGE,
+      ).send({
+        access_token: cred.access_token,
+      });
+
+    return res.send(cred);
   }
 
   @AccountStatus(['completed'])

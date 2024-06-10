@@ -45,6 +45,7 @@ const excludeServiceAttributes = [
   'deletedAt',
   'createdAt',
   'updatedAt',
+  'provider',
 ];
 
 const excludeSensitiveAttributes = ['password', 'otp', 'accountStatus'];
@@ -177,6 +178,9 @@ export class User extends Model {
   @Default(false)
   @Column
   cookieAccepted: boolean;
+
+  @Column(DataType.ENUM('email', 'google'))
+  provider: 'email' | 'google';
 
   @BelongsToMany(() => User, () => UserSubscribers, 'userId', 'subscriberId')
   subscribers: User[];
