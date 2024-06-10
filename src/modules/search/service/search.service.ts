@@ -21,7 +21,7 @@ export class SearchService extends AppService {
   async searchData(query: string) {
     const user = await this.userService.getAllUsers({
       where: Sequelize.literal(
-        `MATCH (firstName, nickName, lastName, status, location) AGAINST('${query}' IN NATURAL LANGUAGE MODE)`,
+        `MATCH (firstName, nickName, lastName, status, location, email) AGAINST('${query}' IN BOOLEAN MODE)`,
       ),
     });
 
