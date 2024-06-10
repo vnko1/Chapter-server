@@ -23,7 +23,7 @@ export class SearchService extends AppService {
     const users = await this.userService.getAllUsers(
       {
         where: {
-          [Op.and]: [
+          [Op.or]: [
             { email: query },
             { firstName: query },
             { lastName: query },
