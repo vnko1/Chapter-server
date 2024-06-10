@@ -19,12 +19,15 @@ export class SearchService extends AppService {
   }
 
   async searchData(query: string) {
-    const user = await this.userService.getAllUsers({
-      where: Sequelize.literal(
-        `MATCH (firstName, nickName, lastName, status, location, email) AGAINST('${query}' IN BOOLEAN MODE)`,
-      ),
-    });
+    const users = await this.userService.getAllUsers(
+      {
+        where: Sequelize.literal(
+          `MATCH (firstName, nickName, lastName, status, location) AGAINST('${query}' IN BOOLEAN MODE)`,
+        ),
+      },
+      'publicScope',
+    );
 
-    return user;
+    return users;
   }
 }
