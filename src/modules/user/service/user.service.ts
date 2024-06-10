@@ -61,8 +61,8 @@ export class UserService extends AppService {
     return this.userModel.restore(opt);
   }
 
-  getAllUsers(opt: FindOptions) {
-    return this.userModel.findAll(opt);
+  getAllUsers(opt: FindOptions, scope: UserScope = 'defaultScope') {
+    return this.userModel.scope(scope).findAll(opt);
   }
 
   countData(opt?: Omit<CountOptions<any>, 'group'>) {
