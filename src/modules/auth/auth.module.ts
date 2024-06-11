@@ -31,6 +31,7 @@ import { GoogleStrategy } from './strategies';
     GoogleStrategy,
   ],
   controllers: [AuthController],
+  exports: [JwtModule],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
