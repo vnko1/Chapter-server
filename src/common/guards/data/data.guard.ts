@@ -29,6 +29,7 @@ export class DataGuard extends AppService implements CanActivate {
   private getPropertyKey(key: string) {
     if (key === 'postId') return 'posts';
     if (key === 'bookId') return 'userBooks';
+    if (key === 'notsId') return 'userNots';
     return 'userComments';
   }
 }

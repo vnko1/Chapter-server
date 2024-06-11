@@ -14,6 +14,7 @@ import { UserService, User } from 'src/modules/user';
 import { CloudsService } from 'src/modules/clouds';
 
 import { UpdatePasswordDto, UpdateUserDto } from '../dto';
+import { NotificationService } from 'src/modules/notification';
 
 @Injectable()
 export class UsersService extends AppService {
@@ -21,6 +22,7 @@ export class UsersService extends AppService {
     private userService: UserService,
     private cloudsService: CloudsService,
     private socketGateway: SocketGateway,
+    private notificationService: NotificationService,
   ) {
     super();
   }
@@ -101,11 +103,21 @@ export class UsersService extends AppService {
 
     const isSubscribed = await user.$has('subscribedTo', subscribedTo);
 
-    this.socketGateway.notifySubscribersChange(userId, subscribedToId);
+    if (isSubscribed) {
+      await user.$remove('subscribedTo', subscribedTo);
+      await this.notificationService.addNotification({
+        userId,
+        type: 'unsubscribe',
+      });
+    } else {
+      await user.$add('subscribedTo', subscribedTo);
+      await this.notificationService.addNotification({
+        userId,
+        type: 'subscribe',
+      });
+    }
 
-    if (isSubscribed) return await user.$remove('subscribedTo', subscribedTo);
-
-    return await user.$add('subscribedTo', subscribedTo);
+    return this.socketGateway.notifySubscribersChange(userId, subscribedToId);
   }
 
   async getSubscribers(userId: string) {
