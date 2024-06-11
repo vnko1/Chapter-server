@@ -13,12 +13,14 @@ import { UserService, User } from 'src/modules/user';
 import { CloudsService } from 'src/modules/clouds';
 
 import { UpdatePasswordDto, UpdateUserDto } from '../dto';
+import { SocketGateway } from 'src/modules/socket/gateway';
 
 @Injectable()
 export class UsersService extends AppService {
   constructor(
     private userService: UserService,
     private cloudsService: CloudsService,
+    private socketGateway: SocketGateway,
   ) {
     super();
   }
@@ -98,6 +100,8 @@ export class UsersService extends AppService {
     if (!subscribedTo) throw new NotFoundException('User not exists');
 
     const isSubscribed = await user.$has('subscribedTo', subscribedTo);
+
+    this.socketGateway.notifySubscribersChange(userId);
 
     if (isSubscribed) return await user.$remove('subscribedTo', subscribedTo);
 

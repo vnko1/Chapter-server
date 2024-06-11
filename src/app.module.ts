@@ -19,6 +19,7 @@ import {
   BookModule,
   BooksModule,
   SearchModule,
+  SocketModule,
 } from './modules';
 import { Post } from './modules/post';
 import { User, UserSubscribers } from './modules/user';
@@ -44,6 +45,7 @@ import { Book } from './modules/book';
         models: [User, UserSubscribers, Comment, Like, Post, Book],
       }),
     }),
+    SocketModule,
     UserModule,
     PostModule,
     LikeModule,
