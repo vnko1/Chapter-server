@@ -18,7 +18,11 @@ export class SocketGateway implements OnGatewayConnection {
     this.socketService.handleConnection(socket);
   }
 
-  notifySubscribersChange(userId: string) {
-    this.socketService.emitEvent('subscribersChange', { userId });
+  notifySubscribersChange(userId: string, subscribeToId: string) {
+    this.socketService.emitEvent(
+      'subscribersChange',
+      { subscribeToId },
+      userId,
+    );
   }
 }

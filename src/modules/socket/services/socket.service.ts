@@ -27,7 +27,7 @@ export class SocketService {
 
       if (!user) throw new WsException('Unauthorized');
 
-      const clientId = socket.id;
+      const clientId = user.userId;
       this.connectedClients.set(clientId, socket);
       socket.on('disconnect', () => {
         this.connectedClients.delete(clientId);
@@ -37,13 +37,8 @@ export class SocketService {
     }
   }
 
-  emitEvent(event: string, data: any): void {
-    this.connectedClients.forEach((client) => {
-      //   console.log(
-      //     '🚀 ~ SocketService ~ this.connectedClients.forEach ~ client:',
-      //     client,
-      //   );
-      client.emit(event, data);
-    });
+  emitEvent(event: string, data: any, userId: string) {
+    const client = this.connectedClients.get(userId);
+    if (client) client.emit(event, data);
   }
 }

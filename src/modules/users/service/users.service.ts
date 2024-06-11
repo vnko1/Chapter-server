@@ -9,11 +9,11 @@ import { UploadApiOptions } from 'cloudinary';
 import { UserScope } from 'src/types';
 import { AppService } from 'src/common/services';
 
+import { SocketGateway } from 'src/modules/socket';
 import { UserService, User } from 'src/modules/user';
 import { CloudsService } from 'src/modules/clouds';
 
 import { UpdatePasswordDto, UpdateUserDto } from '../dto';
-import { SocketGateway } from 'src/modules/socket/gateway';
 
 @Injectable()
 export class UsersService extends AppService {
@@ -101,7 +101,7 @@ export class UsersService extends AppService {
 
     const isSubscribed = await user.$has('subscribedTo', subscribedTo);
 
-    this.socketGateway.notifySubscribersChange(userId);
+    this.socketGateway.notifySubscribersChange(userId, subscribedToId);
 
     if (isSubscribed) return await user.$remove('subscribedTo', subscribedTo);
 
