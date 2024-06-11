@@ -1,18 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
+import { JwtService } from '@nestjs/jwt';
+
+import { UserService } from 'src/modules/user';
 
 @Injectable()
 export class SocketService {
   private readonly connectedClients: Map<string, Socket> = new Map();
 
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private userService: UserService,
+  ) {}
 
-  handleConnection(socket: Socket): void {
+  async handleConnection(socket: Socket) {
     try {
       const token = socket.handshake.headers.token;
       if (!token) throw new WsException('Unauthorized');
+
+      const payload = await this.jwtService.verifyAsync(token as string, {
+        secret: process.env.JWT_SECRET,
+      });
+
+      const user = await this.userService.findUserByPK(payload.sub);
+
+      if (!user) throw new WsException('Unauthorized');
 
       const clientId = socket.id;
       this.connectedClients.set(clientId, socket);
