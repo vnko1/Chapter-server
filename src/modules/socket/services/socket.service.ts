@@ -6,7 +6,10 @@ export class SocketService {
   private readonly connectedClients: Map<string, Socket> = new Map();
 
   handleConnection(socket: Socket): void {
-    console.log('🚀 ~ SocketService ~ handleConnection ~ socket:', socket);
+    console.log(
+      '🚀 ~ SocketService ~ handleConnection ~ socket:',
+      socket.handshake.headers.token,
+    );
     const clientId = socket.id;
     this.connectedClients.set(clientId, socket);
     socket.on('disconnect', () => {
@@ -16,10 +19,10 @@ export class SocketService {
 
   emitEvent(event: string, data: any): void {
     this.connectedClients.forEach((client) => {
-      console.log(
-        '🚀 ~ SocketService ~ this.connectedClients.forEach ~ client:',
-        client,
-      );
+      //   console.log(
+      //     '🚀 ~ SocketService ~ this.connectedClients.forEach ~ client:',
+      //     client,
+      //   );
       client.emit(event, data);
     });
   }
