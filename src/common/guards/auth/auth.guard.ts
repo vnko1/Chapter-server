@@ -13,6 +13,7 @@ import { IS_PUBLIC_KEY, REFRESH_TOKEN } from 'src/common/decorators';
 import { UserService } from 'src/modules/user/service';
 import { Comment } from 'src/modules/comment/model';
 import { Book } from 'src/modules/book';
+import { Notification } from 'src/modules/notification';
 
 @Injectable()
 export class AuthGuard extends AppService implements CanActivate {
@@ -50,7 +51,11 @@ export class AuthGuard extends AppService implements CanActivate {
       });
 
       const user = await this.userService.findUserByPK(payload.sub, {
-        include: [{ model: Comment }, { model: Book }],
+        include: [
+          { model: Comment },
+          { model: Book },
+          { model: Notification, as: 'userNots' },
+        ],
       });
 
       if (!user) throw new UnauthorizedException();

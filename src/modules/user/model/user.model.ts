@@ -24,6 +24,7 @@ import { Post } from 'src/modules/post/model';
 
 import { UserSubscribers } from './userSubscribers.model';
 import { Book } from 'src/modules/book';
+import { Notification } from 'src/modules/notification';
 
 const excludeAttributes = [
   'password',
@@ -226,6 +227,14 @@ export class User extends Model {
     onUpdate: 'CASCADE',
   })
   books: Book[];
+
+  @HasMany(() => Notification, {
+    foreignKey: 'userId',
+    as: 'userNots',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  notifications: Notification[];
 
   static indexes = [
     {

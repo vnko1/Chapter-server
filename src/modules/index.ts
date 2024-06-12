@@ -14,3 +14,6 @@ export { FeedModule } from './feed/feed.module';
 export { BookModule } from './book/book.module';
 export { BooksModule } from './books/books.module';
 export { SearchModule } from './search/search.module';
+export { SocketModule } from './socket/socket.module';
+export { NotificationModule } from './notification/notification.module';
+export { NotificationsModule } from './notifications/notifications.module';

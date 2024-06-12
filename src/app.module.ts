@@ -19,12 +19,16 @@ import {
   BookModule,
   BooksModule,
   SearchModule,
+  SocketModule,
+  NotificationModule,
+  NotificationsModule,
 } from './modules';
 import { Post } from './modules/post';
 import { User, UserSubscribers } from './modules/user';
 import { Like } from './modules/like';
 import { Comment } from './modules/comment';
 import { Book } from './modules/book';
+import { Notification } from './modules/notification';
 
 @Module({
   imports: [
@@ -41,9 +45,18 @@ import { Book } from './modules/book';
         retryAttempts: +process.env.DB_CONNECTIONS_ATTEMPTS || 5,
         synchronize: true,
         autoLoadModels: true,
-        models: [User, UserSubscribers, Comment, Like, Post, Book],
+        models: [
+          User,
+          UserSubscribers,
+          Comment,
+          Like,
+          Post,
+          Book,
+          Notification,
+        ],
       }),
     }),
+    SocketModule,
     UserModule,
     PostModule,
     LikeModule,
@@ -56,6 +69,8 @@ import { Book } from './modules/book';
     CommentsModule,
     FeedModule,
     AdminModule,
+    NotificationModule,
+    NotificationsModule,
     BookModule,
     BooksModule,
     SearchModule,
