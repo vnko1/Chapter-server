@@ -6,10 +6,12 @@ import {
   HttpStatus,
   Param,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 
-import { NotificationsService } from '../services';
 import { UserData } from 'src/common/decorators';
+import { DataGuard } from 'src/common/guards';
+import { NotificationsService } from '../services';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -20,12 +22,14 @@ export class NotificationsController {
     return await this.notificationsService.getAllNots(userId);
   }
 
+  @UseGuards(DataGuard)
   @Patch(':notsId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async setViewed(@Param('notsId') notsId: string) {
     return await this.notificationsService.setAsReadNots(notsId);
   }
 
+  @UseGuards(DataGuard)
   @Delete(':notsId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteNots(@Param('notsId') notsId: string) {

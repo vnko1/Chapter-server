@@ -39,6 +39,7 @@ export class SocketService {
 
   emitEvent(event: string, data: any, userId: string) {
     const client = this.connectedClients.get(userId);
+
     if (client) client.emit(event, data);
   }
 }

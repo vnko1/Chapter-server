@@ -106,18 +106,21 @@ export class UsersService extends AppService {
     if (isSubscribed) {
       await user.$remove('subscribedTo', subscribedTo);
       await this.notificationService.addNotification({
-        userId,
+        userId: subscribedTo.userId,
         type: 'unsubscribe',
       });
     } else {
       await user.$add('subscribedTo', subscribedTo);
       await this.notificationService.addNotification({
-        userId,
+        userId: subscribedTo.userId,
         type: 'subscribe',
       });
     }
 
-    return this.socketGateway.notifySubscribersChange(userId, subscribedToId);
+    return this.socketGateway.notifySubscribersChange(
+      subscribedTo.userId,
+      userId,
+    );
   }
 
   async getSubscribers(userId: string) {
