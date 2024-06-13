@@ -12,6 +12,7 @@ import { Reflector } from '@nestjs/core';
 
 import { AccountStatus } from '../../decorators';
 import { User } from 'src/modules/user/model';
+import { error } from 'console';
 
 @Injectable()
 export class AccountGuard implements CanActivate {
@@ -34,9 +35,13 @@ export class AccountGuard implements CanActivate {
     accountStatus: string[],
   ) {
     if (path.startsWith('/auth/register/email') && user)
-      throw new ConflictException(
-        `This email already is used; Account status: ${user.deletedAt !== null ? 'deleted' : user.accountStatus}`,
-      );
+      throw new ConflictException({
+        message: `This email already is used; Account status: ${user.deletedAt !== null ? 'deleted' : user.accountStatus}`,
+        error:
+          user && user.accountStatus === 'confirmed'
+            ? { userId: user.userId, email: user.email }
+            : null,
+      });
 
     if (path.startsWith('/auth/login') || path.startsWith('/auth/pass-reset')) {
       if (!user) throw new UnauthorizedException('Wrong email or password');
