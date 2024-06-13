@@ -57,15 +57,13 @@ export class AuthController extends AppService {
   async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
     const cred = await this.authService.googleLogin(req);
     if ('access_token' in cred && 'refresh_token' in cred)
-      return this.setCookieResponse(
-        res,
-        cred,
-        +process.env.REFRESH_TOKEN_AGE,
-      ).send({
-        access_token: cred.access_token,
-      });
+      return res.redirect(
+        `${process.env.CLIENT_URL}/login/?access_token=${cred.access_token}&refresh_token=${cred.refresh_token}`,
+      );
 
-    return res.send(cred);
+    return res.redirect(
+      `${process.env.CLIENT_URL}/account-creation?email=${cred.email}&userId=${cred.userId}`,
+    );
   }
 
   @AccountStatus(['completed'])
@@ -74,16 +72,8 @@ export class AuthController extends AppService {
   async login(
     @UserData() user: User,
     @Body(new ZodValidationPipe(signInSchema)) signInDto: SignInDto,
-    @Res() res: Response,
   ) {
-    const cred = await this.authService.signIn(user, signInDto);
-    return this.setCookieResponse(
-      res,
-      cred,
-      +process.env.REFRESH_TOKEN_AGE,
-    ).send({
-      access_token: cred.access_token,
-    });
+    return await this.authService.signIn(user, signInDto);
   }
 
   @Public()
@@ -144,15 +134,8 @@ export class AuthController extends AppService {
 
   @RToken()
   @Post('refresh')
-  async refreshAccessToken(@UserData() user: User, @Res() res: Response) {
-    const cred = await this.authService.createCred({ sub: user.userId });
-    return this.setCookieResponse(
-      res,
-      cred,
-      +process.env.REFRESH_TOKEN_AGE,
-    ).send({
-      access_token: cred.access_token,
-    });
+  async refreshAccessToken(@UserData() user: User) {
+    return await this.authService.createCred({ sub: user.userId });
   }
 
   @Public()

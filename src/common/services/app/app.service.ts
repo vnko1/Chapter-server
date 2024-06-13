@@ -59,4 +59,8 @@ export abstract class AppService {
   protected extractTokenFromCookies(request: Request, name: string) {
     return request.cookies[name];
   }
+
+  protected extractTokenFromBody(request: Request, name: string) {
+    return request.body[name];
+  }
 }

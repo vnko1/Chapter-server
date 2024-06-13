@@ -41,7 +41,7 @@ export class AuthGuard extends AppService implements CanActivate {
 
     const token =
       authStrategy === REFRESH_TOKEN
-        ? this.extractTokenFromCookies(request, authStrategy)
+        ? this.extractTokenFromBody(request, authStrategy)
         : this.extractTokenFromHeader(request);
 
     if (!token) throw new UnauthorizedException();
