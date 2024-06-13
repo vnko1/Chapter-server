@@ -12,7 +12,6 @@ import { Reflector } from '@nestjs/core';
 
 import { AccountStatus } from '../../decorators';
 import { User } from 'src/modules/user/model';
-import { error } from 'console';
 
 @Injectable()
 export class AccountGuard implements CanActivate {

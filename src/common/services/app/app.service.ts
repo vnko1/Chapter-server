@@ -27,7 +27,7 @@ export abstract class AppService {
         errorType: type,
         errorMessage: message,
       };
-      if (description) errorResponse['message'] = description;
+      if (description) errorResponse['data'] = description;
       return response.status(status).json(errorResponse);
     };
   }
