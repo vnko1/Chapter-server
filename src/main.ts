@@ -11,6 +11,11 @@ import {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
+    credentials: true,
+  });
   app.useGlobalFilters(new AppHttpExceptionFilter());
   app.useGlobalInterceptors(new ClearDataInterceptor());
   app.useGlobalInterceptors(new TransformInterceptor());
