@@ -12,8 +12,8 @@ export class AdminController {
   constructor(private adminService: AdminService) {}
 
   @Public()
-  @Get('user/:id')
-  async getUser(@Param('id') userId: string) {
+  @Get('user/:userId')
+  async getUser(@Param('userId') userId: string) {
     return await this.adminService.getUserById(userId, {
       include: [
         { model: User, as: 'subscribers' },

@@ -25,6 +25,7 @@ export class AccountGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
+
     return this.validatePattern(request.path, user, accountStatus);
   }
 

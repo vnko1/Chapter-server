@@ -87,7 +87,7 @@ export class AuthController extends AppService {
 
   @Public()
   @AccountStatus(['unconfirmed'])
-  @Post('register/confirm/:id')
+  @Post('register/confirm/:userId')
   async confirmEmail(
     @UserData() user: User,
     @Body(new ZodValidationPipe(otpSchema))
@@ -105,11 +105,11 @@ export class AuthController extends AppService {
     return await this.authService.nickNameValidate(nickNameDto.nickName);
   }
   @Public()
-  @Patch('register/account/:id')
+  @Patch('register/account/:userId')
   @AccountStatus(['confirmed'])
   @HttpCode(HttpStatus.NO_CONTENT)
   async createUserAccount(
-    @Param('id') userId: string,
+    @Param('userId') userId: string,
     @Body(new ZodValidationPipe(userAccountSchema))
     userAccountDto: UserAccountDto,
   ) {
