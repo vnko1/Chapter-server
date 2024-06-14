@@ -9,13 +9,13 @@ export class UserMiddleware implements NestMiddleware {
   async use(req: Request, _: Response, next: NextFunction) {
     const { email, otp } = req.body;
 
-    const { id } = req.params;
+    const { userId } = req.params;
 
     const user = await this.userService.findUser({
       where: {
         [Op.or]: [
           { email: email || '' },
-          { userId: id || '' },
+          { userId: userId || '' },
           { otp: otp || '' },
         ],
       },

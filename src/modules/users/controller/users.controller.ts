@@ -39,8 +39,8 @@ export class UsersController extends AppService {
     super();
   }
 
-  @Get('profile/:id')
-  async getProfileById(@Param('id') userId: string) {
+  @Get('profile/:userId')
+  async getProfileById(@Param('userId') userId: string) {
     return await this.usersService.getUserById(
       userId,
       undefined,
