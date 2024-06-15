@@ -62,7 +62,7 @@ export class AuthController extends AppService {
       );
 
     return res.redirect(
-      `${process.env.CLIENT_URL}/account-creation?email=${cred.email}&userId=${cred.userId}`,
+      `${process.env.CLIENT_URL}/account-creation/${cred.userId}?email=${cred.email}`,
     );
   }
 
