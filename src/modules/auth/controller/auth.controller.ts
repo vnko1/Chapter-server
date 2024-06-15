@@ -58,11 +58,11 @@ export class AuthController extends AppService {
     const cred = await this.authService.googleLogin(req);
     if ('access_token' in cred && 'refresh_token' in cred)
       return res.redirect(
-        `${process.env.CLIENT_URL}/login/?access_token=${cred.access_token}&refresh_token=${cred.refresh_token}`,
+        `${process.env.CLIENT_URL}/auth/login/?access_token=${cred.access_token}&refresh_token=${cred.refresh_token}`,
       );
 
     return res.redirect(
-      `${process.env.CLIENT_URL}/account-creation/${cred.userId}?email=${cred.email}`,
+      `${process.env.CLIENT_URL}/auth/account-creation/${cred.userId}`,
     );
   }
 
