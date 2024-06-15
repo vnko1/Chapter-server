@@ -59,7 +59,7 @@ export class MailService {
             url: process.env.CLIENT_URL + '/auth/change-password/' + otp,
             app_name: 'Chapter',
             text1: 'Trouble signing in?',
-            text2: 'Resetting your password is easy."',
+            text2: 'Resetting your password is easy.',
             text3:
               'Just press the button below and follow the instructions. We’ll have you up and running in no time.',
             text4:
