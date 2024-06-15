@@ -56,7 +56,7 @@ export class MailService {
           context: {
             title: 'Chapter',
             actionTitle: 'Chapter',
-            url: process.env.CLIENT_URL + '/' + otp,
+            url: process.env.CLIENT_URL + '/auth/change-password/' + otp,
             app_name: 'Chapter',
             text1: 'Trouble signing in?',
             text2: 'Resetting your password is easy."',
