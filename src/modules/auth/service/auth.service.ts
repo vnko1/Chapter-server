@@ -80,6 +80,7 @@ export class AuthService extends AppService {
 
   async googleLogin(req: Request) {
     const user: GoogleProfile = req['user'];
+
     if (!user) throw new UnauthorizedException();
 
     const [userData] = await this.userService.findOrCreateUserInstance({
@@ -90,7 +91,14 @@ export class AuthService extends AppService {
         avatarUrl: user.picture,
         accountStatus: 'confirmed',
       },
+      paranoid: false,
     });
+
+    if (userData.deletedAt !== null) {
+      await this.userService.restoreUser({
+        where: { userId: userData.userId },
+      });
+    }
 
     if (userData.accountStatus === 'completed') {
       const payload = {
