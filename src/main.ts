@@ -15,6 +15,14 @@ async function bootstrap() {
     origin: ['http://localhost:3000'],
     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
     credentials: true,
+    allowedHeaders: [
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+      'Authorization',
+      'X-Frame-Options',
+    ],
   });
   app.useGlobalFilters(new AppHttpExceptionFilter());
   app.useGlobalInterceptors(new ClearDataInterceptor());
