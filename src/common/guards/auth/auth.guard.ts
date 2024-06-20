@@ -44,19 +44,11 @@ export class AuthGuard extends AppService implements CanActivate {
         ? this.extractTokenFromCookies(request, authStrategy)
         : this.extractTokenFromHeader(request);
 
-    if (authStrategy === REFRESH_TOKEN) {
-      console.log('🚀 ~ AuthGuard ~ canActivate ~ token:', token);
-    }
-
     if (!token) throw new UnauthorizedException();
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
-
-      if (authStrategy === REFRESH_TOKEN) {
-        console.log('🚀 ~ AuthGuard ~ canActivate ~ payload:', payload);
-      }
 
       const user = await this.userService.findUserByPK(payload.sub, {
         include: [
