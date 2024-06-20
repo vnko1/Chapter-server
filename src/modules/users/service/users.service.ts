@@ -81,15 +81,10 @@ export class UsersService extends AppService {
 
   async updateUser(user: User, updateUserDto: UpdateUserDto) {
     const { image, ...userData } = updateUserDto;
+    Object.keys(userData).forEach((field) => (user[field] = userData[field]));
+    if (image) user.avatarUrl = await this.uploadAvatar(image, user.userId);
+    await user.save();
 
-    await this.userService.updateUser(userData, {
-      where: { userId: user.userId },
-    });
-
-    if (image) {
-      user.avatarUrl = await this.uploadAvatar(image, user.userId);
-      await user.save();
-    }
     return this.userService.findUserByPK(
       user.userId,
       undefined,

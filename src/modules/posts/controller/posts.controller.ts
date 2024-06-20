@@ -57,7 +57,6 @@ export class PostsController {
   @UseInterceptors(
     FileInterceptor('image', { storage: diskStorage(multerConfig) }),
   )
-  @HttpCode(HttpStatus.NO_CONTENT)
   async updatePost(
     @UserData('userId') userId: string,
     @Param('postId') postId: string,
