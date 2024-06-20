@@ -90,6 +90,11 @@ export class UsersService extends AppService {
       user.avatarUrl = await this.uploadAvatar(image, user.userId);
       await user.save();
     }
+    return this.userService.findUserByPK(
+      user.userId,
+      undefined,
+      'privateScope',
+    );
   }
 
   async subscribeToggler(userId: string, subscribedToId: string) {

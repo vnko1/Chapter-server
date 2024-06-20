@@ -68,7 +68,6 @@ export class UsersController extends AppService {
   @UseInterceptors(
     FileInterceptor('image', { storage: diskStorage(multerConfig) }),
   )
-  @HttpCode(HttpStatus.NO_CONTENT)
   async updateUser(
     @UserData() user: User,
     @Body()
