@@ -57,10 +57,6 @@ export abstract class AppService {
   }
 
   protected extractTokenFromCookies(request: Request, name: string) {
-    console.log(
-      '🚀 ~ AppService ~ extractTokenFromCookies ~ request:',
-      request.cookies,
-    );
     return request.cookies[name];
   }
 
