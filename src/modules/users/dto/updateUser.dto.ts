@@ -20,7 +20,7 @@ export const updateUserSchema = z
         'The length of characters should not exceed 500 characters long.',
       )
       .optional(),
-    location: z.string().min(2).optional(),
+    location: z.string().optional(),
     image: z
       .any()
       .refine((image) => {
