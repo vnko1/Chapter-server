@@ -15,10 +15,9 @@ export const updateUserSchema = z
       .optional(),
     status: z
       .string()
-      .min(2, 'Must be at least 2 characters long.')
       .max(
-        120,
-        'The length of characters should not exceed 120 characters long.',
+        500,
+        'The length of characters should not exceed 500 characters long.',
       )
       .optional(),
     location: z.string().min(2).optional(),
