@@ -12,7 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.enableCors({
-    origin: '*',
+    origin: ['http://localhost:3000', 'https://chapter-client.vercel.app'],
     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
     credentials: true,
     allowedHeaders: [
@@ -23,6 +23,8 @@ async function bootstrap() {
       'Authorization',
       'X-Frame-Options',
     ],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
   app.useGlobalFilters(new AppHttpExceptionFilter());
   app.useGlobalInterceptors(new ClearDataInterceptor());
