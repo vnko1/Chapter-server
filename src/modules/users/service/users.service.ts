@@ -117,10 +117,9 @@ export class UsersService extends AppService {
       });
     }
 
-    return this.socketGateway.notifySubscribersChange(
-      subscribedTo.userId,
-      userId,
-    );
+    this.socketGateway.notifySubscribersChange(subscribedTo.userId, userId);
+
+    return user.subscribedTo;
   }
 
   async getSubscribers(userId: string) {

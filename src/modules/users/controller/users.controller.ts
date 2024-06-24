@@ -96,7 +96,6 @@ export class UsersController extends AppService {
   }
 
   @Put('subscribe/:subscribedToId')
-  @HttpCode(HttpStatus.NO_CONTENT)
   async toggleSubscribe(
     @UserData('userId') userId: string,
     @Param('subscribedToId') subscribedToId: string,
