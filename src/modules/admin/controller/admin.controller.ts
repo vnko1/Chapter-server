@@ -14,12 +14,16 @@ export class AdminController {
   @Public()
   @Get('user/:userId')
   async getUser(@Param('userId') userId: string) {
-    return await this.adminService.getUserById(userId, {
-      include: [
-        { model: User, as: 'subscribers' },
-        { model: User, as: 'subscribedTo' },
-        { model: Post, as: 'posts' },
-      ],
-    });
+    return await this.adminService.getUserById(
+      userId,
+      {
+        include: [
+          { model: User, as: 'subscribers' },
+          { model: User, as: 'subscribedTo' },
+          { model: Post, as: 'posts' },
+        ],
+      },
+      'privateScopeWithAssociation',
+    );
   }
 }
