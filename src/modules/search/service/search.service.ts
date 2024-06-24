@@ -42,7 +42,7 @@ export class SearchService extends AppService {
         offset,
         limit,
       },
-      'publicScope',
+      'publicScopeWithAssociation',
     );
   }
 

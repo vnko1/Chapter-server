@@ -63,6 +63,7 @@ const excludeSensitiveAttributes = ['password', 'otp', 'accountStatus'];
       exclude: excludeSensitiveAttributes,
     },
     include: [
+      { model: Book },
       {
         model: User,
         as: 'subscribers',
@@ -90,6 +91,7 @@ const excludeSensitiveAttributes = ['password', 'otp', 'accountStatus'];
       exclude: excludeServiceAttributes,
     },
     include: [
+      { model: Book },
       {
         model: User,
         as: 'subscribers',

@@ -44,7 +44,7 @@ export class UsersController extends AppService {
     return await this.usersService.getUserById(
       userId,
       undefined,
-      'publicScope',
+      'publicScopeWithAssociation',
     );
   }
 
@@ -53,7 +53,7 @@ export class UsersController extends AppService {
     return await this.usersService.getUserById(
       userId,
       undefined,
-      'privateScope',
+      'privateScopeWithAssociation',
     );
   }
 
@@ -96,7 +96,6 @@ export class UsersController extends AppService {
   }
 
   @Put('subscribe/:subscribedToId')
-  @HttpCode(HttpStatus.NO_CONTENT)
   async toggleSubscribe(
     @UserData('userId') userId: string,
     @Param('subscribedToId') subscribedToId: string,
