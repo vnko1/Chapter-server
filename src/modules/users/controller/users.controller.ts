@@ -44,7 +44,7 @@ export class UsersController extends AppService {
     return await this.usersService.getUserById(
       userId,
       undefined,
-      'publicScope',
+      'publicScopeWithAssociation',
     );
   }
 
@@ -53,7 +53,7 @@ export class UsersController extends AppService {
     return await this.usersService.getUserById(
       userId,
       undefined,
-      'privateScope',
+      'privateScopeWithAssociation',
     );
   }
 
