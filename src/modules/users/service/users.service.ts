@@ -119,7 +119,16 @@ export class UsersService extends AppService {
 
     this.socketGateway.notifySubscribersChange(subscribedTo.userId, userId);
     const userSubs = await this.userService.findUserByPK(user.userId, {
-      include: [{ model: User, as: 'subscribedTo', attributes: ['userId'] }],
+      include: [
+        {
+          model: User,
+          as: 'subscribedTo',
+          attributes: ['userId'],
+          through: {
+            attributes: [],
+          },
+        },
+      ],
     });
     return userSubs.subscribedTo;
   }
