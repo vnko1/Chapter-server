@@ -36,6 +36,7 @@ const excludeAttributes = [
   'status',
   'location',
   'cookieAccepted',
+  'provider',
 ];
 
 const excludeServiceAttributes = [
@@ -70,12 +71,42 @@ const excludeSensitiveAttributes = ['password', 'otp', 'accountStatus'];
         attributes: {
           exclude: excludeAttributes,
         },
+        through: {
+          attributes: [],
+        },
       },
       {
         model: User,
         as: 'subscribedTo',
         attributes: {
           exclude: excludeAttributes,
+        },
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  },
+  privateScopeAndSubscribersId: {
+    attributes: {
+      exclude: excludeSensitiveAttributes,
+    },
+    include: [
+      { model: Book },
+      {
+        model: User,
+        as: 'subscribers',
+        attributes: ['userId'],
+        through: {
+          attributes: [],
+        },
+      },
+      {
+        model: User,
+        as: 'subscribedTo',
+        attributes: ['userId'],
+        through: {
+          attributes: [],
         },
       },
     ],
@@ -98,12 +129,42 @@ const excludeSensitiveAttributes = ['password', 'otp', 'accountStatus'];
         attributes: {
           exclude: excludeAttributes,
         },
+        through: {
+          attributes: [],
+        },
       },
       {
         model: User,
         as: 'subscribedTo',
         attributes: {
           exclude: excludeAttributes,
+        },
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  },
+  publicScopeAndSubscribersId: {
+    attributes: {
+      exclude: excludeServiceAttributes,
+    },
+    include: [
+      { model: Book },
+      {
+        model: User,
+        as: 'subscribers',
+        attributes: ['userId'],
+        through: {
+          attributes: [],
+        },
+      },
+      {
+        model: User,
+        as: 'subscribedTo',
+        attributes: ['userId'],
+        through: {
+          attributes: [],
         },
       },
     ],
