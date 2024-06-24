@@ -80,6 +80,24 @@ const excludeSensitiveAttributes = ['password', 'otp', 'accountStatus'];
       },
     ],
   },
+  privateScopeAndSubscribersId: {
+    attributes: {
+      exclude: excludeSensitiveAttributes,
+    },
+    include: [
+      { model: Book },
+      {
+        model: User,
+        as: 'subscribers',
+        attributes: ['userId'],
+      },
+      {
+        model: User,
+        as: 'subscribedTo',
+        attributes: ['userId'],
+      },
+    ],
+  },
   publicScope: {
     attributes: {
       exclude: excludeServiceAttributes,
@@ -105,6 +123,24 @@ const excludeSensitiveAttributes = ['password', 'otp', 'accountStatus'];
         attributes: {
           exclude: excludeAttributes,
         },
+      },
+    ],
+  },
+  publicScopeAndSubscribersId: {
+    attributes: {
+      exclude: excludeServiceAttributes,
+    },
+    include: [
+      { model: Book },
+      {
+        model: User,
+        as: 'subscribers',
+        attributes: ['userId'],
+      },
+      {
+        model: User,
+        as: 'subscribedTo',
+        attributes: ['userId'],
       },
     ],
   },
