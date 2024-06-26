@@ -22,4 +22,10 @@ export class AdminController {
       ],
     });
   }
+
+  @Public()
+  @Get('cron')
+  cron() {
+    return { status: 'OK' };
+  }
 }
