@@ -13,11 +13,11 @@ import {
   Post,
   Put,
   Query,
-  UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
 import { LIMIT, multerConfig } from 'src/utils';
@@ -33,17 +33,17 @@ export class PostsController {
 
   @Post('post')
   @UseInterceptors(
-    FileInterceptor('image', { storage: diskStorage(multerConfig) }),
+    FilesInterceptor('images', 10, { storage: diskStorage(multerConfig) }),
   )
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.CREATED)
   async createPost(
     @UserData('userId') userId: string,
     @Body() createPostDto: PostDto,
-    @UploadedFile() image: Express.Multer.File,
+    @UploadedFiles() images: Array<Express.Multer.File>,
   ) {
     const parsedSchema = postSchema.safeParse({
       ...createPostDto,
-      image,
+      images,
     });
 
     if (!parsedSchema.success)
@@ -55,17 +55,17 @@ export class PostsController {
   @UseGuards(DataGuard)
   @Patch('post/:postId')
   @UseInterceptors(
-    FileInterceptor('image', { storage: diskStorage(multerConfig) }),
+    FilesInterceptor('images', 10, { storage: diskStorage(multerConfig) }),
   )
   async updatePost(
     @UserData('userId') userId: string,
     @Param('postId') postId: string,
     @Body() createPostDto: PostDto,
-    @UploadedFile() image: Express.Multer.File,
+    @UploadedFiles() images: Express.Multer.File,
   ) {
     const parsedSchema = postSchema.safeParse({
       ...createPostDto,
-      image,
+      images,
     });
 
     if (!parsedSchema.success)

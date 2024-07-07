@@ -23,8 +23,8 @@ export class Post extends Model {
   postId: string;
 
   @AllowNull
-  @Column({ type: DataType.STRING })
-  imageUrl: string;
+  @Column({ type: DataType.JSON })
+  imagesUrl: string[];
 
   @AllowNull(false)
   @Default('')
