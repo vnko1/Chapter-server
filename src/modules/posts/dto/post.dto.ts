@@ -19,15 +19,17 @@ export const postSchema = z
         'The length of characters should not exceed 500 characters long.',
       )
       .optional(),
-    image: z
-      .any()
-      .refine((image) => {
-        return image.size <= MAX_FILE_SIZE;
-      }, `Max image size is 3MB.`)
-      .refine((image) => {
-        return ACCEPTED_IMAGE_TYPES.includes(image?.mimetype);
-      }, 'Only .jpg, .jpeg, .png and .webp formats are supported.')
-      .optional(),
+    images: z.array(
+      z
+        .any()
+        .refine((image) => {
+          return image.size <= MAX_FILE_SIZE;
+        }, `Max image size is 3MB.`)
+        .refine((image) => {
+          return ACCEPTED_IMAGE_TYPES.includes(image?.mimetype);
+        }, 'Only .jpg, .jpeg, .png and .webp formats are supported.')
+        .optional(),
+    ),
   })
   .refine(
     (data) => {

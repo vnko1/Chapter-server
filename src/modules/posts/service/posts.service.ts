@@ -94,31 +94,48 @@ export class PostsService extends AppService {
     });
   }
 
+  private async uploadImages(
+    images: Array<Express.Multer.File>,
+    userId: string,
+  ) {
+    const imagesToUpload = images.map(async (image) => {
+      return await this.uploadImage(image, userId);
+    });
+
+    return Promise.all(imagesToUpload);
+  }
+
+  private async deleteImages(imagesUrl: Array<string>) {
+    const imagesToDelete = imagesUrl.map(async (imageUrl) => {
+      return await this.cloudsService.delete(imageUrl);
+    });
+
+    return Promise.all(imagesToDelete);
+  }
+
   async addPost(postDto: PostDto, userId: string) {
-    const { image, ...postData } = postDto;
+    const { images, ...postData } = postDto;
 
     const post: Partial<Post> = { ...postData };
+    if (images.length) post.imagesUrl = await this.uploadImages(images, userId);
 
-    if (image) post.imageUrl = await this.uploadImage(image, userId);
     return this.postService.createPost(post, userId);
   }
 
   async editPost(postDto: PostDto, postId: string, userId: string) {
-    const { image, ...postData } = postDto;
+    const { images, ...postData } = postDto;
     const post = await this.postService.findPostByPK(postId);
-    if (image) {
-      await this.cloudsService.delete(post.imageUrl);
-      post.imageUrl = await this.uploadImage(image, userId);
+    if (images.length) {
+      await this.deleteImages(post.imagesUrl);
+      post.imagesUrl = await this.uploadImages(images, userId);
     }
     Object.keys(postData).forEach((field) => (post[field] = postDto[field]));
-
     return post.save();
   }
 
   async deletePost(postId: string) {
     const post = await this.postService.findPostByPK(postId);
-    if (post.imageUrl) await this.cloudsService.delete(post.imageUrl);
-
+    if (post.imagesUrl.length) await this.deleteImages(post.imagesUrl);
     return post.destroy();
   }
 
