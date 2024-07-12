@@ -235,6 +235,10 @@ export class User extends Model {
   @Column
   otp: string | null;
 
+  @AllowNull
+  @Column(DataType.ENUM('male', 'female', 'other'))
+  gender: 'male' | 'female' | 'other';
+
   @Default('unconfirmed')
   @Column(DataType.ENUM('unconfirmed', 'confirmed', 'completed', 'restoring'))
   accountStatus: 'unconfirmed' | 'confirmed' | 'completed' | 'restoring';

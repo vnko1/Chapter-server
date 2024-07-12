@@ -20,6 +20,7 @@ export const updateUserSchema = z
         'The length of characters should not exceed 500 characters long.',
       )
       .optional(),
+    gender: z.enum(['male', 'female', 'other']).optional(),
     location: z.string().optional(),
     image: z
       .any()
