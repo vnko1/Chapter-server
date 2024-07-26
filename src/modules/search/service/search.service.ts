@@ -60,7 +60,7 @@ export class SearchService extends AppService {
   }
 
   async booksSearch(query: string, offset: number, limit: number) {
-    return await this.bookService.findAndCountBooks({
+    return await this.bookService.findAndCountAll({
       where: {
         [Op.or]: [
           { bookName: { [Op.like]: `%${query}%` } },
