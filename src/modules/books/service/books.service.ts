@@ -39,11 +39,11 @@ export class BooksService extends AppService {
 
     const imageUrl = await this.uploadImage(image, userId);
 
-    return this.bookService.addBook({ ...book, imageUrl, userId });
+    return this.bookService.add({ ...book, imageUrl, userId });
   }
 
   async editBook(bookId: string, userId: string, editBookDto: EditBookDto) {
-    const book = await this.bookService.findBookByPK(bookId);
+    const book = await this.bookService.findByPk(bookId);
     const { image, ...bookDto } = editBookDto;
 
     if (image) {
@@ -59,24 +59,24 @@ export class BooksService extends AppService {
   }
 
   async deleteBook(bookId: string) {
-    const book = await this.bookService.findBookByPK(bookId);
+    const book = await this.bookService.findByPk(bookId);
     await this.cloudsService.delete(book.imageUrl);
     return await book.destroy();
   }
 
   async getBook(bookId: string) {
-    const book = await this.bookService.findBookByPK(bookId);
+    const book = await this.bookService.findByPk(bookId);
     if (!book) throw new NotFoundException('Book not found');
     return book;
   }
 
   async toggleFavorite(bookId: string) {
-    const book = await this.bookService.findBookByPK(bookId);
+    const book = await this.bookService.findByPk(bookId);
     book.favorite = !book.favorite;
     return book.save();
   }
 
   async getFavorites(userId: string) {
-    return this.bookService.findBooks({ where: { userId, favorite: true } });
+    return this.bookService.findAll({ where: { userId, favorite: true } });
   }
 }
